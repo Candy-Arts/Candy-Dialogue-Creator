@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://daf73cw76howu"]
+
+[ext_resource type="Script" uid="uid://c42smjq3bfmpf" path="res://Scripts/Data_Editor.gd" id="1_w1fcv"]
+
+[node name="DataEditor" type="CanvasLayer" unique_id=1206464099]
+script = ExtResource("1_w1fcv")
+
+[node name="Shield" type="ColorRect" parent="." unique_id=1798631096]
+z_index = -1
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.39215687)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=74431082]
+offset_left = 544.0
+offset_top = 128.0
+offset_right = 1664.0
+offset_bottom = 960.0
+color = Color(0.43325865, 0.57628727, 0.5451591, 1)
+
+[node name="Enter" type="Button" parent="." unique_id=1064241864]
+z_index = 1
+offset_left = 1456.0
+offset_top = 144.0
+offset_right = 1648.0
+offset_bottom = 192.0
+text = "CLOSE"
+
+[node name="Label" type="Label" parent="." unique_id=171190106]
+offset_left = 560.0
+offset_top = 144.0
+offset_right = 736.0
+offset_bottom = 184.0
+theme_override_font_sizes/font_size = 24
+text = "Data Editor"
+vertical_alignment = 1
+
+[node name="Syntax" type="RichTextLabel" parent="." unique_id=1057744244]
+offset_left = 864.0
+offset_top = 148.0
+offset_right = 1440.0
+offset_bottom = 188.0
+tooltip_text = "Default symbols for referencing variables in autoloads, in nodes or in the Candy DE var_dict dictionary."
+theme_override_font_sizes/normal_font_size = 14
+text = "Syntax:
+£autoload.variable     $node_path.variable     €dialogue_variable"
+
+[node name="Data" type="TextEdit" parent="." unique_id=1031379683]
+offset_left = 560.0
+offset_top = 200.0
+offset_right = 1648.0
+offset_bottom = 944.0
+placeholder_text = "Data"
+wrap_mode = 1
+tab_input_mode = false
+
+[connection signal="pressed" from="Enter" to="." method="_on_data_editor_enter_pressed"]
+[connection signal="text_changed" from="Data" to="." method="_on_data_text_changed"]

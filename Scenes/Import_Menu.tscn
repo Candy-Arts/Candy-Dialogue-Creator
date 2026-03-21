@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://gyrs5fxqtnk6"]
+
+[ext_resource type="Script" uid="uid://cwbsauq27c6l2" path="res://Scripts/Import_Menu.gd" id="1_idh18"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k67pg"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1.3957917e-06, 0.47192127, 0.60348207, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_idh18"]
+bg_color = Color(0.099985994, 0.09998601, 0.099985965, 0.627451)
+
+[node name="ImportMenu" type="CanvasLayer" unique_id=35646535]
+script = ExtResource("1_idh18")
+
+[node name="Shield" type="ColorRect" parent="." unique_id=1100017469]
+z_index = -1
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.39215687)
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1035197206]
+offset_left = 640.0
+offset_top = 192.0
+offset_right = 1280.0
+offset_bottom = 864.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_k67pg")
+
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=225622415]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Panel/VBox" unique_id=1519861113]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Import Dialogue"
+
+[node name="File" type="HBoxContainer" parent="Panel/VBox" unique_id=823638912]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Panel/VBox/File" unique_id=1264614167]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "File:"
+
+[node name="LineEdit" type="LineEdit" parent="Panel/VBox/File" unique_id=272994096]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileBrowser" type="Button" parent="Panel/VBox/File" unique_id=544075740]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "..."
+
+[node name="HBox" type="HBoxContainer" parent="Panel/VBox" unique_id=2138663635]
+layout_mode = 2
+
+[node name="Mode" type="HBoxContainer" parent="Panel/VBox/HBox" unique_id=319319998]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBox/HBox/Mode" unique_id=1059009594]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Export Mode:"
+
+[node name="OptionButton" type="OptionButton" parent="Panel/VBox/HBox/Mode" unique_id=1488940401]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Replace"
+popup/item_0/id = 0
+popup/item_1/text = "Add"
+popup/item_1/id = 1
+popup/item_2/text = "Update"
+popup/item_2/id = 2
+
+[node name="Conversations" type="HBoxContainer" parent="Panel/VBox" unique_id=1535723236]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Panel/VBox/Conversations" unique_id=878080916]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Panel/VBox/Conversations/VBox" unique_id=1092684597]
+layout_mode = 2
+text = "Conversations:"
+
+[node name="Select" type="Button" parent="Panel/VBox/Conversations/VBox" unique_id=1091060099]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Select All"
+
+[node name="Deselect" type="Button" parent="Panel/VBox/Conversations/VBox" unique_id=326277133]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Deselect All"
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox/Conversations" unique_id=1510914014]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_idh18")
+
+[node name="VBox" type="VBoxContainer" parent="Panel/VBox/Conversations/Scroll" unique_id=1776648867]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Warnings" type="PanelContainer" parent="Panel/VBox" unique_id=786305513]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/VBox/Warnings" unique_id=1754370684]
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="End" type="HBoxContainer" parent="Panel/VBox" unique_id=806667793]
+layout_mode = 2
+theme_override_constants/separation = 128
+alignment = 1
+
+[node name="Cancel" type="Button" parent="Panel/VBox/End" unique_id=1720842690]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Cancel"
+
+[node name="Import" type="Button" parent="Panel/VBox/End" unique_id=2064990105]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Import"
+
+[node name="Shield2" type="ColorRect" parent="." unique_id=1048740997]
+visible = false
+z_index = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.39215687)
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1773814852]
+oversampling_override = 1.0
+title = "Open a File"
+initial_position = 1
+size = Vector2i(960, 540)
+ok_button_text = "Select"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.txt")
+
+[connection signal="text_changed" from="Panel/VBox/File/LineEdit" to="." method="spawn_convo_buttons"]
+[connection signal="pressed" from="Panel/VBox/File/FileBrowser" to="." method="_on_file_browser_pressed"]
+[connection signal="pressed" from="Panel/VBox/Conversations/VBox/Select" to="." method="_on_select_all_pressed"]
+[connection signal="pressed" from="Panel/VBox/Conversations/VBox/Deselect" to="." method="_on_deselect_all_pressed"]
+[connection signal="pressed" from="Panel/VBox/End/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Panel/VBox/End/Import" to="." method="_on_import_pressed"]
+[connection signal="canceled" from="FileDialog" to="." method="_on_file_dialog_canceled"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

@@ -1,0 +1,94 @@
+[gd_scene load_steps=6 format=3 uid="uid://bhu4o7cgh0dxx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpyp4"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_haucg"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rycmg"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3j23"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5iil1"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="0" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 20)
+offset_right = 23.0
+offset_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Button" type="Button" parent="HBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_tpyp4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_haucg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_rycmg")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_t3j23")
+theme_override_styles/focus = SubResource("StyleBoxFlat_5iil1")
+text = "Variant"
+alignment = 0
+
+[node name="Status" type="Button" parent="HBox"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_tpyp4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_haucg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_rycmg")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_t3j23")
+theme_override_styles/focus = SubResource("StyleBoxFlat_5iil1")
+text = "●○"

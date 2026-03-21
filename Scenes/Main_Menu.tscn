@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://ct7eypxw03ot0"]
+
+[ext_resource type="Script" uid="uid://dd8fsb1wggwek" path="res://Scripts/Main_Menu.gd" id="1_c4tk2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c4tk2"]
+content_margin_left = 32.0
+content_margin_top = 32.0
+content_margin_right = 32.0
+content_margin_bottom = 32.0
+bg_color = Color(0.52156866, 0.3882353, 0.627451, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_rmbjf"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rmbjf"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.5254902, 0.5254902, 0.5254902, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 5
+
+[node name="MainMenu" type="CanvasLayer" unique_id=1311230385]
+script = ExtResource("1_c4tk2")
+
+[node name="Shield" type="ColorRect" parent="." unique_id=1194445107]
+z_index = -1
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.39215687)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=433522473]
+custom_minimum_size = Vector2(256, 0)
+offset_left = 800.0
+offset_top = 208.0
+offset_right = 1120.0
+offset_bottom = 644.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_c4tk2")
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer" unique_id=1113850932]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="NewDialogue" type="Button" parent="PanelContainer/VBox" unique_id=1926710931]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "New Dialogue"
+
+[node name="Separator1" type="HSeparator" parent="PanelContainer/VBox" unique_id=496601720]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_rmbjf")
+
+[node name="Profiles" type="Button" parent="PanelContainer/VBox" unique_id=983047989]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Profiles"
+
+[node name="Export" type="Button" parent="PanelContainer/VBox" unique_id=1640317858]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Export Dialogue"
+
+[node name="Import" type="Button" parent="PanelContainer/VBox" unique_id=259238490]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Import Dialogue"
+
+[node name="Settings" type="Button" parent="PanelContainer/VBox" unique_id=1411808774]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
+[node name="Separator2" type="HSeparator" parent="PanelContainer/VBox" unique_id=1193768820]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_rmbjf")
+
+[node name="Close" type="Button" parent="PanelContainer/VBox" unique_id=519000863]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Close Menu"
+
+[node name="SaveCheck" type="Control" parent="." unique_id=398186244]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Shield" type="ColorRect" parent="SaveCheck" unique_id=1659449494]
+z_index = -1
+layout_mode = 0
+offset_top = -64.0
+offset_right = 1920.0
+offset_bottom = 1016.0
+color = Color(0, 0, 0, 0)
+
+[node name="PanelC" type="PanelContainer" parent="SaveCheck" unique_id=1039566330]
+layout_mode = 0
+offset_left = 704.0
+offset_top = 416.0
+offset_right = 1216.0
+offset_bottom = 584.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rmbjf")
+
+[node name="Label" type="Label" parent="SaveCheck" unique_id=2111950517]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 448.0
+offset_right = 1200.0
+offset_bottom = 480.0
+text = "Save before exiting?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cancel" type="Button" parent="SaveCheck" unique_id=1738140088]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 520.0
+offset_right = 864.0
+offset_bottom = 552.0
+text = "Cancel"
+
+[node name="No" type="Button" parent="SaveCheck" unique_id=1063980451]
+layout_mode = 0
+offset_left = 912.0
+offset_top = 520.0
+offset_right = 1008.0
+offset_bottom = 552.0
+text = "No"
+
+[node name="Yes" type="Button" parent="SaveCheck" unique_id=1796710960]
+layout_mode = 0
+offset_left = 1056.0
+offset_top = 520.0
+offset_right = 1152.0
+offset_bottom = 552.0
+text = "Yes"
+
+[connection signal="pressed" from="PanelContainer/VBox/NewDialogue" to="." method="_on_new_dialogue_pressed"]
+[connection signal="pressed" from="PanelContainer/VBox/Profiles" to="." method="_on_profiles_pressed"]
+[connection signal="pressed" from="PanelContainer/VBox/Export" to="." method="_on_export_pressed"]
+[connection signal="pressed" from="PanelContainer/VBox/Import" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="PanelContainer/VBox/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="PanelContainer/VBox/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="SaveCheck/Cancel" to="." method="_on_save_confirm_cancel_pressed"]
+[connection signal="pressed" from="SaveCheck/No" to="." method="_on_save_confirm_no_pressed"]
+[connection signal="pressed" from="SaveCheck/Yes" to="." method="_on_save_confirm_yes_pressed"]

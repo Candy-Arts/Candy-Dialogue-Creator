@@ -1,0 +1,244 @@
+[gd_scene format=3 uid="uid://c42e0hj3u6x2x"]
+
+[ext_resource type="Script" uid="uid://nfm5rjty1k1x" path="res://Scripts/Profile_Menu.gd" id="1_dveow"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dveow"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+corner_detail = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0acjw"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.88235295)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_upc1h"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.88235295)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="ProfileMenu" type="CanvasLayer" unique_id=1803879675]
+layer = 1100
+script = ExtResource("1_dveow")
+
+[node name="Shield" type="ColorRect" parent="." unique_id=501099760]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.1, 0.1, 0.1, 0)
+metadata/_edit_lock_ = true
+
+[node name="BG" type="PanelContainer" parent="." unique_id=1948929099]
+z_index = -1
+offset_left = 384.0
+offset_top = 64.0
+offset_right = 1536.0
+offset_bottom = 1024.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dveow")
+
+[node name="Label" type="Label" parent="." unique_id=360020253]
+offset_left = 448.0
+offset_top = 128.0
+offset_right = 792.0
+offset_bottom = 168.0
+theme_override_font_sizes/font_size = 24
+text = "Profiles"
+
+[node name="New" type="Button" parent="." unique_id=596753044]
+offset_left = 672.0
+offset_top = 192.0
+offset_right = 832.0
+offset_bottom = 256.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_0acjw")
+text = "NEW"
+
+[node name="Copy" type="Button" parent="." unique_id=760603611]
+offset_left = 864.0
+offset_top = 192.0
+offset_right = 1024.0
+offset_bottom = 256.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_0acjw")
+text = "COPY"
+
+[node name="Rename" type="Button" parent="." unique_id=1758906197]
+offset_left = 1056.0
+offset_top = 192.0
+offset_right = 1216.0
+offset_bottom = 256.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_0acjw")
+text = "RENAME"
+
+[node name="Select" type="Button" parent="." unique_id=2117473551]
+offset_left = 448.0
+offset_top = 192.0
+offset_right = 608.0
+offset_bottom = 256.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_0acjw")
+text = "SELECT"
+
+[node name="Delete" type="Button" parent="." unique_id=583389383]
+offset_left = 1344.0
+offset_top = 192.0
+offset_right = 1472.0
+offset_bottom = 256.0
+theme_override_colors/font_color = Color(0.88, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_0acjw")
+text = "DELETE"
+
+[node name="ProfileList" type="ItemList" parent="." unique_id=952778833]
+offset_left = 448.0
+offset_top = 320.0
+offset_right = 1472.0
+offset_bottom = 960.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/panel = SubResource("StyleBoxFlat_upc1h")
+auto_width = true
+
+[node name="NameProfile" type="Control" parent="." unique_id=199693719]
+visible = false
+z_index = 100
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Shield" type="ColorRect" parent="NameProfile" unique_id=1322264936]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.1, 0.1, 0.1, 0.39215687)
+
+[node name="ColorRect" type="ColorRect" parent="NameProfile" unique_id=1728719729]
+layout_mode = 0
+offset_left = 704.0
+offset_top = 288.0
+offset_right = 1216.0
+offset_bottom = 448.0
+color = Color(0.2901961, 0.4392157, 0.6745098, 1)
+
+[node name="Label" type="Label" parent="NameProfile" unique_id=180913843]
+layout_mode = 0
+offset_left = 712.0
+offset_top = 296.0
+offset_right = 1208.0
+offset_bottom = 319.0
+text = "New Profile Name:"
+
+[node name="Error" type="Label" parent="NameProfile" unique_id=1647629160]
+layout_mode = 0
+offset_left = 712.0
+offset_top = 376.0
+offset_right = 1208.0
+offset_bottom = 399.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+
+[node name="LineEdit" type="LineEdit" parent="NameProfile" unique_id=1024885300]
+layout_mode = 0
+offset_left = 712.0
+offset_top = 328.0
+offset_right = 1208.0
+offset_bottom = 375.0
+
+[node name="Cancel" type="Button" parent="NameProfile" unique_id=806068075]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 408.0
+offset_right = 912.0
+offset_bottom = 440.0
+text = "Cancel"
+
+[node name="Enter" type="Button" parent="NameProfile" unique_id=1849006770]
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 408.0
+offset_right = 1152.0
+offset_bottom = 440.0
+text = "Enter"
+
+[node name="DeleteProfile" type="Control" parent="." unique_id=877046651]
+visible = false
+z_index = 100
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Shield" type="ColorRect" parent="DeleteProfile" unique_id=251141350]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.1, 0.1, 0.1, 0.39215687)
+
+[node name="ColorRect" type="ColorRect" parent="DeleteProfile" unique_id=499151745]
+layout_mode = 0
+offset_left = 704.0
+offset_top = 288.0
+offset_right = 1216.0
+offset_bottom = 448.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Label" type="Label" parent="DeleteProfile" unique_id=385108874]
+layout_mode = 0
+offset_left = 712.0
+offset_top = 296.0
+offset_right = 1208.0
+offset_bottom = 336.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Delete Profile?"
+
+[node name="ProfileName" type="Label" parent="DeleteProfile" unique_id=1363237479]
+layout_mode = 0
+offset_left = 712.0
+offset_top = 352.0
+offset_right = 1208.0
+offset_bottom = 384.0
+text = "Profile"
+
+[node name="Cancel" type="Button" parent="DeleteProfile" unique_id=1664224216]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 408.0
+offset_right = 912.0
+offset_bottom = 440.0
+text = "Cancel"
+
+[node name="Enter" type="Button" parent="DeleteProfile" unique_id=892957869]
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 408.0
+offset_right = 1152.0
+offset_bottom = 440.0
+text = "Enter"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="New" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="Copy" to="." method="_on_copy_pressed"]
+[connection signal="pressed" from="Rename" to="." method="_on_rename_pressed"]
+[connection signal="pressed" from="Select" to="." method="_on_select_pressed"]
+[connection signal="pressed" from="Delete" to="." method="_on_delete_pressed"]
+[connection signal="item_selected" from="ProfileList" to="." method="_on_item_list_item_selected"]
+[connection signal="pressed" from="NameProfile/Cancel" to="." method="_on_cancel_name_pressed"]
+[connection signal="pressed" from="NameProfile/Enter" to="." method="_on_enter_name_pressed"]
+[connection signal="pressed" from="DeleteProfile/Cancel" to="." method="_on_delete_cancel_pressed"]
+[connection signal="pressed" from="DeleteProfile/Enter" to="." method="_on_delete_enter_pressed"]

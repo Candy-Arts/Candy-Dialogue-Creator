@@ -21,20 +21,20 @@ A number of features make Candy Dialogue Creator great for teams: unique setting
 
 ## Use Options
 Candy Dialogue Creator can be used in three different ways:
-- For best performance, download and launch the executable for your operating system.
+- For best performance, download and launch the compiled executable for your operating system.
 - To modify Candy Dialogue Creator as you see fit, download the source code as a raw Godot project, edit it, then compile.
 - Or integrate the scripts, scenes and other resource files into your game to access the Candy Dialogue Creator at runtime, so you or your players can create and edit dialogues live in-game!
 
 ## Setup
-### Executable
+### Executable (Compiled)
 1. Download the executable for your operating system.
 2. Unpack the downloaded compressed file to any location you want on your computer.
 3. Read the Instructions.pdf file inside the folder.
 4. Launch the executable.
 5. It takes several seconds to load. You'll land on the profile menu. Create a new profile (give it a name that references the project it's for).
 6. Click the profile in the list, then click the 'Select' button.
-7. You'll arrive at the Main UI screen, where you can start adding lines to create a dialogue. But first, read the 'Quick Setup' guide in the Documentation folder to learn how to configure your profile.
-- Read the 'Example Dialogue' guide in the Documentation folder to learn how to create a basic dialogue.
+7. You'll arrive at the Main UI screen, where you can start adding lines to create a dialogue. But first, read the 'Basic Setup' guide in the Documentation folder to learn how to configure your profile.
+- Read the 'Basic Dialogue' guide in the Documentation folder to learn how to create a basic dialogue.
 - The rest of the documentation will explain the remaining features.
 - Don't forget to download [Candy Dialogue Engine](https://github.com/Candy-Arts/Candy-Dialogue-Engine) and integrate it to your project, otherwise dialogues won't work.
 
@@ -54,7 +54,10 @@ Candy Dialogue Creator can be used in three different ways:
 7. You can now move the files in the Resources, Scenes and Scripts folders anywhere you want in your project files through the Godot editor's FileSystem panel.
 8. Add User_Variables.gd as an autoload, with the prefix 'candy_dc'.
 
-You'll need to adapt the code to fit your project: don't display the profile menu at launch, etc. This depends on your project and what you want the Candy Dialogue Creator to be used for.
+You'll need to adapt the code to fit your project: read data from variables instead of .gd scripts or resources folders, don't display the profile menu at launch, etc. This depends on your project and what you want the Candy Dialogue Creator to be used for.
+
+**A ready-made 'Integrated' edition of Candy Dialogue Creator is in the works and will be released very soon.**
+It will feature several modifications for in-project integration, saving you the trouble of making them yourself.
 
 **When integrating Candy Dialogue Creator directly into your project, note that the UI is designed for resolutions of 1920x1080. If your project's resolution is smaller or has different proportions, you will need to adapt the UI.**
 

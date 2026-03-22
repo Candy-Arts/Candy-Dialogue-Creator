@@ -362,8 +362,8 @@ func _input(event: InputEvent) -> void:
 			#% Home → Spoken Line:
 			elif event.keycode == KEY_HOME and not shift and not alt:
 				var button := $"VBox/HBox/SideBar/VBox/Spoken/Spoken"
-				button.grab_focus()            #/ optional, if you want visual focus
-				button.emit_signal("pressed")  #/ behaves like a real click
+				button.grab_focus()				#/ Optional, if you want visual focus
+				button.emit_signal("pressed")	#/ Emulates a real click
 
 			#% F2 → Open Conversations:
 			elif event.keycode == KEY_F2 and not ctrl and not shift and not alt:
@@ -480,8 +480,8 @@ func _input(event: InputEvent) -> void:
 			#% CTRL+Y → Undo:
 			elif event.keycode == KEY_Y and ctrl and not shift and not alt:
 				var button := $"VBox/TopBar/HBox/Undo"
-				button.grab_focus()				#/ optional, if you want visual focus
-				button.emit_signal("pressed")	#/ behaves like a real click
+				button.grab_focus()
+				button.emit_signal("pressed")
 
 			#% CTRL+SHIFT+Y → Redo:
 			elif event.keycode == KEY_Y and ctrl and shift and not alt:
@@ -538,6 +538,8 @@ func _capture_line_pool() -> void:
 	if line_pool.size() != VISIBLE_LINES:
 		push_warning("Expected 26 pooled line nodes, got " + str(line_pool.size()))
 
+
+#* Ensure scrollbar values match the number of lines:
 func _apply_scroll_limits() -> void:
 	var total := lines_data.size()
 
@@ -547,7 +549,7 @@ func _apply_scroll_limits() -> void:
 	scroll_bar.max_value = max(total, 1)
 	scroll_bar.page = VISIBLE_LINES
 
-	#% Keep value in a safe range (we'll clamp again when slicing):
+	#% Keep value in a safe range (will clamp again when slicing):
 	scroll_bar.value = clamp(int(scroll_bar.value), 0, int(scroll_bar.max_value))
 
 	print("[SB] total=", total, " page=", int(scroll_bar.page),
@@ -560,6 +562,7 @@ func _apply_scroll_limits() -> void:
 	print("[SB enforced after frame] page=", scroll_bar.page)
 
 
+#* Called when lines are scrolled - updates displayed line data.
 func _on_scroll_lines_value_changed(_value: float) -> void:
 	_update_visible_lines()
 
@@ -590,7 +593,7 @@ func _update_visible_lines() -> void:
 			line.hide()
 			line.visible = false
 			line.dictionary_index = idx
-			line._apply_line_data_to_ui()  #/ pull directly from globals via index
+			line._apply_line_data_to_ui()
 			line.get_node("HBox/Index").text = str(line.dictionary_index)
 
 			#% Update highlight state based on current selection:
@@ -603,6 +606,7 @@ func _update_visible_lines() -> void:
 			line.show()
 		else:
 			line.visible = false
+
 
 #* Blank & hide the 18 pooled panels so old data doesn't linger:
 func _clear_line_pool_ui() -> void:
@@ -657,8 +661,8 @@ func _load_active_block() -> void:
 func _reset_optionbuttons_recursive(node: Node) -> void:
 	if node is OptionButton:
 		var ob := node as OptionButton
-		ob.select(-1)	 #/ no selected item
-		ob.text = ""	  #/ wipe the displayed label (important!)
+		ob.select(-1)	#/ No selected item
+		ob.text = ""	#/ Wipe the displayed label (important!)
 	for c in node.get_children():
 		_reset_optionbuttons_recursive(c)
 #endregion
@@ -783,12 +787,12 @@ func _on_right_click_menu_pressed(id: int) -> void:
 		1:  #% Copy:
 			match candy_dc.rc_target:
 				"line":
-					_copy_selected_lines()   #/ your implementation
+					_copy_selected_lines()
 
 		2:  #% Cut:
 			match candy_dc.rc_target:
 				"line":
-					_cut_selected_lines()    #/ delete immediately
+					_cut_selected_lines()
 
 		3:  #% Paste Above:
 			match candy_dc.rc_target:
@@ -1172,7 +1176,7 @@ func _skip_invalid_history(direction: int) -> void:
 	while true:
 		candy_dc.browsing_index += direction
 		if candy_dc.browsing_index < 0 or candy_dc.browsing_index >= candy_dc.browsing_history.size():
-			return  #/ no more valid entries
+			return		#/ No more valid entries
 		var e = candy_dc.browsing_history[candy_dc.browsing_index]
 		if candy_dc.conversations.has(e["conversation"]) and candy_dc.conversations[e["conversation"]].has(e["block"]):
 			_apply_history_entry(e, direction)
@@ -1183,6 +1187,8 @@ func _skip_invalid_history(direction: int) -> void:
 
 #& Hide UI Elements:
 #region
+#* 'Hide index' button pressed:
+#% Toggle indexes for all lines.
 func _on_hide_index_pressed() -> void:
 	candy_dc.hide_indexes = !candy_dc.hide_indexes
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1192,6 +1198,8 @@ func _on_hide_index_pressed() -> void:
 	btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"] if candy_dc.hide_indexes else candy_dc.color_models[candy_dc.color_mode]["Null"]
 	get_node("ProfileMenu").save_profile()
 
+#* 'Hide tags' button pressed:
+#% Toggle 'Tag' buttons in Spoken Lines (LLM, TTS, etc).
 func _on_hide_tags_pressed() -> void:
 	candy_dc.hide_tags = !candy_dc.hide_tags
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1204,6 +1212,8 @@ func _on_hide_tags_pressed() -> void:
 	btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"] if candy_dc.hide_tags else candy_dc.color_models[candy_dc.color_mode]["Null"]
 	get_node("ProfileMenu").save_profile()
 
+#* 'Hide disposition' button pressed:
+#% Toggle 'Disposition' field in Spoken Lines.
 func _on_hide_disposition_pressed() -> void:
 	candy_dc.hide_disposition = !candy_dc.hide_disposition
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1213,6 +1223,8 @@ func _on_hide_disposition_pressed() -> void:
 	btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"] if candy_dc.hide_disposition else candy_dc.color_models[candy_dc.color_mode]["Null"]
 	get_node("ProfileMenu").save_profile()
 
+#* 'Hide voice' button pressed:
+#% Toggle 'Voice' field in Spoken Lines.
 func _on_hide_voice_pressed() -> void:
 	candy_dc.hide_voice = !candy_dc.hide_voice
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1222,6 +1234,8 @@ func _on_hide_voice_pressed() -> void:
 	btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"] if candy_dc.hide_voice else candy_dc.color_models[candy_dc.color_mode]["Null"]
 	get_node("ProfileMenu").save_profile()
 
+#* 'Hide text limit' button pressed:
+#% Toggle text character count/limit in Spoken Lines.
 func _on_hide_limit_pressed() -> void:
 	candy_dc.hide_limit = !candy_dc.hide_limit
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1231,6 +1245,8 @@ func _on_hide_limit_pressed() -> void:
 	btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"] if candy_dc.hide_limit else candy_dc.color_models[candy_dc.color_mode]["Null"]
 	get_node("ProfileMenu").save_profile()
 
+#* 'Hide portrait' button pressed:
+#% Toggle 'Portrait' field in Spoken Lines.
 func _on_hide_portrait_pressed() -> void:
 	candy_dc.hide_portrait = !candy_dc.hide_portrait
 	for line in $"VBox/HBox/WorkArea/Lines".get_children():
@@ -1326,7 +1342,7 @@ func open_voice_menu(line: Node, field: LineEdit, char_name: String) -> void:
 		btn.pressed.connect(func():
 			stop_voice_preview()
 			file_popup.hide()
-			line._apply_selected_voice(filename))   #/ call back into line
+			line._apply_selected_voice(filename))
 		file_box.add_child(btn)
 
 	#% Show popup:
@@ -1539,27 +1555,27 @@ func open_reference_menu(line: Node, field: LineEdit, role):
 			if candy_dc.editor_state == "ui":
 				if field == line.get_node("HBox/Con/Reference/Ref"):	#/ Function called by §Name or §Disposition
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._set_apply_selected_reference(ref))
 					file_box.add_child(btn)
 				elif field == line.get_node("HBox/VN/Reference/Ref"):	#/ Function called by §VN command:
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._apply_selected_vn_reference(ref))
 					file_box.add_child(btn)
 				else:													#/ Function called by Spoken Line
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._apply_selected_reference(ref))
 					file_box.add_child(btn)
 
 			elif candy_dc.editor_state == "writer":
 				btn.pressed.connect(func():
-					file_popup.hide()								#/ list closes
-					hide_portrait_panel()							#/ also hide the popup panel (as requested)
+					file_popup.hide()								#/ List closes
+					hide_portrait_panel()
 					line._apply_selected_reference(ref))
 				file_box.add_child(btn)
 
@@ -1574,27 +1590,27 @@ func open_reference_menu(line: Node, field: LineEdit, role):
 			if candy_dc.editor_state == "ui":
 				if field == line.get_node("HBox/Con/Role/Ref"):			#/ Function called by §Role
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._set_apply_selected_role(ref))
 					file_box.add_child(btn)
 				elif field == line.get_node("HBox/Con/Reference/Ref"):	#/ Function called by §Name or §Disposition
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._set_apply_selected_reference(ref))
 					file_box.add_child(btn)
 				else:													#/ Function called by Spoken Line
 					btn.pressed.connect(func():
-						file_popup.hide()								#/ list closes
-						hide_portrait_panel()							#/ also hide the popup panel (as requested)
+						file_popup.hide()								#/ List closes
+						hide_portrait_panel()
 						line._apply_selected_reference(ref))
 					file_box.add_child(btn)
 
 			elif candy_dc.editor_state == "writer":
 				btn.pressed.connect(func():
-					file_popup.hide()								#/ list closes
-					hide_portrait_panel()							#/ also hide the popup panel (as requested)
+					file_popup.hide()								#/ List closes
+					hide_portrait_panel()
 					line._apply_selected_reference(ref))
 				file_box.add_child(btn)
 
@@ -2468,8 +2484,8 @@ func open_vn_bust_node_menu(line: Node, field: LineEdit):
 
 		#% Select:
 		btn.pressed.connect(func():
-			file_popup.hide()				#/ list closes
-			hide_portrait_panel()			#/ also hide the popup panel (as requested)
+			file_popup.hide()				#/ List closes
+			hide_portrait_panel()
 			line._apply_selected_vn_bust_node(bust_node))
 		file_box.add_child(btn)
 
@@ -2564,8 +2580,8 @@ func open_vn_actors_menu(line: Node, field: LineEdit):
 
 			#% Select:
 			btn.pressed.connect(func():
-				file_popup.hide()				#/ list closes
-				hide_portrait_panel()			#/ also hide the popup panel (as requested)
+				file_popup.hide()				#/ List closes
+				hide_portrait_panel()
 				line._add_selected_actor(role))
 			file_box.add_child(btn)
 
@@ -2577,8 +2593,8 @@ func open_vn_actors_menu(line: Node, field: LineEdit):
 
 			#% Select:
 			btn.pressed.connect(func():
-				file_popup.hide()				#/ list closes
-				hide_portrait_panel()			#/ also hide the popup panel (as requested)
+				file_popup.hide()				#/ List closes
+				hide_portrait_panel()
 				line._add_selected_actor(actor))
 			file_box.add_child(btn)
 
@@ -2727,8 +2743,8 @@ func open_vn_effects_menu(line: Node, field: LineEdit):
 
 		#% Select:
 		btn.pressed.connect(func():
-			file_popup.hide()				#/ list closes
-			hide_portrait_panel()			#/ also hide the popup panel (as requested)
+			file_popup.hide()				#/ List closes
+			hide_portrait_panel()
 			line._apply_selected_vn_effect(effect))
 		file_box.add_child(btn)
 
@@ -2775,8 +2791,8 @@ func open_choice_menus_menu(menu: String, field) -> void:
 
 			#% Select:
 			btn.pressed.connect(func():
-				file_popup.hide()				#/ list closes
-				hide_portrait_panel()			#/ also hide the popup panel (as requested)
+				file_popup.hide()				#/ List closes
+				hide_portrait_panel()
 				choice_or_alter(menu, field, btn.text))
 			file_box.add_child(btn)
 	else:
@@ -2819,8 +2835,8 @@ func open_choice_buttons_menu(menu: String, field) -> void:
 
 			#% Select:
 			btn.pressed.connect(func():
-				file_popup.hide()				#/ list closes
-				hide_portrait_panel()			#/ also hide the popup panel (as requested)
+				file_popup.hide()				#/ List closes
+				hide_portrait_panel()
 				choice_or_alter(menu, field, btn.text))
 			file_box.add_child(btn)
 	else:
@@ -4041,7 +4057,7 @@ func _show_save_popup() -> void:
 	btn_save_incr.pressed.connect(func():
 		file_popup.hide()
 		_on_save_incremental_pressed()
-		print("Save Incremental clicked"))   #/ placeholder for later
+		print("Save Incremental clicked"))
 
 	file_box.add_child(btn_save)
 	file_box.add_child(btn_save_as)
@@ -4084,12 +4100,12 @@ func _save_dialogue_to_txt(path: String, save_type: String = "ManualSave") -> vo
 
 #* Save the current editor state to .txt (GDScript-like format):
 func _on_save_pressed() -> void:
-	#% Ensure we have a target file path:
+	#% Ensure there is a target file path:
 	if candy_dc.loaded_save == "":
 		$"SaveLoad".visible = true
 		$"SaveLoad/SaveMenu".current_dir = ProjectSettings.globalize_path("user://Profiles".path_join(candy_dc.current_profile).path_join("Saves").path_join("Manual Saves"))
 		$"SaveLoad/SaveMenu".visible = true
-		return  #/ Wait for user selection
+		return  #/ Return and let user select a path
 
 	var path = candy_dc.loaded_save
 
@@ -4636,7 +4652,7 @@ func _build_command_presets() -> void:
 			var btn := Button.new()
 			btn.text = preset_data["name"]
 			btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			btn.custom_minimum_size.y = 32
+			btn.custom_minimum_size.y = 32	#/ Minimum vertical size
 			btn.connect("mouse_entered", Callable(self, "_on_command_mouse_entered"))
 			btn.connect("mouse_exited", Callable(self, "_on_command_mouse_exited"))
 			btn.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -4723,9 +4739,11 @@ func _on_about_pressed() -> void:
 #& WINDOW HANDLING:
 #?#################
 
+#* Minimize button pressed:
 func _on_minimize_pressed():
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MINIMIZED)
 
+#* Windowed button pressed:
 func _on_windowed_pressed():
 	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
@@ -4733,14 +4751,20 @@ func _on_windowed_pressed():
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
+#* Open exit confirmation prompt:
 func _on_exit_pressed() -> void:
 	$"ExitMenu".visible = true
 	candy_dc.editor_state = "exit"
 
+
+#* Cancel exit:
 func _on_exit_no_pressed() -> void:
 	$"ExitMenu".visible = false
 	candy_dc.editor_state = "ui"
 
+
+#* Confirm exit:
 func _on_exit_yes_pressed() -> void:
+	#% Save profile data:
 	await $"ProfileMenu".save_profile()
 	get_tree().quit()

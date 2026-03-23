@@ -1,5 +1,8 @@
 ![Candy Arts Logo](Screenshots/Logo.png)
 
+> [!TIP]
+> For compiled executables of Candy Dialogue Creator, see the [Releases](https://github.com/Candy-Arts/Candy-Dialogue-Creator/releases).
+
 # Candy Dialogue Creator
 **Candy Dialogue Creator by [Candy Arts](https://candy-arts.com) is the free, standalone companion application to [Candy Dialogue Engine](https://github.com/Candy-Arts/Candy-Dialogue-Engine).**
 

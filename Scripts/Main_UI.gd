@@ -3367,6 +3367,7 @@ func _delete_lines() -> void:
 
 	#% Refresh the visible pool:
 	_load_active_block()
+
 #endregion
 #endregion
 
@@ -3518,7 +3519,6 @@ func _add_line(template_name: String) -> void:
 
 #* Handles all "New Line" button presses automatically:
 func _on_new_line_pressed(button: Button) -> void:
-	save_undo_step()
 	var btn_name = button.name
 	var template_name = "§" + btn_name if btn_name != "Spoken" else "Spoken Line"
 	print(str("Added Line: " + template_name))

@@ -24,9 +24,9 @@ A number of features make Candy Dialogue Creator great for teams: unique setting
 
 ## Use Options
 Candy Dialogue Creator can be used in three different ways:
-- [Recommended] For best performance, download and launch the compiled executable for your operating system.
-- [Optional] To modify Candy Dialogue Creator as you see fit, download the source code as a raw Godot project, edit it, then compile.
-- [Advanced] Or integrate the scripts, scenes and other resource files into your game to access the Candy Dialogue Creator at runtime, so you or your players can create and edit dialogues live in-game!
+- **[Recommended]** For best performance, download and launch the compiled executable for your operating system.
+- **[Optional]** To modify Candy Dialogue Creator as you see fit, download the source code as a raw Godot project, edit it, then compile.
+- **[Advanced]** Or integrate the scripts, scenes and other resource files into your game to access the Candy Dialogue Creator at runtime, so you or your players can create and edit dialogues live in-game!
 
 ## Setup
 ### Compiled Executable (Recommended - For normal use)

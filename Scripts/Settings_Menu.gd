@@ -9,6 +9,8 @@ var edited_variant = ""
 var variant_name_mode = ""
 var deleting_variant = ""
 
+var folder_select_mode = ""
+
 #* Setup variant line buttons:
 func _ready() -> void:
 	#@ Get container reference:
@@ -37,7 +39,6 @@ func _ready() -> void:
 		btn_auto.pressed.connect(func(): variant_toggle_auto(label.text))
 		btn_rename.pressed.connect(func(): variant_rename(label.text))
 		btn_delete.pressed.connect(func(): variant_delete(label.text))
-
 
 #* Write data from globals to settings menu fields:
 func setup_menu():
@@ -96,6 +97,8 @@ func setup_menu():
 		candy_dc.resource_paths = candy_dc.default_resource_paths
 		$"TabContainer/ProjectFiles/ColorRect".visible = true
 
+	update_project_paths()
+
 	#@ Project Data:
 	$"TabContainer/ProjectData/Data/VBox/Flags/List".text = ", ".join(candy_dc.flag_list)
 	$"TabContainer/ProjectData/Data/VBox/Dispositions/List".text = ", ".join(candy_dc.disposition_list)
@@ -123,6 +126,25 @@ func setup_menu():
 
 	#@ Refresh variant list:
 	refresh_variant_list()
+
+
+#* Display stored project paths in input fields:
+func update_project_paths():
+	$"TabContainer/ProjectFiles/Project".text = candy_dc.project_path
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Dialogues/LineEdit".text = candy_dc.custom_resource_paths["Dialogues"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/*Portraits/LineEdit".text = candy_dc.custom_resource_paths["*Portraits"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/*Busts/LineEdit".text = candy_dc.custom_resource_paths["*Busts"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/*Voices/LineEdit".text = candy_dc.custom_resource_paths["*Voices"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Audio/LineEdit".text = candy_dc.custom_resource_paths["Audio"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Videos/LineEdit".text = candy_dc.custom_resource_paths["Videos"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Images/LineEdit".text = candy_dc.custom_resource_paths["Images"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Backgrounds/LineEdit".text = candy_dc.custom_resource_paths["Backgrounds"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Input Menus/LineEdit".text = candy_dc.custom_resource_paths["Input Menus"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Choice Menus/LineEdit".text = candy_dc.custom_resource_paths["Choice Menus"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Choice Categories/LineEdit".text = candy_dc.custom_resource_paths["Choice Categories"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/Choice Buttons/LineEdit".text = candy_dc.custom_resource_paths["Choice Buttons"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/VN Scenes/LineEdit".text = candy_dc.custom_resource_paths["VN Scenes"]
+	$"TabContainer/ProjectFiles/CustomFolders/VBox/BG Scenes/LineEdit".text = candy_dc.custom_resource_paths["BG Scenes"]
 
 
 #* Close settings menu:
@@ -158,14 +180,26 @@ func _on_folder_path_text_changed(new_text: String, source) -> void:
 	print(folder)
 	print(candy_dc.custom_resource_paths[folder])
 
+
+func _on_select_project_folder_pressed() -> void:
+	folder_select_mode = "Project"
+	$"TabContainer/ProjectFiles/FolderSelect".visible = true
+
 func _on_select_resource_folder_pressed(source:BaseButton) -> void:
-	selecting_resource_folder = source.get_parent().name
+	folder_select_mode = "Custom"
+	selecting_resource_folder = source.get_parent()
 	$"TabContainer/ProjectFiles/FolderSelect".visible = true
 
 func _on_folder_select_file_selected(path: String) -> void:
-	candy_dc.custom_resource_paths[selecting_resource_folder] = path
-	$"TabContainer/ProjectFiles/FolderSelect".visible = false
+	if folder_select_mode == "Custom":
+		candy_dc.custom_resource_paths[selecting_resource_folder.name] = path
+		selecting_resource_folder.get_node("LineEdit").text = path
+	elif folder_select_mode == "Project":
+		candy_dc.project_path = path
+		$"TabContainer/ProjectFiles/Project".text = path
 
+	$"TabContainer/ProjectFiles/FolderSelect".visible = false
+	folder_select_mode = ""
 
 #& Project Data
 func _on_flags_list_text_changed() -> void:

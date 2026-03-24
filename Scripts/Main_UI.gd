@@ -1650,7 +1650,7 @@ func open_portrait_menu(line: Node, field: LineEdit, char_name: String) -> void:
 	if candy_dc.resources.has("*Portraits") and candy_dc.resources["*Portraits"].has(char_name):
 		for filename in candy_dc.resources["*Portraits"][char_name].keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or typeof(candy_dc.resources["*Busts"][char_name][filename]) == TYPE_DICTIONARY:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or typeof(candy_dc.resources["*Portraits"][char_name][filename]) == TYPE_DICTIONARY:
 				continue
 
 			var btn := Button.new()
@@ -1921,7 +1921,7 @@ func open_media_menu(line: Node, field: LineEdit, node: String) -> void:
 		var node_folder = folder_dict[node]
 		for filename in node_folder.keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or node_folder[filename] is Dictionary:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or node_folder[filename] is Dictionary:
 				continue
 
 			var btn := Button.new()
@@ -1983,7 +1983,7 @@ func open_vn_bust_file_menu(line: Node, field: LineEdit, char_name: String) -> v
 	if candy_dc.resources.has("*Busts") and candy_dc.resources["*Busts"].has(char_name):
 		for filename in candy_dc.resources["*Busts"][char_name].keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or typeof(candy_dc.resources["*Busts"][char_name][filename]) == TYPE_DICTIONARY:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or typeof(candy_dc.resources["*Busts"][char_name][filename]) == TYPE_DICTIONARY:
 				continue
 
 			var btn := Button.new()
@@ -2044,7 +2044,7 @@ func open_bg_file_menu(line: Node, field: LineEdit, layer_name: String) -> void:
 	if candy_dc.resources.has("Backgrounds") and candy_dc.resources["Backgrounds"].has(layer_name):
 		for filename in candy_dc.resources["Backgrounds"][layer_name].keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename is Dictionary:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename is Dictionary:
 				continue
 
 			var btn := Button.new()
@@ -2696,7 +2696,7 @@ func open_vn_library_menu(line: Node, field: LineEdit, type: String):
 
 	#@ Step 3: Populate file buttons:
 	for filename in dict.keys():
-		if filename.begins_with(".") or filename.ends_with(".uid"):
+		if filename.begins_with(".") or filename.ends_with(".uid") or filename.ends_with(".txt"):
 			continue
 		var btn := Button.new()
 		btn.text = filename

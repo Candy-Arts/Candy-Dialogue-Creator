@@ -12,24 +12,44 @@ var local_export_folder = "user://Profiles".path_join(current_profile).path_join
 #^ Paths to resource files in the project folder:
 var project_path = ""
 
+var default_path_ends = {
+	"Dialogues": "Candy_DE/Dialogues",
+
+	"*Portraits": "Candy_DE/Media/Characters/Portraits",
+	"*Busts": "Candy_DE/Media/Characters/Busts",
+	"*Voices": "Candy_DE/Media/Characters/Voices",
+
+	"Images": "Candy_DE/Media/General/Images",
+	"Audio": "Candy_DE/Media/General/Audio",
+	"Videos": "Candy_DE/Media/General/Videos",
+	"Backgrounds": "Candy_DE/Media/General/Backgrounds",
+
+	"Input Menus": "Candy_DE/Scenes/Input Menus",
+	"Choice Menus": "Candy_DE/Scenes/Choice Menus",
+	"Choice Categories": "Candy_DE/Scenes/Choice Categories",
+	"Choice Buttons": "Candy_DE/Scenes/Choice Buttons",
+	"VN Scenes": "Candy_DE/Scenes/VN Scenes",
+	"BG Scenes": "Candy_DE/Scenes/Background Scenes",	
+}
+
 var default_resource_paths = {
-	"Dialogues": project_path.path_join("Candy_DE/Dialogues"),
+	"Dialogues": "",
 
-	"*Portraits": project_path.path_join("Candy_DE/Media/Characters/Portraits"),
-	"*Busts": project_path.path_join("Candy_DE/Media/Characters/Busts"),
-	"*Voices": project_path.path_join("Candy_DE/Media/Characters/Voices"),
+	"*Portraits": "",
+	"*Busts": "",
+	"*Voices": "",
 
-	"Images": project_path.path_join("Candy_DE/Media/General/Images"),
-	"Audio": project_path.path_join("Candy_DE/Media/General/Audio"),
-	"Videos": project_path.path_join("Candy_DE/Media/General/Videos"),
-	"Backgrounds": project_path.path_join("Candy_DE/Media/General/Backgrounds"),
+	"Images": "",
+	"Audio": "",
+	"Videos": "",
+	"Backgrounds": "",
 
-	"Input Menus": project_path.path_join("Candy_DE/Scenes/Input Menus"),
-	"Choice Menus": project_path.path_join("Candy_DE/Scenes/Choice Menus"),
-	"Choice Categories": project_path.path_join("Candy_DE/Scenes/Choice Categories"),
-	"Choice Buttons": project_path.path_join("Candy_DE/Scenes/Choice Buttons"),
-	"VN Scenes": project_path.path_join("Candy_DE/Scenes/VN Scenes"),
-	"BG Scenes": project_path.path_join("Candy_DE/Scenes/Background Scenes"),
+	"Input Menus": "",
+	"Choice Menus": "",
+	"Choice Categories": "",
+	"Choice Buttons": "",
+	"VN Scenes": "",
+	"BG Scenes": "",
 }
 
 var custom_resource_paths = {

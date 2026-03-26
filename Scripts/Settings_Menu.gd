@@ -40,6 +40,7 @@ func _ready() -> void:
 		btn_rename.pressed.connect(func(): variant_rename(label.text))
 		btn_delete.pressed.connect(func(): variant_delete(label.text))
 
+
 #* Write data from globals to settings menu fields:
 func setup_menu():
 	#@ Preferences:
@@ -171,8 +172,14 @@ func _on_defaults_pressed() -> void:
 		$"TabContainer/ProjectFiles/ColorRect".visible = false
 		candy_dc.resource_paths = candy_dc.custom_resource_paths
 
+
 func _on_project_text_changed(new_text: String) -> void:
 	candy_dc.project_path = new_text
+	
+	#% Update default paths:
+	for key in candy_dc.default_resource_paths:
+		candy_dc.default_resource_paths[key] = candy_dc.project_path.path_join(candy_dc.default_path_ends[key])
+
 
 func _on_folder_path_text_changed(new_text: String, source) -> void:
 	var folder = source.get_parent().name
@@ -181,15 +188,20 @@ func _on_folder_path_text_changed(new_text: String, source) -> void:
 	print(candy_dc.custom_resource_paths[folder])
 
 
+#* Select the project path:
 func _on_select_project_folder_pressed() -> void:
 	folder_select_mode = "Project"
 	$"TabContainer/ProjectFiles/FolderSelect".visible = true
 
+
+#* Select a custom folder path:
 func _on_select_resource_folder_pressed(source:BaseButton) -> void:
 	folder_select_mode = "Custom"
 	selecting_resource_folder = source.get_parent()
 	$"TabContainer/ProjectFiles/FolderSelect".visible = true
 
+
+#* Assign selected path:
 func _on_folder_select_file_selected(path: String) -> void:
 	if folder_select_mode == "Custom":
 		candy_dc.custom_resource_paths[selecting_resource_folder.name] = path
@@ -198,8 +210,13 @@ func _on_folder_select_file_selected(path: String) -> void:
 		candy_dc.project_path = path
 		$"TabContainer/ProjectFiles/Project".text = path
 
+	#% Update default paths:
+	for key in candy_dc.default_resource_paths:
+		candy_dc.default_resource_paths[key] = candy_dc.project_path.path_join(candy_dc.default_path_ends[key])
+
 	$"TabContainer/ProjectFiles/FolderSelect".visible = false
 	folder_select_mode = ""
+
 
 #& Project Data
 func _on_flags_list_text_changed() -> void:
@@ -227,6 +244,7 @@ func _on_dispositions_list_text_changed() -> void:
 
 	candy_dc.disposition_list = result
 
+
 func _on_actors_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Actors/List".text
 	var items := raw_text.split(",", false)  #/ split by commas
@@ -238,6 +256,7 @@ func _on_actors_list_text_changed() -> void:
 			result.append(trimmed)
 
 	candy_dc.actor_list = result
+
 
 func _on_roles_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Roles/List".text
@@ -251,6 +270,7 @@ func _on_roles_list_text_changed() -> void:
 
 	candy_dc.role_list = result
 
+
 func _on_busts_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Busts/List".text
 	var items := raw_text.split(",", false)  #/ split by commas
@@ -262,6 +282,7 @@ func _on_busts_list_text_changed() -> void:
 			result.append(trimmed)
 
 	candy_dc.bust_list = result
+
 
 func _on_effects_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Effects/List".text
@@ -275,35 +296,46 @@ func _on_effects_list_text_changed() -> void:
 
 	candy_dc.effect_list = result
 
+
 func _on_settings_autoload_symbol_text_changed(new_text: String) -> void:
 	candy_dc.autoload_symbol = new_text
+
 
 func _on_settings_node_symbol_text_changed(new_text: String) -> void:
 	candy_dc.node_symbol = new_text
 
+
 func _on_settings_candy_symbol_text_changed(new_text: String) -> void:
 	candy_dc.candy_symbol = new_text
+
 
 func _on_settings_super_autoload_symbol_text_changed(new_text: String) -> void:
 	candy_dc.super_autoload_symbol = new_text
 
+
 func _on_settings_super_node_symbol_text_changed(new_text: String) -> void:
 	candy_dc.super_node_symbol = new_text
+
 
 func _on_settings_super_candy_symbol_text_changed(new_text: String) -> void:
 	candy_dc.super_candy_symbol = new_text
 
+
 func _on_settings_text_var_start_text_changed(new_text: String) -> void:
 	candy_dc.var_in_speech_start = new_text
+
 
 func _on_settings_text_var_end_text_changed(new_text: String) -> void:
 	candy_dc.var_in_speech_end = new_text
 
+
 func _on_settings_role_symbol_text_changed(new_text: String) -> void:
 	candy_dc.role_symbol = new_text
 
+
 func _on_settings_substitution_symbol_text_changed(new_text: String) -> void:
 	candy_dc.substitution_symbol = new_text
+
 
 func _on_settings_separator_symbol_text_changed(new_text: String) -> void:
 	candy_dc.separator_symbol = new_text
@@ -313,47 +345,62 @@ func _on_settings_separator_symbol_text_changed(new_text: String) -> void:
 func _on_conversation_option_text_changed(new_text: String) -> void:
 	candy_dc.new_conversation_name = new_text
 
+
 func _on_block_option_text_changed(new_text: String) -> void:
 	candy_dc.new_block_name = new_text
+
 
 func _on_delete_option_toggled(toggled_on: bool) -> void:
 	candy_dc.confirm_delete_line = toggled_on
 
+
 func _on_portrait_h_option_text_changed(new_text: String) -> void:
 	candy_dc.portrait_preview_max_h = int(new_text)
+
 
 func _on_portrait_w_option_text_changed(new_text: String) -> void:
 	candy_dc.portrait_preview_max_w = int(new_text)
 
+
 func _on_bust_h_option_text_changed(new_text: String) -> void:
 	candy_dc.bust_preview_max_h = int(new_text)
+
 
 func _on_bust_w_option_text_changed(new_text: String) -> void:
 	candy_dc.bust_preview_max_w = int(new_text)
 
+
 func _on_bg_h_option_text_changed(new_text: String) -> void:
 	candy_dc.bg_preview_max_h = int(new_text)
+
 
 func _on_bg_w_option_text_changed(new_text: String) -> void:
 	candy_dc.bg_preview_max_w = int(new_text)
 
+
 func _on_image_h_option_text_changed(new_text: String) -> void:
 	candy_dc.image_preview_max_h = int(new_text)
+
 
 func _on_image_w_option_text_changed(new_text: String) -> void:
 	candy_dc.image_preview_max_w = int(new_text)
 
+
 func _on_video_h_option_text_changed(new_text: String) -> void:
 	candy_dc.video_preview_max_h = int(new_text)
+
 
 func _on_video_w_option_text_changed(new_text: String) -> void:
 	candy_dc.video_preview_max_w = int(new_text)
 
+
 func _on_line_limit_option_text_changed(new_text: String) -> void:
 	candy_dc.spoken_line_limit = int(new_text)
 
+
 func _on_near_limit_option_text_changed(new_text: String) -> void:
 	candy_dc.spoken_line_near_limit = int(new_text)
+
 
 func _on_alignment_option_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:
@@ -374,6 +421,7 @@ func _on_alignment_option_toggled(toggled_on: bool) -> void:
 		$"TabContainer/Preferences/AlignmentOption".tooltip_text = "Left to Right"
 
 	print(candy_dc.default_text_direction)
+
 
 func _on_save_mode_option_pressed() -> void:
 	if candy_dc.incremental_saves == false:
@@ -397,7 +445,6 @@ func _on_auto_save_freq_option_focus_exited() -> void:
 
 func _on_quick_save_option_text_changed(new_text: String) -> void:
 	candy_dc.quick_saves = int(new_text)
-
 
 
 func _on_color_mode_text_changed(new_text: String) -> void:

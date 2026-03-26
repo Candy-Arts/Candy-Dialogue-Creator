@@ -302,6 +302,27 @@ func create_config_file(profile_name: String) -> void:
 		#% Project Path:
 		"project_path": project_path,
 
+		#% Default Resource Paths:
+		"default_resource_paths": {
+			"Dialogues": "",
+
+			"*Portraits": "",
+			"*Busts": "",
+			"*Voices": "",
+
+			"Images": "",
+			"Audio": "",
+			"Videos": "",
+			"Backgrounds": "",
+
+			"Input Menus": "",
+			"Choice Menus": "",
+			"Choice Categories": "",
+			"Choice Buttons": "",
+			"VN Scenes": "",
+			"BG Scenes": "",
+		},
+
 		#% Custom Resource Paths:
 		"custom_resource_paths": {
 			"Dialogues": "",
@@ -464,6 +485,7 @@ func save_profile() -> void:
 
 	#@ Overwrite data from globals:
 	data["project_path"] = candy_dc.project_path
+	data["default_resource_paths"] = candy_dc.default_resource_paths
 	data["custom_resource_paths"] = candy_dc.custom_resource_paths
 
 	data["data_scripts"] = candy_dc.data_scripts
@@ -572,6 +594,7 @@ func load_profile() -> void:
 
 	#@ Load Data:
 	candy_dc.project_path = data.get("project_path", "")
+	candy_dc.default_resource_paths = data.get("default_resource_paths", {})
 	candy_dc.custom_resource_paths = data.get("custom_resource_paths", {})
 
 	candy_dc.data_scripts = data.get("data_scripts", {})

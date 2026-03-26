@@ -507,7 +507,7 @@ func _on_play_voice_pressed() -> void:
 	var voice_error_label := $"Main/HBox/Options/DefaultOptions/VoiceError"
 	voice_error_label.text = ""   #/ Clear previous error
 
-	var player := main.get_node("VoicePreview")
+	var player = main.get_node("VoicePreview")
 
 	#% Resume or pause:
 	if player.stream_paused:
@@ -585,7 +585,7 @@ func _on_variant_play_voice_pressed() -> void:
 	var voice_error_label := $"Main/HBox/Options/VariantOptions/VariantVoiceError"
 	voice_error_label.text = ""		#/ Clear previous error
 
-	var player := main.get_node("VariantVoicePreview")
+	var player = main.get_node("VariantVoicePreview")
 
 	#% No variant selected:
 	if candy_dc.write_variant == "":
@@ -1060,7 +1060,7 @@ func _on_play_voice_variant_pressed() -> void:
 	var error_label := $"Main/HBox/Options/VariantOptions/VariantVoiceError"
 	error_label.text = ""
 
-	var player := main.get_node("VoicePreview")
+	var player = main.get_node("VoicePreview")
 
 	#% Resume or restart if paused:
 	if player.stream_paused:
@@ -1672,7 +1672,7 @@ func _apply_selected_voice(filename: String) -> void:
 
 #* Change default voice volume:
 func _on_volume_value_changed(value: float) -> void:
-	var player := main.get_node("VoicePreview")
+	var player = main.get_node("VoicePreview")
 	if player == null:
 		return
 
@@ -1723,7 +1723,7 @@ func _on_progress_drag_ended(_value_changed: bool) -> void:
 
 #* Change default voice volume:
 func _on_variant_volume_value_changed(value: float) -> void:
-	var player := main.get_node("VariantVoicePreview")
+	var player = main.get_node("VariantVoicePreview")
 	if player == null:
 		return
 

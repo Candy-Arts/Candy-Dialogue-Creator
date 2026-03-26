@@ -1574,7 +1574,7 @@ func open_reference_menu(line: Node, field: LineEdit, role):
 
 			elif candy_dc.editor_state == "writer":
 				btn.pressed.connect(func():
-					file_popup.hide()								#/ List closes
+					file_popup.hide()									#/ List closes
 					hide_portrait_panel()
 					line._apply_selected_reference(ref))
 				file_box.add_child(btn)
@@ -2267,6 +2267,7 @@ func hide_media_preview_only() -> void:
 	media_video_preview.visible = false
 	video_popup.visible = false
 
+
 #* Open a list of Scenes:
 func open_scene_menu(line: Node, field: LineEdit, type: String) -> void:
 	#% Clear any existing items in the shared file list:
@@ -2896,7 +2897,7 @@ func scan_dir(path: String, nested: bool = false) -> Dictionary:
 				#% Always recurse when nested = true (for multi-level folders like Voices/Speaker/Conversation/Block):
 				result[file_name] = scan_dir(subpath, nested)
 		else:
-			if not file_name.begins_with(".") and not file_name.ends_with(".import") and not file_name.ends_with(".uid"):
+			if not file_name.begins_with(".") and not file_name.ends_with(".import") and not file_name.ends_with(".uid") and not file_name.ends_with(".txt"):
 				result[file_name] = path.path_join(file_name)
 		file_name = dir.get_next()
 	dir.list_dir_end()

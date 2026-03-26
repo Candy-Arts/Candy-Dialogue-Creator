@@ -62,7 +62,7 @@ var custom_resource_paths = {
 	"Images": "",
 	"Audio": "",
 	"Videos": "",
-	"Backgrounds": "s",
+	"Backgrounds": "",
 
 	"Input Menus": "",
 	"Choice Menus": "",

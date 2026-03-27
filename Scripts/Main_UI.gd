@@ -3742,7 +3742,6 @@ func _on_color_picker_close_pressed() -> void:
 #region
 func _on_alt_click_target_set(target_idx: int, move_below: bool):
 	#% Only execute if we have a selection:
-
 	if candy_dc.selected_lines.size() == 0:
 		return
 
@@ -3754,10 +3753,6 @@ func _on_alt_click_target_set(target_idx: int, move_below: bool):
 
 #* Clear all selections:
 func _clear_selection() -> void:
-	for idx in candy_dc.selected_lines:
-		var line = get_node("VBox/HBox/WorkArea/Lines").get_child(idx)
-		if line:
-			line.get_node("HBox/Move").modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]
 	candy_dc.selected_lines.clear()
 	candy_dc.last_clicked_line = -1
 

@@ -54,8 +54,8 @@ func _apply_line_data_to_ui() -> void:
 	$"HBox/Con/SetVariable".visible = false
 	$"HBox/Con/Flag".visible = false
 	$"HBox/Con/Name".visible = false
-	$"HBox/Con/NameTable".visible = true
-	$"HBox/Con/NameActorKey".visible = true
+	$"HBox/Con/NameTable".visible = false
+	$"HBox/Con/NameActorKey".visible = false
 	$"HBox/Con/Operator".visible = false
 	$"HBox/Con/Reference".visible = false
 	$"HBox/Con/Disposition".visible = false

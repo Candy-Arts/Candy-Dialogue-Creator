@@ -108,10 +108,9 @@ offset_top = 224.0
 offset_right = 1312.0
 offset_bottom = 816.0
 theme_override_constants/side_margin = 0
-current_tab = 1
+current_tab = 0
 
 [node name="Preferences" type="Control" parent="TabContainer" unique_id=1189037346]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -460,6 +459,7 @@ tooltip_text = "The number of quick-save files to use.
 text = "0"
 
 [node name="ProjectFiles" type="Control" parent="TabContainer" unique_id=1306597404]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 

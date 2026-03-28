@@ -221,7 +221,7 @@ func _on_folder_select_file_selected(path: String) -> void:
 #& Project Data
 func _on_flags_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Flags/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -229,12 +229,12 @@ func _on_flags_list_text_changed() -> void:
 		if trimmed != "":
 			result.append(trimmed)
 
-	candy_dc.flags_list = result
+	candy_dc.flag_list = result
 
 
 func _on_dispositions_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Dispositions/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -247,7 +247,7 @@ func _on_dispositions_list_text_changed() -> void:
 
 func _on_actors_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Actors/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -260,7 +260,7 @@ func _on_actors_list_text_changed() -> void:
 
 func _on_roles_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Roles/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -273,7 +273,7 @@ func _on_roles_list_text_changed() -> void:
 
 func _on_busts_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Busts/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -286,7 +286,7 @@ func _on_busts_list_text_changed() -> void:
 
 func _on_effects_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Effects/List".text
-	var items := raw_text.split(",", false)  #/ split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:

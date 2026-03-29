@@ -375,6 +375,8 @@ func create_config_file(profile_name: String) -> void:
 			},
 		},
 
+		"properties_script_path": "Candy_DE/Scripts/Candy_Properties.gd",
+
 		"flag_list": [],
 		"disposition_list": [],
 		"actor_list": [],
@@ -500,7 +502,8 @@ func save_profile() -> void:
 	data["custom_resource_paths"] = candy_dc.custom_resource_paths
 
 	data["data_scripts"] = candy_dc.data_scripts
-
+	data["properties_script_path"] = candy_dc.properties_script_path
+	
 	data["flag_list"] = candy_dc.flag_list
 	data["disposition_list"] = candy_dc.disposition_list
 	data["actor_list"] = candy_dc.actor_list
@@ -609,6 +612,7 @@ func load_profile() -> void:
 	candy_dc.custom_resource_paths = data.get("custom_resource_paths", {})
 
 	candy_dc.data_scripts = data.get("data_scripts", {})
+	candy_dc.properties_script_path = data.get("properties_script_path", "Candy_DE/Scripts/Candy_Properties.gd")
 
 	candy_dc.flag_list = data.get("flag_list", [])
 	candy_dc.disposition_list = data.get("disposition_list", [])

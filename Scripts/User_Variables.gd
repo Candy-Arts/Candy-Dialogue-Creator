@@ -74,8 +74,11 @@ var custom_resource_paths = {
 
 var resource_paths = default_resource_paths
 
-
 var data_scripts = {
+	"Flag": {
+		"Script": "",
+		"Variable": "",
+	},
 	"Disposition": {
 		"Script": "",
 		"Variable": "",
@@ -89,6 +92,8 @@ var data_scripts = {
 		"Variable": "",
 	},
 }
+
+var properties_script_path = ""
 
 var operator_list = ["=", "+=", "-=", "×=", "÷=", "append"]
 var flag_list = []
@@ -106,9 +111,11 @@ var super_autoload_symbol = "££"
 var super_node_symbol = "$$"
 var super_candy_symbol = "€€"
 
+var role_symbol = "°"
+
 var var_in_speech_start = "{)"
 var var_in_speech_end = "}"
-var role_symbol = "°"
+
 var substitution_symbol = "•"
 var separator_symbol = "|"
 

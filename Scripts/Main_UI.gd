@@ -3612,7 +3612,7 @@ func open_block_menu(line: Node, o_convo_field, field: LineEdit) -> void:
 	file_popup.popup()
 
 
-#* Open a list of Lines (LM Commands) for If/Elif/Else/Go/Bridge commands:
+#* Open a list of Lines (LM Commands) for If/Elif/Else/Jump/Bridge commands:
 func open_line_menu(line: Node, o_convo_field, o_block_field, field: LineEdit) -> void:
 	#% Clear old buttons
 	for c in file_box.get_children():

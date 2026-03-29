@@ -101,6 +101,16 @@ func setup_menu():
 	update_project_paths()
 
 	#@ Project Data:
+	$"TabContainer/ProjectData/Data/VBox/Flag/Script".text = candy_dc.data_scripts["Flag"]["Script"]
+	$"TabContainer/ProjectData/Data/VBox/Flag/Variable".text = candy_dc.data_scripts["Flag"]["Variable"]
+	$"TabContainer/ProjectData/Data/VBox/Disposition/Script".text = candy_dc.data_scripts["Disposition"]["Script"]
+	$"TabContainer/ProjectData/Data/VBox/Disposition/Variable".text = candy_dc.data_scripts["Disposition"]["Variable"]
+	$"TabContainer/ProjectData/Data/VBox/Actor/Script".text = candy_dc.data_scripts["Actor"]["Script"]
+	$"TabContainer/ProjectData/Data/VBox/Actor/Variable".text = candy_dc.data_scripts["Actor"]["Variable"]
+	$"TabContainer/ProjectData/Data/VBox/Role/Script".text = candy_dc.data_scripts["Role"]["Script"]
+	$"TabContainer/ProjectData/Data/VBox/Role/Variable".text = candy_dc.data_scripts["Role"]["Variable"]
+	$"TabContainer/ProjectData/Data/VBox/Symbols/LineEdit".text = candy_dc.properties_script_path
+
 	$"TabContainer/ProjectData/Data/VBox/Flags/List".text = ", ".join(candy_dc.flag_list)
 	$"TabContainer/ProjectData/Data/VBox/Dispositions/List".text = ", ".join(candy_dc.disposition_list)
 	$"TabContainer/ProjectData/Data/VBox/Actors/List".text = ", ".join(candy_dc.actor_list)
@@ -153,6 +163,17 @@ func _on_close_pressed() -> void:
 	self.visible = false
 	main.get_node("ProfileMenu").save_profile()
 
+	#% Save script paths:
+	candy_dc.data_scripts["Flag"]["Script"] = $"TabContainer/ProjectData/Data/VBox/Flag/Script".text
+	candy_dc.data_scripts["Flag"]["Variable"] = $"TabContainer/ProjectData/Data/VBox/Flag/Variable".text
+	candy_dc.data_scripts["Disposition"]["Script"] = $"TabContainer/ProjectData/Data/VBox/Disposition/Script".text
+	candy_dc.data_scripts["Disposition"]["Variable"] = $"TabContainer/ProjectData/Data/VBox/Disposition/Variable".text
+	candy_dc.data_scripts["Actor"]["Script"] = $"TabContainer/ProjectData/Data/VBox/Actor/Script".text
+	candy_dc.data_scripts["Actor"]["Variable"] = $"TabContainer/ProjectData/Data/VBox/Actor/Variable".text
+	candy_dc.data_scripts["Role"]["Script"] = $"TabContainer/ProjectData/Data/VBox/Role/Script".text
+	candy_dc.data_scripts["Role"]["Variable"] = $"TabContainer/ProjectData/Data/VBox/Role/Variable".text
+	candy_dc.properties_script_path = $"TabContainer/ProjectData/Data/VBox/Symbols/LineEdit".text
+
 	#% Adjust the auto-save timer count if it's greater than the new frequency:
 	if main.get_node("AutoSaveTimer").wait_time > candy_dc.auto_saves_frequency:
 		main.get_node("AutoSaveTimer").wait_time = candy_dc.auto_saves_frequency * 60
@@ -175,7 +196,7 @@ func _on_defaults_pressed() -> void:
 
 func _on_project_text_changed(new_text: String) -> void:
 	candy_dc.project_path = new_text
-	
+
 	#% Update default paths:
 	for key in candy_dc.default_resource_paths:
 		candy_dc.default_resource_paths[key] = candy_dc.project_path.path_join(candy_dc.default_path_ends[key])
@@ -221,7 +242,7 @@ func _on_folder_select_file_selected(path: String) -> void:
 #& Project Data
 func _on_flags_list_text_changed() -> void:
 	var raw_text: String = $"TabContainer/ProjectData/Data/VBox/Flags/List".text
-	var items := raw_text.split(",", false)		#/Split by commas
+	var items := raw_text.split(",", false)		#/ Split by commas
 	var result: Array = []
 
 	for item in items:
@@ -295,6 +316,18 @@ func _on_effects_list_text_changed() -> void:
 			result.append(trimmed)
 
 	candy_dc.effect_list = result
+
+
+func _on_properties_script_text_changed(new_text: String) -> void:
+	candy_dc.properties_script_path = new_text
+
+
+func _on_find_properties_script_pressed() -> void:
+	selecting_script = "Candy_Properties"
+	if candy_dc.project_path == "":
+		return
+	$"TabContainer/ProjectData/ScriptSelect".root_subfolder = candy_dc.project_path
+	$"TabContainer/ProjectData/ScriptSelect".visible = true
 
 
 func _on_settings_autoload_symbol_text_changed(new_text: String) -> void:
@@ -452,8 +485,61 @@ func _on_color_mode_text_changed(new_text: String) -> void:
 
 
 func _on_update_symbols_pressed() -> void:
-	pass
+	#@ Step 1 - Build path and verify file exists:
+	var full_path = candy_dc.project_path.path_join(candy_dc.properties_script_path)
+	if not FileAccess.file_exists(full_path):
+		push_error("Properties script not found: " + full_path)
+		return
 
+	#@ Step 2 - Read script contents:
+	var file := FileAccess.open(full_path, FileAccess.READ)
+	if not file:
+		push_error("Failed to open file: " + full_path)
+		return
+	var content := file.get_as_text()
+	file.close()
+
+	#@ Step 3 - Define variable mappings (script var name → candy_dc property):
+	var mappings := {
+		"singleton_symbol":        "autoload_symbol",
+		"node_symbol":             "node_symbol",
+		"vardict_symbol":          "candy_symbol",
+		"super_singleton_symbol":  "super_autoload_symbol",
+		"super_node_symbol":       "super_node_symbol",
+		"super_vardict_symbol":    "super_candy_symbol",
+		"role_symbol":             "role_symbol",
+		"text_var_symbol_start":   "var_in_speech_start",
+		"text_var_symbol_end":     "var_in_speech_end",
+		"substitution_symbol":     "substitution_symbol",
+		"separator_symbol":        "separator_symbol",
+	}
+
+	#@ Step 4 - Extract each variable from the script content:
+	var regex := RegEx.new()
+	for script_var in mappings.keys():
+		regex.compile("var\\s+" + script_var + "\\s*=\\s*\"([^\"]*)\"")
+		var result := regex.search(content)
+		if result:
+			candy_dc.set(mappings[script_var], result.get_string(1))
+		else:
+			push_warning("Symbol variable not found in script: " + script_var)
+
+	#@ Step 5 - Update symbol fields:
+	$"TabContainer/ProjectData/Data/VBox/VariableSymbols/Autoload".text = candy_dc.autoload_symbol
+	$"TabContainer/ProjectData/Data/VBox/VariableSymbols/Node".text = candy_dc.node_symbol
+	$"TabContainer/ProjectData/Data/VBox/VariableSymbols/Candy".text = candy_dc.candy_symbol
+
+	$"TabContainer/ProjectData/Data/VBox/SuperSymbols/Autoload".text = candy_dc.super_autoload_symbol
+	$"TabContainer/ProjectData/Data/VBox/SuperSymbols/Node".text = candy_dc.super_node_symbol
+	$"TabContainer/ProjectData/Data/VBox/SuperSymbols/Candy".text = candy_dc.super_candy_symbol
+
+	$"TabContainer/ProjectData/Data/VBox/RoleSymbol/Symbol".text = candy_dc.role_symbol
+
+	$"TabContainer/ProjectData/Data/VBox/TextVar/TextVarStart".text = candy_dc.var_in_speech_start
+	$"TabContainer/ProjectData/Data/VBox/TextVar/TextVarEnd".text = candy_dc.var_in_speech_end
+
+	$"TabContainer/ProjectData/Data/VBox/SubSymbol/Symbol".text = candy_dc.substitution_symbol
+	$"TabContainer/ProjectData/Data/VBox/SeparatorSymbol/Symbol".text = candy_dc.separator_symbol
 
 #* Update global key list based on external data script:
 func _on_update_data_pressed(source) -> void:
@@ -643,6 +729,8 @@ func _on_script_select_file_selected(path: String) -> void:
 		$"TabContainer/ProjectData/Data/VBox/Actor/Script".text = path
 	elif selecting_script == "Role":
 		$"TabContainer/ProjectData/Data/VBox/Role/Script".text = path
+	elif selecting_script == "Candy_Properties":
+		$"TabContainer/ProjectData/Data/VBox/Symbols/LineEdit".text = path
 
 
 #& VARIANTS

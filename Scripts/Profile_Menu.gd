@@ -41,18 +41,29 @@ func _on_rename_pressed() -> void:
 
 #* Load a profile and go:
 func _on_select_pressed() -> void:
+	#% Check that a profile is selected:
 	if selected_profile != "":
-		load_profile()
-		self.visible = false
+		#% If the selected profile is not already loaded, load it:
+		if selected_profile != candy_dc.current_profile:
+			load_profile()
+			main._build_command_presets()
+			if candy_dc.auto_saves_frequency > 0.0:
+				main.get_node("AutoSaveTimer").wait_time = candy_dc.auto_saves_frequency * 60
+				main.get_node("AutoSaveTimer").start()
+			candy_dc.current_profile = selected_profile
+			candy_dc.loaded_save = ""
+
+		main.get_node("MainMenu").visible = false
 		main.get_node("Intro").visible = false
 		main.get_node("SettingsMenu").visible = false
-		main.get_node("MainMenu").visible = false
+		self.visible = false
 		candy_dc.editor_state = "ui"
-		main._build_command_presets()
-		if candy_dc.auto_saves_frequency > 0.0:
-			main.get_node("AutoSaveTimer").wait_time = candy_dc.auto_saves_frequency * 60
-			main.get_node("AutoSaveTimer").start()
-		candy_dc.current_profile = selected_profile
+
+		if candy_dc.use_default_project_folders == false:
+			candy_dc.resource_paths = candy_dc.custom_resource_paths
+		elif candy_dc.use_default_project_folders == true:
+			candy_dc.resource_paths = candy_dc.default_resource_paths
+
 
 #* Delete a profile:
 func _on_delete_pressed() -> void:

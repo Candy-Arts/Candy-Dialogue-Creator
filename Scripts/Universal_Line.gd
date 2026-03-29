@@ -2368,7 +2368,7 @@ func _apply_selected_voice(filename: String) -> void:
 
 func _on_disposition_pressed() -> void:
 	var field: LineEdit = $"HBox/SpeechLine/Disposition/Disposition"
-	main.open_disposition_menu(self, field)
+	main.open_disposition_menu("spoken", self, field)
 
 func _on_reference_pressed() -> void:
 	var field: LineEdit = $"HBox/SpeechLine/Speaker/Ref"
@@ -2657,7 +2657,7 @@ func _on_if_line_changed(new_text: String) -> void:
 
 func _on_conversation_button_pressed() -> void:
 	var field: LineEdit = $"HBox/Con/Conversation/LineEdit"
-	main.open_conversation_menu(field)
+	main.open_conversation_menu(self, field)
 
 func _apply_selected_conversation(conv_name: String) -> void:
 	$"HBox/Con/Conversation/LineEdit".text = conv_name
@@ -2666,7 +2666,7 @@ func _apply_selected_conversation(conv_name: String) -> void:
 func _on_block_button_pressed() -> void:
 	var field: LineEdit = $"HBox/Con/Block/LineEdit"
 	var o_convo: LineEdit = $"HBox/Con/Conversation/LineEdit"
-	main.open_block_menu(o_convo, field)
+	main.open_block_menu(self, o_convo, field)
 
 func _apply_selected_block(block_name: String) -> void:
 	$"HBox/Con/Block/LineEdit".text = block_name
@@ -2676,7 +2676,7 @@ func _on_line_button_pressed() -> void:
 	var field: LineEdit = $"HBox/Con/Line/LineEdit"
 	var o_convo: LineEdit = $"HBox/Con/Conversation/LineEdit"
 	var o_block: LineEdit = $"HBox/Con/Block/LineEdit"
-	main.open_line_menu(o_convo, o_block, field)
+	main.open_line_menu(self, o_convo, o_block, field)
 
 func _apply_selected_line(ref_name: String) -> void:
 	$"HBox/Con/Line/LineEdit".text = ref_name
@@ -2818,7 +2818,7 @@ func _on_set_flag_pressed() -> void:
 
 func _on_set_disposition_pressed() -> void:
 	var field: LineEdit = $"HBox/Con/Disposition/Disposition"
-	main.open_disposition_menu(self, field)
+	main.open_disposition_menu("set", self, field)
 
 func _on_set_expression_changed(new_text: String) -> void:
 	line_data["Expression"] = new_text

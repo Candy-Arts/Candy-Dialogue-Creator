@@ -11,6 +11,7 @@ func _on_new_dialogue_pressed() -> void:
 func _on_profiles_pressed() -> void:
 	main.get_node("ProfileMenu").save_profile()
 	main.get_node("ProfileMenu").visible = true
+	main.get_node("Intro").visible = true
 	candy_dc.editor_state = "profiles"
 
 

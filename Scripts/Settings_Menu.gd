@@ -85,7 +85,7 @@ func setup_menu():
 	$"TabContainer/ProjectFiles/Project".text = candy_dc.project_path
 
 	for h_line in $"TabContainer/ProjectFiles/CustomFolders/VBox".get_children():
-		var line_name: String = str(h_line.name)  #/ ensure it's a pure string
+		var line_name: String = str(h_line.name)	#/ Ensure it's a pure string
 		if candy_dc.custom_resource_paths.has(line_name):
 			h_line.get_node("LineEdit").text = candy_dc.custom_resource_paths[line_name]
 

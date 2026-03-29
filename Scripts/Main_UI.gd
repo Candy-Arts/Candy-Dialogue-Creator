@@ -1494,7 +1494,7 @@ func open_flag_menu(line: Node, field: LineEdit):
 
 
 #* Display list of dispositions:
-func open_disposition_menu(line: Node, field: LineEdit):
+func open_disposition_menu(mode: String, line: Node, field: LineEdit):
 	#% Rebuild the list
 	for c in file_box.get_children():
 		c.queue_free()
@@ -1506,13 +1506,22 @@ func open_disposition_menu(line: Node, field: LineEdit):
 		btn.text = disposition
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
-		#% Select:
-		btn.pressed.connect(func():
-			file_popup.hide()
-			hide_portrait_panel()
-			line._set_apply_selected_disposition(disposition))
-		file_box.add_child(btn)
+		if mode == "spoken":
+			#% Select:
+			btn.pressed.connect(func():
+				file_popup.hide()
+				hide_portrait_panel()
+				line._apply_selected_disposition(disposition))
+			file_box.add_child(btn)		
 
+		elif mode == "set":
+			#% Select:
+			btn.pressed.connect(func():
+				file_popup.hide()
+				hide_portrait_panel()
+				line._set_apply_selected_disposition(disposition))
+			file_box.add_child(btn)
+	
 	#% Show popup:
 	var max_width := field.size.x
 	var max_height: = 8.0
@@ -3527,7 +3536,7 @@ func _on_new_line_pressed(button: Button) -> void:
 
 
 #* Open a list of Conversations for If/Elif/Else/Go/Bridge commands:
-func open_conversation_menu(field: LineEdit) -> void:
+func open_conversation_menu(line: Node, field: LineEdit) -> void:
 	#% Clear old buttons:
 	for c in file_box.get_children():
 		c.queue_free()
@@ -3544,7 +3553,7 @@ func open_conversation_menu(field: LineEdit) -> void:
 		#% Selection:
 		btn.pressed.connect(func():
 			file_popup.hide()
-			field.text = conv_name)
+			line._apply_selected_conversation(conv_name))
 
 		file_box.add_child(btn)
 		button_count += 1
@@ -3556,8 +3565,8 @@ func open_conversation_menu(field: LineEdit) -> void:
 	file_popup.popup()
 
 
-#* Open a list of Blocks for If/Elif/Else/Go/Bridge commands:
-func open_block_menu(o_convo_field, field: LineEdit) -> void:
+#* Open a list of Blocks for If/Elif/Else/Jump/Bridge commands:
+func open_block_menu(line: Node, o_convo_field, field: LineEdit) -> void:
 	#% Clear old buttons
 	for c in file_box.get_children():
 		c.queue_free()
@@ -3592,7 +3601,7 @@ func open_block_menu(o_convo_field, field: LineEdit) -> void:
 
 		btn.pressed.connect(func():
 			file_popup.hide()
-			field.text = block_name)
+			line._apply_selected_block(block_name))
 
 		file_box.add_child(btn)
 		button_count += 1
@@ -3604,7 +3613,7 @@ func open_block_menu(o_convo_field, field: LineEdit) -> void:
 
 
 #* Open a list of Lines (LM Commands) for If/Elif/Else/Go/Bridge commands:
-func open_line_menu(o_convo_field, o_block_field, field: LineEdit) -> void:
+func open_line_menu(line: Node, o_convo_field, o_block_field, field: LineEdit) -> void:
 	#% Clear old buttons
 	for c in file_box.get_children():
 		c.queue_free()
@@ -3665,7 +3674,7 @@ func open_line_menu(o_convo_field, o_block_field, field: LineEdit) -> void:
 				btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 				btn.pressed.connect(func():
 					file_popup.hide()
-					field.text = ref_name)
+					line._apply_selected_line(ref_name))
 				file_box.add_child(btn)
 				found_any = true
 				button_count += 1

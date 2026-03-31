@@ -85,6 +85,7 @@ func _on_file_dialog_canceled() -> void:
 
 #* Confirm file selection in file browser:
 func _on_file_dialog_file_selected(path: String) -> void:
+	$"Shield2".visible = false
 	file_field.text = path
 
 

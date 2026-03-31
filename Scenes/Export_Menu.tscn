@@ -159,7 +159,7 @@ initial_position = 1
 size = Vector2i(960, 540)
 ok_button_text = "Select"
 access = 2
-filters = PackedStringArray("*.json")
+filters = PackedStringArray("*.txt")
 
 [connection signal="pressed" from="Panel/VBox/File/FileBrowser" to="." method="_on_file_browser_pressed"]
 [connection signal="pressed" from="Panel/VBox/Conversations/VBox/Select" to="." method="_on_select_all_pressed"]

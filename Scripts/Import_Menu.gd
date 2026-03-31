@@ -83,7 +83,13 @@ func spawn_convo_buttons(_new_text):
 	var dialogue_data: Dictionary = result
 
 	#@ Step 7: Create buttons for each conversation key:
-	for c in dialogue_data.keys():
+	if not dialogue_data.has("Dialogue"):
+		push_error("Dialogue file is missing 'Dialogue' key: " + path)
+		return
+
+	var conversations_data: Dictionary = dialogue_data["Dialogue"]
+
+	for c in conversations_data.keys():
 		#% Skip special preset container:
 		if c == "CUSTOM_PRESETS":
 			continue
@@ -171,7 +177,18 @@ func _on_import_pressed() -> void:
 	var content := file.get_as_text()
 	file.close()
 
-	#@ Step 3 - Parse Variant text:
+	#@ Step 3 - Clean and parse Variant text:
+	content = content.replace("<null>", "null")
+	content = content.replace("<Null>", "null")
+
+	var regex_trailing := RegEx.new()
+	regex_trailing.compile(",(\\s*[}\\]])")
+	content = regex_trailing.sub(content, "$1", true)
+
+	content = content.strip_edges()
+	if content.ends_with(","):
+		content = content.substr(0, content.length() - 1)
+
 	var parsed = str_to_var(content)
 
 	if typeof(parsed) != TYPE_DICTIONARY:
@@ -220,8 +237,25 @@ func _on_import_pressed() -> void:
 				candy_dc.current_block = block
 				continue
 
-	#@ Step 7 - Confirm import completed:
+	#@  Step 7 - Rebuild conversation dropdown:
+	var conv_btn = main.get_node("VBox/TopBar/HBox/Conversations/Conversations")
+	conv_btn.clear()
+	for key in candy_dc.conversations.keys():
+		conv_btn.add_item(key)
+		if key == candy_dc.current_conversation:
+			conv_btn.select(conv_btn.item_count - 1)
+
+	#@  Step 8 - Rebuild block dropdown:
+	var block_btn = main.get_node("VBox/TopBar/HBox/Blocks/Blocks")
+	block_btn.clear()
+	for block_name in candy_dc.conversations[candy_dc.current_conversation].keys():
+		block_btn.add_item(block_name)
+		if block_name == candy_dc.current_block:
+			block_btn.select(block_btn.item_count - 1)
+
+	#@ Step 9 - Confirm import completed:
 	print("Import completed:", mode, "←", path)
+	main.sort_conversations_and_blocks()
 	main._load_active_block()
 	_on_cancel_pressed()
 

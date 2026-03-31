@@ -1512,7 +1512,7 @@ func open_disposition_menu(mode: String, line: Node, field: LineEdit):
 				file_popup.hide()
 				hide_portrait_panel()
 				line._apply_selected_disposition(disposition))
-			file_box.add_child(btn)		
+			file_box.add_child(btn)
 
 		elif mode == "set":
 			#% Select:
@@ -1521,7 +1521,7 @@ func open_disposition_menu(mode: String, line: Node, field: LineEdit):
 				hide_portrait_panel()
 				line._set_apply_selected_disposition(disposition))
 			file_box.add_child(btn)
-	
+
 	#% Show popup:
 	var max_width := field.size.x
 	var max_height: = 8.0
@@ -3192,10 +3192,14 @@ func sort_conversations_and_blocks() -> void:
 				sorted_blocks[b] = conv[b]
 			candy_dc.conversations[conv_name] = sorted_blocks
 
-	#% Sort the conversation dictionary itself:
+	#% Sort the conversation dictionary itself, keeping CUSTOM_PRESETS first:
 	var convo_keys = candy_dc.conversations.keys()
+	convo_keys.erase("CUSTOM_PRESETS")
 	convo_keys.sort()
 	var sorted_convos := {}
+	#% Insert CUSTOM_PRESETS first if it exists:
+	if candy_dc.conversations.has("CUSTOM_PRESETS"):
+		sorted_convos["CUSTOM_PRESETS"] = candy_dc.conversations["CUSTOM_PRESETS"]
 	for c in convo_keys:
 		sorted_convos[c] = candy_dc.conversations[c]
 	candy_dc.conversations = sorted_convos
@@ -4431,16 +4435,44 @@ func _validate_current_selection() -> void:
 
 	#% Ensure current conversation is valid:
 	if not candy_dc.conversations.has(candy_dc.current_conversation):
-		candy_dc.current_conversation = convo_btn.get_item_text(0) if convo_btn.item_count > 0 else ""
+		var first_conv := ""
+		for c in candy_dc.conversations.keys():
+			if c != "CUSTOM_PRESETS":
+				first_conv = c
+				break
+		#% Fall back to CUSTOM_PRESETS only if there's nothing else:
+		if first_conv == "":
+			first_conv = "CUSTOM_PRESETS" if candy_dc.conversations.has("CUSTOM_PRESETS") else ""
+		candy_dc.current_conversation = first_conv
 
 	#% Blocks:
 	if candy_dc.current_conversation != "":
 		var conv = candy_dc.conversations[candy_dc.current_conversation]
 		var valid_block = conv.has(candy_dc.current_block)
 		if not valid_block:
-			candy_dc.current_block = block_btn.get_item_text(0) if block_btn.item_count > 0 else ""
+			#% Get first block directly from the dictionary, not from the dropdown:
+			#% The dropdown may not have been rebuilt yet and could contain stale data.
+			var first_block := ""
+			for b in conv.keys():
+				first_block = b
+				break
+			candy_dc.current_block = first_block
 
-	print(candy_dc.conversations)
+		#% Rebuild conversation dropdown:
+		convo_btn.clear()
+		for key in candy_dc.conversations.keys():
+			convo_btn.add_item(key)
+			if key == candy_dc.current_conversation:
+				convo_btn.select(convo_btn.item_count - 1)
+
+		#% Rebuild block dropdown:
+		block_btn.clear()
+		if candy_dc.current_conversation != "":
+			for block_name in candy_dc.conversations[candy_dc.current_conversation].keys():
+				block_btn.add_item(block_name)
+				if block_name == candy_dc.current_block:
+					block_btn.select(block_btn.item_count - 1)
+
 	candy_dc.refresh_conv_block_selectors = true
 
 
@@ -4493,7 +4525,7 @@ func save_undo_step() -> void:
 
 	#@ Build snapshot dictionary with all relevant state:
 	var snapshot := {
-		"conversations": JSON.parse_string(JSON.stringify(candy_dc.conversations)),
+		"conversations": _deserialize_value(_serialize_value(candy_dc.conversations)),
 		"browsing_history": JSON.parse_string(JSON.stringify(candy_dc.browsing_history)),
 		"browsing_index": candy_dc.browsing_index
 	}
@@ -4517,7 +4549,7 @@ func _apply_undo_snapshot(abs_index: int) -> void:
 	var snap: Dictionary = candy_dc.undo_array[abs_index]
 
 	#% 1) Restore conversations:
-	candy_dc.conversations = JSON.parse_string(JSON.stringify(snap["conversations"]))
+	candy_dc.conversations = _deserialize_value(snap["conversations"])
 
 	#% 2) Restore browsing history (if available):
 	if snap.has("browsing_history"):
@@ -4548,6 +4580,41 @@ func _apply_undo_snapshot(abs_index: int) -> void:
 
 	#% 4) Refresh UI selectors:
 	_refresh_conversation_block_selectors()
+
+
+#* Convert variants:
+func _serialize_value(value):
+	if value is Color:
+		return {"__type": "Color", "r": value.r, "g": value.g, "b": value.b, "a": value.a}
+	elif value is Dictionary:
+		var result = {}
+		for key in value.keys():
+			result[key] = _serialize_value(value[key])
+		return result
+	elif value is Array:
+		var result = []
+		for item in value:
+			result.append(_serialize_value(item))
+		return result
+	return value
+
+
+#* Read variants:
+func _deserialize_value(value):
+	if value is Dictionary:
+		if value.has("__type") and value["__type"] == "Color":
+			return Color(value["r"], value["g"], value["b"], value["a"])
+		var result = {}
+		for key in value.keys():
+			result[key] = _deserialize_value(value[key])
+		return result
+	elif value is Array:
+		var result = []
+		for item in value:
+			result.append(_deserialize_value(item))
+		return result
+	return value
+
 
 #* Undo:
 func _on_undo_pressed() -> void:

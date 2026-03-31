@@ -71,7 +71,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Panel/VBox/HBox/Mode" unique_id=1059009594]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
-text = "Export Mode:"
+text = "Import Mode:"
 
 [node name="OptionButton" type="OptionButton" parent="Panel/VBox/HBox/Mode" unique_id=1488940401]
 custom_minimum_size = Vector2(128, 0)

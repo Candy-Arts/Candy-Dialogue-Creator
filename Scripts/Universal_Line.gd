@@ -241,7 +241,7 @@ func _apply_line_data_to_ui() -> void:
 		"§Call":
 			$"HBox/Move".text = "Call"
 			$"HBox/Move".tooltip_text += "Call a function."
-			$"HBox/Con/SetVariable".tooltip_text = "Variable to store returned value to."
+			$"HBox/Con/SetVariable".tooltip_text = "Variable to store returned value to.\n*SUPER*"
 
 			#% Get data:
 			$"HBox/Con/Function".text = str(line_data.get("Function", ""))
@@ -282,7 +282,7 @@ func _apply_line_data_to_ui() -> void:
 		"§Await":
 			$"HBox/Move".text = "Await"
 			$"HBox/Move".tooltip_text += "Await on a signal."
-			$"HBox/Con/SetVariable".tooltip_text = "Variable to store signal arguments to."
+			$"HBox/Con/SetVariable".tooltip_text = "Variable to store signal arguments to.\n*SUPER*"
 
 			#% Get data:
 			$"HBox/Con/Signal".text = str(line_data.get("Signal", ""))
@@ -299,7 +299,7 @@ func _apply_line_data_to_ui() -> void:
 		"§Set":
 			$"HBox/Move".text = "Set"
 			$"HBox/Move".tooltip_text += "Change the value of a variable."
-			$"HBox/Con/SetVariable".tooltip_text = "Variable to modify."
+			$"HBox/Con/SetVariable".tooltip_text = "Variable to modify.\n*SUPER*"
 
 			#% Get data:
 			$"HBox/Con/SetVariable".text = str(line_data.get("Variable", ""))
@@ -498,13 +498,13 @@ func _apply_line_data_to_ui() -> void:
 			$"HBox/Con/Condition/Text".text = str(line_data.get("Condition", ""))
 			_apply_option_value($"HBox/Con/Type", line_data, "Type")
 
-			#%Set
+			#% Set:
 			$"HBox/Con/SetVariable".text = str(line_data.get("Variable", ""))
 			$"HBox/Con/Flag/Flag".text = str(line_data.get("Flag", ""))
 			$"HBox/Con/Operator/Operator".text = str(line_data.get("Operator", ""))
 			$"HBox/Con/Expression/Text".text = str(line_data.get("Expression", ""))
 
-			#% Call
+			#% Call:
 			$"HBox/Con/Function".text = str(line_data.get("Function", ""))
 			$"HBox/Con/Signal".text = str(line_data.get("Signal", ""))
 			$"HBox/Con/Arguments".text = str(line_data.get("Arguments", ""))
@@ -535,13 +535,13 @@ func _apply_line_data_to_ui() -> void:
 			#% Get data:
 			_apply_option_value($"HBox/Con/Type", line_data, "Type")
 
-			#%Set
+			#% Set:
 			$"HBox/Con/SetVariable".text = str(line_data.get("Variable", ""))
 			$"HBox/Con/Flag/Flag".text = str(line_data.get("Flag", ""))
 			$"HBox/Con/Operator/Operator".text = str(line_data.get("Operator", ""))
 			$"HBox/Con/Expression/Text".text = str(line_data.get("Expression", ""))
 
-			#% Call
+			#% Call:
 			$"HBox/Con/Function".text = str(line_data.get("Function", ""))
 			$"HBox/Con/Signal".text = str(line_data.get("Signal", ""))
 			$"HBox/Con/Arguments".text = str(line_data.get("Arguments", ""))
@@ -2606,7 +2606,7 @@ func match_condition_type(type):
 			$"HBox/Con/Line".visible = true
 			$"HBox/Con/Go".visible = true
 		"Call":
-			$"HBox/Con/SetVariable".tooltip_text += "Variable to store returned value to."
+			$"HBox/Con/SetVariable".tooltip_text += "Variable to store returned value to.\n*SUPER*"
 			$"HBox/Con/SetVariable".visible = true
 			$"HBox/Con/Await".visible = true
 			$"HBox/Con/Function".visible = true
@@ -2615,11 +2615,11 @@ func match_condition_type(type):
 			$"HBox/Con/Signal".visible = true
 			$"HBox/Con/Arguments".visible = true
 		"Await":
-			$"HBox/Con/SetVariable".tooltip_text += "Variable to store signal arguments to."
+			$"HBox/Con/SetVariable".tooltip_text += "Variable to store signal arguments to.\n*SUPER*"
 			$"HBox/Con/SetVariable".visible = true
 			$"HBox/Con/Signal".visible = true
 		"Set":
-			$"HBox/Con/SetVariable".tooltip_text += "Variable to modify."
+			$"HBox/Con/SetVariable".tooltip_text += "Variable to modify.\n*SUPER*"
 			$"HBox/Con/SetVariable".visible = true
 			$"HBox/Con/Operator".visible = true
 			$"HBox/Con/Expression".visible = true

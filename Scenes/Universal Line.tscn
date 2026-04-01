@@ -440,7 +440,8 @@ text = "⫶"
 [node name="SetVariable" type="LineEdit" parent="HBox/Con" unique_id=1047515473]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
-tooltip_text = "Variable to modify."
+tooltip_text = "Variable to modify.
+*SUPER*"
 placeholder_text = "Variable"
 
 [node name="Flag" type="HBoxContainer" parent="HBox/Con" unique_id=2018349464]
@@ -628,7 +629,8 @@ popup/item_3/id = 3
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "Arguments to pass to the function."
+tooltip_text = "Dictionary to import the data to.
+*SUPER*"
 placeholder_text = "Dictionary"
 
 [node name="Data" type="HBoxContainer" parent="HBox/Con" unique_id=1218700716]

@@ -275,7 +275,6 @@ vertical_alignment = 1
 
 [node name="Con" type="HBoxContainer" parent="HBox" unique_id=1243688846]
 editor_description = "If, Elif, Else, For, While, Go, Bridge, Jump, Jump Bridge"
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4

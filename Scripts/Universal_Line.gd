@@ -2763,7 +2763,7 @@ func _on_if_command_go_pressed() -> void:
 func _on_set_editor_pressed() -> void:
 	main.get_node("ConditionEditor").visible = true
 	main.get_node("ConditionEditor").line_data = line_data
-	main.get_node("ConditionEditor/Condition").text = $"HBox/Con/SetVariable".text
+	main.get_node("ConditionEditor/Condition").text = $"HBox/Con/Expression/Text".text
 	candy_dc.condition_line = self
 	candy_dc.condition_line_index = dictionary_index
 	candy_dc.editor_state = "variable_editor"

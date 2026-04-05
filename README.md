@@ -1,6 +1,10 @@
 ![Candy Arts Logo](Screenshots/Logo.png)
 
 > [!TIP]
+> We've just opened our [Youtube channel](https://www.youtube.com/@CandyArtsStudio/playlists) and released several tutorial videos that will explain how to use Candy Dialogue Engine and Candy Dialogue Creator!
+> Please look at the playlists, to watch videos in the right order.
+
+> [!TIP]
 > For compiled executables of Candy Dialogue Creator, see the [Releases](https://github.com/Candy-Arts/Candy-Dialogue-Creator/releases).
 
 # Candy Dialogue Creator

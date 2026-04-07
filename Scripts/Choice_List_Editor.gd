@@ -273,7 +273,7 @@ func _on_name_enter_pressed() -> void:
 
 	elif new_name.contains(","):
 		error_label.text = "Name cannot feature commas (,)."
-		return		
+		return
 
 	match naming_mode:
 		#@ Create new timer:
@@ -597,7 +597,7 @@ func _on_general_menu_select_pressed() -> void:
 
 func _apply_selected_general_scene(field, filename: String) -> void:
 	field.text = filename
-	line_data["General Scene"] = filename
+	line_data["Menu Scene"] = filename
 
 func _on_general_menu_field_text_changed(new_text: String) -> void:
 	line_data["Menu Scene"] = new_text

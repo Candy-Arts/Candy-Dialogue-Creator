@@ -743,7 +743,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ChoiceSettings" type="VBoxContainer" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox" unique_id=1162603295]
-visible = false
 layout_mode = 2
 
 [node name="Section" type="Label" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings" unique_id=1241213490]
@@ -768,7 +767,7 @@ size_flags_vertical = 1
 text = "Scene: "
 vertical_alignment = 1
 
-[node name="Button Field" type="LineEdit" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Scene/ButtonScene" unique_id=2035859930]
+[node name="ButtonField" type="LineEdit" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Scene/ButtonScene" unique_id=2035859930]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 
@@ -1405,7 +1404,7 @@ text = "Confirm"
 [connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/Tags/Tags" to="." method="_on_category_tags_text_changed"]
 [connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/Prompt/Prompt" to="." method="_on_category_prompt_text_changed"]
 [connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/Custom/Custom" to="." method="_on_category_custom_text_changed"]
-[connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Scene/ButtonScene/Button Field" to="." method="_on_choice_button_sc_field_text_changed"]
+[connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Scene/ButtonScene/ButtonField" to="." method="_on_choice_button_sc_field_text_changed"]
 [connection signal="pressed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Scene/ButtonScene/ButtonSelect" to="." method="_on_choice_button_sc_select_pressed"]
 [connection signal="text_changed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Conversation/Conversation" to="." method="_on_choice_setup_conversation_text_changed"]
 [connection signal="pressed" from="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Conversation/Button" to="." method="_on_choice_setup_conversation_list_pressed"]

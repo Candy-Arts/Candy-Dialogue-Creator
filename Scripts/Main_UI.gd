@@ -4059,14 +4059,19 @@ func _show_save_popup() -> void:
 	btn_save_as.pressed.connect(func():
 		file_popup.hide()
 		$"SaveLoad".visible = true
+		$"SaveLoad/SaveMenu".current_dir = ProjectSettings.globalize_path("user://Profiles".path_join(candy_dc.current_profile).path_join("Saves").path_join("Manual Saves"))
 		$"SaveLoad/SaveMenu".visible = true)
 
 	var btn_save_incr := Button.new()
 	btn_save_incr.text = "Save Incremental"
-	btn_save_incr.pressed.connect(func():
-		file_popup.hide()
-		_on_save_incremental_pressed()
-		print("Save Incremental clicked"))
+	if candy_dc.loaded_save == "":
+		btn_save_incr.modulate = candy_dc.color_models[candy_dc.color_mode]["Fade"]
+
+	else:
+		btn_save_incr.pressed.connect(func():
+			file_popup.hide()
+			_on_save_incremental_pressed()
+			print("Save Incremental clicked"))
 
 	file_box.add_child(btn_save)
 	file_box.add_child(btn_save_as)
@@ -4128,7 +4133,6 @@ func _on_save_pressed() -> void:
 	elif candy_dc.after_save == "quit":
 		candy_dc.after_save = ""
 		$"MainMenu"._on_exit_yes_pressed()
-
 
 
 #* Save to the file selected in the FileDialog:
@@ -4201,7 +4205,6 @@ func _on_save_incremental_pressed() -> void:
 	print("Saved incremental file to:", new_path)
 
 
-
 #* Perform a quick-save (e.g. on F5):
 func perform_quicksave() -> void:
 	var base := "user://Profiles".path_join(candy_dc.current_profile).path_join("Saves").path_join("QuickSaves")
@@ -4223,7 +4226,6 @@ func perform_quicksave() -> void:
 
 	#% Save the dialogue data to file:
 	_save_dialogue_to_txt(path, "QuickSave")
-
 	print("Quick-saved to:", path)
 
 	#% Reset autosave timer:

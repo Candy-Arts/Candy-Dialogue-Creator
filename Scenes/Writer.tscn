@@ -1821,8 +1821,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 tooltip_text = "Speech Bubbles Mode:
-Always display this line in the dialogue box.
-Never shows the line in a speech bubble."
+Yellow: Exempt character from using speech bubbles.
+White: Don't exempt character."
 mouse_filter = 1
 toggle_mode = true
 text = "⁂"

@@ -72,7 +72,6 @@ mouse_filter = 1
 text = "Spoken Line"
 
 [node name="SpeechLine" type="HBoxContainer" parent="HBox" unique_id=1969313449]
-visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -112,8 +111,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 tooltip_text = "Speech Bubbles Mode:
-Green: Always display this line in a speech bubble.
-Red: Never display the line in a speech bubble."
+Yellow: Exempt character from using speech bubbles.
+White: Don't exempt character."
 mouse_filter = 1
 toggle_mode = true
 text = "⁂"
@@ -275,6 +274,7 @@ vertical_alignment = 1
 
 [node name="Con" type="HBoxContainer" parent="HBox" unique_id=1243688846]
 editor_description = "If, Elif, Else, For, While, Go, Bridge, Jump, Jump Bridge"
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4

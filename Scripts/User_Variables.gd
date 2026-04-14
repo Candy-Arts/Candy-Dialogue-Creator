@@ -194,7 +194,7 @@ var color_models = {
 
 #& DATA
 
-var dc_version = "1.0.7"
+var dc_version = "1.0.8"
 var dialogue_version = "1.0.0"
 
 

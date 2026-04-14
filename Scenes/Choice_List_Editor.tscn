@@ -922,9 +922,9 @@ custom_minimum_size = Vector2(104, 0)
 layout_mode = 2
 selected = 1
 item_count = 2
-popup/item_0/text = "Hidden"
+popup/item_0/text = "Visible"
 popup/item_0/id = 0
-popup/item_1/text = "Visible"
+popup/item_1/text = "Hidden"
 popup/item_1/id = 1
 
 [node name="Effect" type="HBoxContainer" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings" unique_id=1218031456]

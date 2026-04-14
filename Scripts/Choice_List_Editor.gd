@@ -226,6 +226,12 @@ func _apply_option_index(btn: OptionButton, data: Dictionary, key: String) -> vo
 		btn.select(index)
 
 
+#* Applay conversation to data field:
+func _apply_selected_cbl(field, cbl_name: String) -> void:
+	field.text = cbl_name
+	field.text_changed.emit(field.text)
+
+
 func _on_add_timer_pressed() -> void:
 	naming_mode = "New Timer"
 	$"PanelC/NameMenu".visible = true
@@ -568,7 +574,7 @@ func _on_general_setup_conversation_text_changed(new_text: String) -> void:
 
 func _on_general_setup_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_general_setup_block_text_changed(new_text: String) -> void:
 	line_data["Setup"]["Block"] = new_text
@@ -576,7 +582,7 @@ func _on_general_setup_block_text_changed(new_text: String) -> void:
 func _on_general_setup_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_general_setup_line_text_changed(new_text: String) -> void:
 	line_data["Setup"]["Line"] = new_text
@@ -585,7 +591,7 @@ func _on_general_setup_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/GeneralSettings/Gen_Setup/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 
 
@@ -726,7 +732,7 @@ func _on_category_setup_conversation_text_changed(new_text: String) -> void:
 
 func _on_category_setup_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_category_setup_block_text_changed(new_text: String) -> void:
 	category_data["Setup"]["Block"] = new_text
@@ -734,7 +740,7 @@ func _on_category_setup_block_text_changed(new_text: String) -> void:
 func _on_category_setup_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_category_setup_line_text_changed(new_text: String) -> void:
 	category_data["Setup"]["Line"] = new_text
@@ -743,7 +749,7 @@ func _on_category_setup_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/CategorySettings/CatSetup/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 
 
@@ -793,19 +799,19 @@ func _on_choice_custom_text_changed(new_text: String) -> void:
 	choice_data["Custom"] = new_text
 
 func _on_choice_enabled_item_selected(index: int) -> void:
-	var enabled_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Enable"
-	var status = enabled_button.get_item_text(index)
-	choice_data["Enabled"] = str(status)
+	#var enabled_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Enable"
+	#var status = enabled_button.get_item_text(index)
+	choice_data["Enabled"] = str(index)
 
 func _on_choice_active_item_selected(index: int) -> void:
-	var active_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Active"
-	var status = active_button.get_item_text(index)
-	choice_data["Active"] = str(status)
+	#var active_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Active"
+	#var status = active_button.get_item_text(index)
+	choice_data["Active"] = str(index)
 
 func _on_choice_visible_item_selected(index: int) -> void:
-	var visible_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Visible"
-	var status = visible_button.get_item_text(index)
-	choice_data["Invisible"] = str(status)
+	#var visible_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Config/Visible"
+	#var status = visible_button.get_item_text(index)
+	choice_data["Invisible"] = str(index)
 
 func _on_choice_navigation_item_selected(index: int) -> void:
 	var navigate_button = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Effect/CatNav"
@@ -891,7 +897,7 @@ func _on_choice_setup_conversation_text_changed(new_text: String) -> void:
 
 func _on_choice_setup_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_choice_setup_block_text_changed(new_text: String) -> void:
 	choice_data["Setup"]["Block"] = new_text
@@ -899,7 +905,7 @@ func _on_choice_setup_block_text_changed(new_text: String) -> void:
 func _on_choice_setup_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_choice_setup_line_text_changed(new_text: String) -> void:
 	choice_data["Setup"]["Line"] = new_text
@@ -908,7 +914,7 @@ func _on_choice_setup_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Choice_Setup/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 
 #° Select:
@@ -993,7 +999,7 @@ func _on_choice_select_conversation_text_changed(new_text: String) -> void:
 
 func _on_choice_select_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_choice_select_block_text_changed(new_text: String) -> void:
 	choice_data["Finish"]["Block"] = new_text
@@ -1001,7 +1007,7 @@ func _on_choice_select_block_text_changed(new_text: String) -> void:
 func _on_choice_select_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_choice_select_line_text_changed(new_text: String) -> void:
 	choice_data["Finish"]["Line"] = new_text
@@ -1010,7 +1016,7 @@ func _on_choice_select_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings/Select/Transition/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 
 #° Scenes:
@@ -1132,7 +1138,7 @@ func _on_timer_setup_conversation_text_changed(new_text: String) -> void:
 
 func _on_timer_setup_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_timer_setup_block_text_changed(new_text: String) -> void:
 	timer_data["Setup"]["Block"] = new_text
@@ -1140,7 +1146,7 @@ func _on_timer_setup_block_text_changed(new_text: String) -> void:
 func _on_timer_setup_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_timer_setup_line_text_changed(new_text: String) -> void:
 	timer_data["Setup"]["Line"] = new_text
@@ -1149,7 +1155,7 @@ func _on_timer_setup_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timer_Setup/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 
 #° Select:
@@ -1228,7 +1234,7 @@ func _on_timer_timeout_conversation_text_changed(new_text: String) -> void:
 
 func _on_timer_timeout_conversation_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Conversation/Conversation"
-	main.open_conversation_menu(null, field)
+	main.choice_open_conversation_menu(field)
 
 func _on_timer_timeout_block_text_changed(new_text: String) -> void:
 	timer_data["Timeout"]["Block"] = new_text
@@ -1236,7 +1242,7 @@ func _on_timer_timeout_block_text_changed(new_text: String) -> void:
 func _on_timer_timeout_block_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Block/Block"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Conversation/Conversation"
-	main.open_block_menu(null, o_convo, field)
+	main.choice_open_block_menu(o_convo, field)
 
 func _on_timer_timeout_line_text_changed(new_text: String) -> void:
 	timer_data["Timeout"]["Line"] = new_text
@@ -1245,7 +1251,7 @@ func _on_timer_timeout_line_list_pressed() -> void:
 	var field: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Line/Line"
 	var o_convo: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Conversation/Conversation"
 	var o_block: LineEdit = $"PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Timeout/Transition/Block/Block"
-	main.open_line_menu(null, o_convo, o_block, field)
+	main.choice_open_line_menu(o_convo, o_block, field)
 
 #endregion
 

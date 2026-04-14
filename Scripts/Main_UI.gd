@@ -3,19 +3,19 @@ extends Control
 @onready var file_popup: PopupPanel = $"FileMenu"
 @onready var file_box: VBoxContainer = $"FileMenu/ScrollContainer/VBoxContainer"
 @onready var portrait_popup: PopupPanel = $"Portrait"
-@onready var portrait_preview: TextureRect = $"Portrait/Preview"   #/ ColorRect/TextureRect holder
+@onready var portrait_preview: TextureRect = $"Portrait/Preview"					#/ ColorRect/TextureRect holder
 @onready var voice_preview: AudioStreamPlayer = $"VoicePreview"
-@onready var media_image_preview: TextureRect = $"Portrait/Preview"   #/ ColorRect/TextureRect holder
-@onready var media_audio_preview: AudioStreamPlayer = $"VoicePreview"   #/ ColorRect/TextureRect holder
+@onready var media_image_preview: TextureRect = $"Portrait/Preview"					#/ ColorRect/TextureRect holder
+@onready var media_audio_preview: AudioStreamPlayer = $"VoicePreview"				#/ ColorRect/TextureRect holder
 @onready var video_popup: PopupPanel = $"Video"
-@onready var media_video_preview: VideoStreamPlayer = $"Video/Preview"   #/ ColorRect/TextureRect holder
-@onready var bust_preview: TextureRect = $"Portrait/Preview"   #/ ColorRect/TextureRect holder
-@onready var background_preview: TextureRect = $"Portrait/Preview"   #/ ColorRect/TextureRect holder
+@onready var media_video_preview: VideoStreamPlayer = $"Video/Preview"				#/ ColorRect/TextureRect holder
+@onready var bust_preview: TextureRect = $"Portrait/Preview"						#/ ColorRect/TextureRect holder
+@onready var background_preview: TextureRect = $"Portrait/Preview"					#/ ColorRect/TextureRect holder
 
 
 @onready var lines_vbox
-var lines_data: Array = []  #/ The active block’s "Text" array
-var line_pool: Array = []   #/ Universal line nodes
+var lines_data: Array = []		#/ The active block’s "Text" array
+var line_pool: Array = []		#/ Universal line nodes
 
 @onready var scroll_bar = $"VBox/HBox/ScrollLines"
 
@@ -3569,6 +3569,36 @@ func open_conversation_menu(line: Node, field: LineEdit) -> void:
 	file_popup.popup()
 
 
+#* Open a list of Conversations for If/Elif/Else/Go/Bridge commands in the Choice List Editor:
+func choice_open_conversation_menu(field: LineEdit) -> void:
+	#% Clear old buttons:
+	for c in file_box.get_children():
+		c.queue_free()
+
+	var button_count = 0
+	#% Create one button per conversation:
+	for conv_name in candy_dc.conversations.keys():
+		if conv_name == "CUSTOM_PRESETS":
+			continue
+		var btn := Button.new()
+		btn.text = conv_name
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+		#% Selection:
+		btn.pressed.connect(func():
+			file_popup.hide()
+			get_node("ChoiceListEditor")._apply_selected_cbl(field, conv_name))
+
+		file_box.add_child(btn)
+		button_count += 1
+
+	#% Position & show list:
+	file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
+	file_popup.size.x = int(field.size.x)
+	file_popup.size.y = 8 + button_count * 31
+	file_popup.popup()
+
+
 #* Open a list of Blocks for If/Elif/Else/Jump/Bridge commands:
 func open_block_menu(line: Node, o_convo_field, field: LineEdit) -> void:
 	#% Clear old buttons
@@ -3606,6 +3636,53 @@ func open_block_menu(line: Node, o_convo_field, field: LineEdit) -> void:
 		btn.pressed.connect(func():
 			file_popup.hide()
 			line._apply_selected_block(block_name))
+
+		file_box.add_child(btn)
+		button_count += 1
+
+	#% Position & show list:
+	file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
+	file_popup.size.y = 8 + button_count * 31
+	file_popup.popup()
+
+
+#* Open a list of Blocks for If/Elif/Else/Jump/Bridge commands in the Choice List Editor:
+func choice_open_block_menu(o_convo_field, field: LineEdit) -> void:
+	#% Clear old buttons
+	for c in file_box.get_children():
+		c.queue_free()
+
+	#% Determine which conversation to use:
+	var convo_field: LineEdit = o_convo_field
+	var convo_name := convo_field.text.strip_edges()
+	var convo_to_use := ""
+
+	if convo_name == "":
+		convo_to_use = candy_dc.current_conversation
+	elif candy_dc.conversations.has(convo_name):
+		convo_to_use = convo_name
+	else:
+		#% Invalid name or missing conversation — show a warning:
+		var label := Label.new()
+		label.text = "[Not found]"
+		file_box.add_child(label)
+		file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
+		file_popup.size.x = int(field.size.x)
+		file_popup.size.y = 39
+		file_popup.popup()
+		return
+
+	#% Populate blocks for the chosen conversation:
+	var button_count = 0
+	var conv = candy_dc.conversations[convo_to_use]
+	for block_name in conv.keys():
+		var btn := Button.new()
+		btn.text = block_name
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+		btn.pressed.connect(func():
+			file_popup.hide()
+			get_node("ChoiceListEditor")._apply_selected_cbl(field, block_name))
 
 		file_box.add_child(btn)
 		button_count += 1
@@ -3679,6 +3756,84 @@ func open_line_menu(line: Node, o_convo_field, o_block_field, field: LineEdit) -
 				btn.pressed.connect(func():
 					file_popup.hide()
 					line._apply_selected_line(ref_name))
+				file_box.add_child(btn)
+				found_any = true
+				button_count += 1
+
+	if not found_any:
+		_show_line_menu_error(field, "[Not found]")
+		return
+
+	#% Position and show popup:
+	file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
+	file_popup.size.x = int(field.size.x)
+	file_popup.size.y = 8 + button_count * 31
+	file_popup.popup()
+
+
+#* Open a list of Lines (LM Commands) for If/Elif/Else/Jump/Bridge commands in the Choice List Editor:
+func choice_open_line_menu(o_convo_field, o_block_field, field: LineEdit) -> void:
+	#% Clear old buttons
+	for c in file_box.get_children():
+		c.queue_free()
+
+	#% Retrieve Conversation and Block fields:
+	var convo_name: String = o_convo_field.text.strip_edges()
+	var block_name: String = o_block_field.text.strip_edges()
+
+	var convo_to_use := ""
+	var block_to_use := ""
+
+	#% Determine which conversation/block to use:
+	if convo_name == "" and block_name == "":
+		#% Both empty: current conversation & block:
+		convo_to_use = candy_dc.current_conversation
+		block_to_use = candy_dc.current_block
+
+	elif convo_name == "" and block_name != "":
+		#% Conversation empty, block given: use current conversation if block exists:
+		convo_to_use = candy_dc.current_conversation
+		if candy_dc.conversations.has(convo_to_use) and candy_dc.conversations[convo_to_use].has(block_name):
+			block_to_use = block_name
+		else:
+			_show_line_menu_error(field, "[Not found]")
+			return
+
+	elif convo_name != "" and block_name != "":
+		#% Both provided: verify both exist:
+		if candy_dc.conversations.has(convo_name) and candy_dc.conversations[convo_name].has(block_name):
+			convo_to_use = convo_name
+			block_to_use = block_name
+		else:
+			_show_line_menu_error(field, "[Not found]")
+			return
+
+	elif convo_name != "" and block_name == "":
+		#% Conversation given, block missing: invalid:
+		_show_line_menu_error(field, "[Not found]")
+		return
+
+	#% Now collect LM Command lines for the given block:
+	var conv = candy_dc.conversations[convo_to_use]
+	var blk = conv[block_to_use]
+	if not blk.has("Text"):
+		_show_line_menu_error(field, "[Not found]")
+		return
+
+	var lines_array: Array = blk["Text"]
+	var found_any := false
+
+	var button_count = 0
+	for line_dict in lines_array:
+		if line_dict.has("§LM"):
+			var ref_name = str(line_dict["§LM"].get("Reference", "")).strip_edges()
+			if ref_name != "":
+				var btn := Button.new()
+				btn.text = ref_name
+				btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+				btn.pressed.connect(func():
+					file_popup.hide()
+					get_node("ChoiceListEditor")._apply_selected_cbl(field, ref_name))
 				file_box.add_child(btn)
 				found_any = true
 				button_count += 1

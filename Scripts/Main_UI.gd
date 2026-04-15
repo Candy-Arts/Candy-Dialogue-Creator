@@ -1726,7 +1726,20 @@ func _preview_portrait(char_name: String, filename: String) -> void:
 		hide_portrait_preview_only()
 		return
 
-	var path: String = dict[filename]
+	var raw = dict[filename]
+	var path: String
+
+	if raw is Dictionary:
+		if raw.is_empty():
+			hide_portrait_preview_only()
+			return
+		path = raw.values()[0]
+	elif raw is String:
+		path = raw
+	else:
+		hide_portrait_preview_only()
+		return
+
 	var img := Image.new()
 	if img.load(path) != OK:
 		hide_portrait_preview_only()
@@ -2053,7 +2066,7 @@ func open_bg_file_menu(line: Node, field: LineEdit, layer_name: String) -> void:
 	if candy_dc.resources.has("Backgrounds") and candy_dc.resources["Backgrounds"].has(layer_name):
 		for filename in candy_dc.resources["Backgrounds"][layer_name].keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename is Dictionary:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Animation Libraries" or filename == "Sprite Frames":
 				continue
 
 			var btn := Button.new()
@@ -2183,7 +2196,38 @@ func _preview_media_bg(layer_name: String, filename: String) -> void:
 		hide_media_preview_only()
 		return
 
-	var path: String = dict[filename]
+	var raw = dict[filename]
+	var path: String
+	if raw is Dictionary:
+		if raw.is_empty():
+			hide_media_preview_only()
+			return
+		path = raw.values()[0]
+	elif raw is String:
+		path = raw
+	else:
+		hide_media_preview_only()
+		return
+
+	if DirAccess.dir_exists_absolute(path):
+		var dir = DirAccess.open(path)
+		if dir == null:
+			hide_media_preview_only()
+			return
+		dir.list_dir_begin()
+		var first_file := ""
+		var fname = dir.get_next()
+		while fname != "":
+			if not dir.current_is_dir() and not fname.ends_with(".import"):
+				first_file = fname
+				break
+			fname = dir.get_next()
+		dir.list_dir_end()
+		if first_file == "":
+			hide_media_preview_only()
+			return
+		path = path.path_join(first_file)
+
 	var img := Image.new()
 	if img.load(path) != OK:
 		hide_media_preview_only()

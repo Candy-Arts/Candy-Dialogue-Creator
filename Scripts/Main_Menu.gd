@@ -62,4 +62,5 @@ func _on_save_confirm_no_pressed() -> void:
 func _on_save_confirm_yes_pressed() -> void:
 	$"SaveCheck".visible = false
 	self.visible = false
+	candy_dc.after_save = "new"
 	main._on_save_pressed()

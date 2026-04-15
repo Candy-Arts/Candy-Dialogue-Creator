@@ -4636,11 +4636,11 @@ func _validate_current_selection() -> void:
 #* Start new dialogue after saving:
 func new_dialogue():
 	candy_dc.conversations = {}
-	candy_dc.conversations = {"CUSTOM_PRESETS": {"Preset 1": {"Text": []}},"Conversation 1": {"Block 1": {"Text": []}}}
+	candy_dc.conversations = {"CUSTOM_PRESETS": {"Preset 1": {"Text": []}},"Conversation_1": {"Block_1": {"Text": []}}}
 	candy_dc.loaded_save = ""
 
-	candy_dc.current_conversation = "Conversation 1"
-	candy_dc.current_block = "Block 1"
+	candy_dc.current_conversation = "Conversation_1"
+	candy_dc.current_block = "Block_1"
 	candy_dc.editor_state = "ui"
 
 	#@ Update the Conversations dropdown:

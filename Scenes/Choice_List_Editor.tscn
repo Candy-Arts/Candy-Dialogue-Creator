@@ -743,6 +743,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ChoiceSettings" type="VBoxContainer" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox" unique_id=1162603295]
+visible = false
 layout_mode = 2
 
 [node name="Section" type="Label" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/ChoiceSettings" unique_id=1241213490]
@@ -1056,7 +1057,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="TimerSettings" type="VBoxContainer" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox" unique_id=665945788]
-visible = false
 layout_mode = 2
 
 [node name="Section" type="Label" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings" unique_id=67760440]
@@ -1174,6 +1174,9 @@ vertical_alignment = 1
 [node name="Loop" type="LineEdit" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Config/Loop" unique_id=573119703]
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
+tooltip_text = "How many times the timer should countdown.
+
+Set to -1 for infinite repeats."
 
 [node name="Start" type="HBoxContainer" parent="PanelC/PanelC/HBox/Options/ScrollC/VBox/TimerSettings/Config" unique_id=238416313]
 layout_mode = 2

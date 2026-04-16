@@ -72,6 +72,7 @@ mouse_filter = 1
 text = "Spoken Line"
 
 [node name="SpeechLine" type="HBoxContainer" parent="HBox" unique_id=1969313449]
+visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -885,7 +886,6 @@ tooltip_text = "Explicitly show or hide the speaker portraits when media starts.
 text = "Portrait"
 
 [node name="VN" type="HBoxContainer" parent="HBox" unique_id=409566086]
-visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3

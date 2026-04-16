@@ -21,6 +21,9 @@ var line_pool: Array = []		#/ Universal line nodes
 
 @onready var rc_menu := PopupMenu.new()
 
+#? Register submenus so they can be targeted for deletion.
+var _sprite_frames_submenu: PopupPanel = null
+
 var in_command_button := false
 
 var scroll_area = ""
@@ -1657,29 +1660,119 @@ func open_portrait_menu(line: Node, field: LineEdit, char_name: String) -> void:
 
 	#@ Rebuild the list:
 	if candy_dc.resources.has("*Portraits") and candy_dc.resources["*Portraits"].has(char_name):
-		for filename in candy_dc.resources["*Portraits"][char_name].keys():
+		var char_dict = candy_dc.resources["*Portraits"][char_name]
+		var has_any := false
+
+		#% First pass - Sprite Frames at the top:
+		if char_dict.has("Sprite Frames") and char_dict["Sprite Frames"] is Dictionary:
+			var sf_dict = char_dict["Sprite Frames"]
+			if not sf_dict.is_empty():
+				has_any = true
+				var sf_btn := Button.new()
+				sf_btn.text = "Sprite Frames ▶"
+				sf_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+				sf_btn.mouse_entered.connect(func():
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						_sprite_frames_submenu.hide()
+						_sprite_frames_submenu.queue_free()
+						_sprite_frames_submenu = null
+
+					_sprite_frames_submenu = PopupPanel.new()
+					_sprite_frames_submenu.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+					var vbox := VBoxContainer.new()
+					vbox.add_theme_constant_override("separation", 0)
+					_sprite_frames_submenu.add_child(vbox)
+					get_tree().root.add_child(_sprite_frames_submenu)
+
+					for sf_name in sf_dict.keys():
+						if not (sf_dict[sf_name] is String):
+							continue
+						var sub_btn := Button.new()
+						sub_btn.text = sf_name
+						sub_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+						sub_btn.pressed.connect(func():
+							file_popup.hide()
+							hide_portrait_panel()
+							if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+								_sprite_frames_submenu.hide()
+								_sprite_frames_submenu.queue_free()
+								_sprite_frames_submenu = null
+							line._apply_selected_portrait(sf_name))
+						vbox.add_child(sub_btn)
+
+					_sprite_frames_submenu.popup()
+					file_popup.grab_focus()
+					await get_tree().process_frame
+					var screen_height = DisplayServer.screen_get_size().y
+					var submenu_height = _sprite_frames_submenu.size.y
+					var btn_y = int(sf_btn.get_screen_position().y)
+					var submenu_y = btn_y
+					if btn_y + submenu_height > screen_height:
+						submenu_y = btn_y - submenu_height + int(sf_btn.size.y)
+					_sprite_frames_submenu.position = Vector2i(int(file_popup.position.x + file_popup.size.x), submenu_y))
+
+				sf_btn.mouse_exited.connect(func():
+					await get_tree().create_timer(0.2).timeout
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						var mouse_pos = _sprite_frames_submenu.get_mouse_position()
+						var rect = Rect2(Vector2.ZERO, _sprite_frames_submenu.size)
+						if not rect.has_point(mouse_pos):
+							_sprite_frames_submenu.queue_free()
+							_sprite_frames_submenu = null
+					file_popup.grab_focus())
+
+				file_box.add_child(sf_btn)
+
+		#% Second pass - everything else:
+		for filename in char_dict.keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or typeof(candy_dc.resources["*Portraits"][char_name][filename]) == TYPE_DICTIONARY:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Button Textures" or filename == "Sprite Frames":
 				continue
 
+			#% Handle Animated subfolder:
+			if filename == "Animated" and char_dict[filename] is Dictionary:
+				for anim_name in char_dict["Animated"].keys():
+					var anim_entry = char_dict["Animated"][anim_name]
+					if not (anim_entry is Dictionary):
+						continue
+					has_any = true
+					var btn_0 := Button.new()
+					btn_0.text = anim_name
+					btn_0.alignment = HORIZONTAL_ALIGNMENT_LEFT
+					btn_0.mouse_entered.connect(func():
+						_preview_portrait(char_name, anim_name))
+					btn_0.mouse_exited.connect(func():
+						hide_portrait_preview_only())
+					btn_0.pressed.connect(func():
+						file_popup.hide()
+						hide_portrait_panel()
+						line._apply_selected_portrait(anim_name))
+					file_box.add_child(btn_0)
+				continue
+
+			#% Skip other subfolders:
+			if char_dict[filename] is Dictionary:
+				continue
+
+			has_any = true
 			var btn := Button.new()
 			btn.text = filename
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-
-			#% Hover: show preview image (keep panel open):
 			btn.mouse_entered.connect(func():
 				_preview_portrait(char_name, filename))
-
-			#% Unhover: hide only the preview rect, NOT the popup panel:
 			btn.mouse_exited.connect(func():
 				hide_portrait_preview_only())
-
-			#% Select:
 			btn.pressed.connect(func():
 				file_popup.hide()
 				hide_portrait_panel()
 				line._apply_selected_portrait(filename))
 			file_box.add_child(btn)
+
+		if not has_any:
+			var label := Label.new()
+			label.text = "[No portraits found]"
+			file_box.add_child(label)
 	else:
 		var label := Label.new()
 		label.text = "[No portraits found]"
@@ -1701,7 +1794,7 @@ func open_portrait_menu(line: Node, field: LineEdit, char_name: String) -> void:
 	file_popup.size.y = int(max_height)
 
 	var line_number = int(line.name.substr(4))
-	if line_number < VISIBLE_LINES/2.0 :
+	if line_number < VISIBLE_LINES/2.0:
 		file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
 	else:
 		file_popup.position = field.get_global_position() + Vector2(0, 0 - max_height)
@@ -1722,18 +1815,100 @@ func _preview_portrait(char_name: String, filename: String) -> void:
 		return
 
 	var dict = candy_dc.resources["*Portraits"][char_name]
-	if not dict.has(filename):
+	if not dict.has(filename) and not (dict.has("Animated") and dict["Animated"].has(filename)):
 		hide_portrait_preview_only()
 		return
 
-	var raw = dict[filename]
 	var path: String
+	var raw = dict.get(filename)
+	if raw == null and dict.has("Animated") and dict["Animated"].has(filename):
+		raw = dict["Animated"][filename]
+	if raw == null:
+		hide_portrait_preview_only()
+		return
 
 	if raw is Dictionary:
 		if raw.is_empty():
 			hide_portrait_preview_only()
 			return
-		path = raw.values()[0]
+
+		var frames: Array = []
+		for file_path in raw.values():
+			if file_path is String:
+				var a_img := Image.new()
+				if a_img.load(file_path) == OK:
+					frames.append(ImageTexture.create_from_image(a_img))
+		if frames.is_empty():
+			hide_portrait_preview_only()
+			return
+
+		#% Read FPS from config.txt if present:
+		var folder_path = raw.values()[0].get_base_dir()
+		var anim_fps := 2.0
+		var config_txt = folder_path.path_join("config.txt")
+		if FileAccess.file_exists(config_txt):
+			var f := FileAccess.open(config_txt, FileAccess.READ)
+			if f:
+				var line := f.get_as_text().strip_edges()
+				f.close()
+				if "=" in line:
+					var val := line.split("=")[1].strip_edges()
+					if val.is_valid_float():
+						anim_fps = float(val)
+
+		#% Append empty frames to cover 1 second of blank:
+		var empty_count := int(ceil(anim_fps))
+		for i in range(empty_count):
+			frames.append(null)
+
+		portrait_preview.texture = frames[0]
+		portrait_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+
+		var old_timer := portrait_preview.get_node_or_null("PortraitPreviewTimer")
+		if old_timer:
+			old_timer.stop()
+			old_timer.queue_free()
+
+		var timer := Timer.new()
+		timer.name = "PortraitPreviewTimer"
+		timer.wait_time = 1.0 / anim_fps
+		timer.autostart = true
+		portrait_preview.add_child(timer)
+
+		if portrait_preview.has_meta("frame_state"):
+			portrait_preview.get_meta("frame_state")["active"] = false
+		var frame_state := {"index": 0, "active": true}
+		portrait_preview.set_meta("frame_state", frame_state)
+		var _animate := func():
+			while frame_state["active"]:
+				await timer.timeout
+				if not frame_state["active"]:
+					return
+				frame_state["index"] += 1
+				if frame_state["index"] >= frames.size():
+					frame_state["index"] = 0
+				portrait_preview.texture = frames[frame_state["index"]]
+		_animate.call_deferred()
+
+		#% Size from first frame:
+		var a_w := float(frames[0].get_width())
+		var a_h := float(frames[0].get_height())
+		var a_max_w = candy_dc.portrait_preview_max_w
+		var a_max_h = candy_dc.portrait_preview_max_h
+		if a_max_w > 0 or a_max_h > 0:
+			var ratio = a_w / a_h
+			if a_max_w > 0 and a_w > a_max_w:
+				a_w = a_max_w
+				a_h = a_w / ratio
+			if a_max_h > 0 and a_h > a_max_h:
+				a_h = a_max_h
+				a_w = a_h * ratio
+		portrait_preview.custom_minimum_size = Vector2(a_w, a_h)
+
+		portrait_popup.visible = true
+		portrait_preview.visible = true
+		return
+
 	elif raw is String:
 		path = raw
 	else:
@@ -1776,9 +1951,14 @@ func _preview_portrait(char_name: String, filename: String) -> void:
 
 #* Hide portrait preview:
 func hide_portrait_preview_only() -> void:
-	#% DO NOT close the Portrait popup, only its content:
-	if portrait_preview:
-		portrait_preview.visible = false
+	if portrait_preview.has_meta("frame_state"):
+		portrait_preview.get_meta("frame_state")["active"] = false
+	var timer := portrait_preview.get_node_or_null("PortraitPreviewTimer")
+	if timer:
+		timer.stop()
+		timer.queue_free()
+	portrait_preview.texture = null
+	portrait_preview.visible = false
 
 
 #* Close previews when list closes:
@@ -1943,26 +2123,43 @@ func open_media_menu(line: Node, field: LineEdit, node: String) -> void:
 		var node_folder = folder_dict[node]
 		for filename in node_folder.keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or node_folder[filename] is Dictionary:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Button Textures" or filename == "Sprite Frames" or filename == "Animation Libraries":
+				continue
+
+			#% Handle Animated subfolder:
+			if filename == "Animated" and node_folder[filename] is Dictionary:
+				for anim_name in node_folder["Animated"].keys():
+					var anim_entry = node_folder["Animated"][anim_name]
+					if not (anim_entry is Dictionary):
+						continue
+					var p_btn := Button.new()
+					p_btn.text = anim_name
+					p_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+					p_btn.mouse_entered.connect(func():
+						if anim_entry.is_empty():
+							return
+						_preview_media_image(anim_entry.values()[0].get_base_dir())
+					)
+					p_btn.mouse_exited.connect(func():
+						hide_media_preview_only())
+					p_btn.pressed.connect(func():
+						file_popup.hide()
+						line._apply_selected_media(anim_name))
+					file_box.add_child(p_btn)
+				continue
+
+			#% Skip other subfolders:
+			if node_folder[filename] is Dictionary:
 				continue
 
 			var btn := Button.new()
 			btn.text = filename
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-
-			#% Hover preview depending on media type:
 			btn.mouse_entered.connect(func():
-				if line_type == "§Image":
-					_preview_media_image(node_folder[filename])
-				elif line_type == "§Audio":
-					_preview_media_audio(node_folder[filename])
-				elif line_type == "§Video":
-					_preview_media_video(node_folder[filename])
+				_preview_media_image(node_folder[filename])
 			)
 			btn.mouse_exited.connect(func():
 				hide_media_preview_only())
-
-			#% Selection:
 			btn.pressed.connect(func():
 				file_popup.hide()
 				line._apply_selected_media(filename))
@@ -2003,11 +2200,106 @@ func open_vn_bust_file_menu(line: Node, field: LineEdit, char_name: String) -> v
 
 	#@ Rebuild the list:
 	if candy_dc.resources.has("*Busts") and candy_dc.resources["*Busts"].has(char_name):
-		for filename in candy_dc.resources["*Busts"][char_name].keys():
+		var char_dict = candy_dc.resources["*Busts"][char_name]
+		var has_any := false
+
+		#% First pass - Sprite Frames at the top:
+		if char_dict.has("Sprite Frames") and char_dict["Sprite Frames"] is Dictionary:
+			var sf_dict = char_dict["Sprite Frames"]
+			if not sf_dict.is_empty():
+				has_any = true
+				var sf_btn := Button.new()
+				sf_btn.text = "Sprite Frames ▶"
+				sf_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+				sf_btn.mouse_entered.connect(func():
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						_sprite_frames_submenu.hide()
+						_sprite_frames_submenu.queue_free()
+						_sprite_frames_submenu = null
+
+					_sprite_frames_submenu = PopupPanel.new()
+					_sprite_frames_submenu.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+					var vbox := VBoxContainer.new()
+					vbox.add_theme_constant_override("separation", 0)
+					_sprite_frames_submenu.add_child(vbox)
+					get_tree().root.add_child(_sprite_frames_submenu)
+
+					for sf_name in sf_dict.keys():
+						if not (sf_dict[sf_name] is String):
+							continue
+						var sub_btn := Button.new()
+						sub_btn.text = sf_name
+						sub_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+						sub_btn.pressed.connect(func():
+							file_popup.hide()
+							if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+								_sprite_frames_submenu.hide()
+								_sprite_frames_submenu.queue_free()
+								_sprite_frames_submenu = null
+							line._apply_selected_vn_bust_file(sf_name))
+						vbox.add_child(sub_btn)
+
+					_sprite_frames_submenu.popup()
+					file_popup.grab_focus()
+					await get_tree().process_frame
+					var screen_height = DisplayServer.screen_get_size().y
+					var submenu_height = _sprite_frames_submenu.size.y
+					var btn_y = int(sf_btn.get_screen_position().y)
+					var submenu_y = btn_y
+					if btn_y + submenu_height > screen_height:
+						submenu_y = btn_y - submenu_height + int(sf_btn.size.y)
+					_sprite_frames_submenu.position = Vector2i(int(file_popup.position.x + file_popup.size.x), submenu_y))
+
+				sf_btn.mouse_exited.connect(func():
+					await get_tree().create_timer(0.2).timeout
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						var mouse_pos = _sprite_frames_submenu.get_mouse_position()
+						var rect = Rect2(Vector2.ZERO, _sprite_frames_submenu.size)
+						if not rect.has_point(mouse_pos):
+							_sprite_frames_submenu.queue_free()
+							_sprite_frames_submenu = null
+					file_popup.grab_focus())
+
+				file_box.add_child(sf_btn)
+
+		#% Second pass - everything else:
+		for filename in char_dict.keys():
 			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or typeof(candy_dc.resources["*Busts"][char_name][filename]) == TYPE_DICTIONARY:
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Button Textures" or filename == "Sprite Frames" or filename == "Animation Libraries":
 				continue
 
+			#% Handle Animated subfolder:
+			if filename == "Animated" and char_dict[filename] is Dictionary:
+				for anim_name in char_dict["Animated"].keys():
+					var anim_entry = char_dict["Animated"][anim_name]
+					if not (anim_entry is Dictionary):
+						continue
+					has_any = true
+					var btn_0 := Button.new()
+					btn_0.text = anim_name
+					btn_0.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+					#% Hover: show preview image (keep panel open):
+					btn_0.mouse_entered.connect(func():
+						_preview_media_bust(char_name, anim_name))
+
+					#% Unhover: hide only the preview rect, NOT the popup panel:
+					btn_0.mouse_exited.connect(func():
+						hide_media_preview_only())
+
+					#% Select:
+					btn_0.pressed.connect(func():
+						file_popup.hide()
+						line._apply_selected_vn_bust_file(anim_name))
+					file_box.add_child(btn_0)
+				continue
+
+			#% Skip other subfolders:
+			if char_dict[filename] is Dictionary:
+				continue
+
+			has_any = true
 			var btn := Button.new()
 			btn.text = filename
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -2026,6 +2318,10 @@ func open_vn_bust_file_menu(line: Node, field: LineEdit, char_name: String) -> v
 				line._apply_selected_vn_bust_file(filename))
 			file_box.add_child(btn)
 
+		if not has_any:
+			var label := Label.new()
+			label.text = "[No busts found]"
+			file_box.add_child(label)
 	else:
 		var label := Label.new()
 		label.text = "[No busts found]"
@@ -2054,7 +2350,8 @@ func open_vn_bust_file_menu(line: Node, field: LineEdit, char_name: String) -> v
 
 	file_popup.popup()
 
-#* Open a list of VN Bust files for the selected character:
+
+#* Open a list of Background layer files for the selected character:
 func open_bg_file_menu(line: Node, field: LineEdit, layer_name: String) -> void:
 	#@ Clear old items:
 	for c in file_box.get_children():
@@ -2064,29 +2361,119 @@ func open_bg_file_menu(line: Node, field: LineEdit, layer_name: String) -> void:
 
 	#@ Rebuild the list:
 	if candy_dc.resources.has("Backgrounds") and candy_dc.resources["Backgrounds"].has(layer_name):
-		for filename in candy_dc.resources["Backgrounds"][layer_name].keys():
-			#% Skip UID files and subfolders:
-			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Animation Libraries" or filename == "Sprite Frames":
+		var layer_dict = candy_dc.resources["Backgrounds"][layer_name]
+		var has_any := false
+
+		#% First pass - Sprite Frames at the top:
+		if layer_dict.has("Sprite Frames") and layer_dict["Sprite Frames"] is Dictionary:
+			var sf_dict = layer_dict["Sprite Frames"]
+			if not sf_dict.is_empty():
+				has_any = true
+				var sf_btn := Button.new()
+				sf_btn.text = "Sprite Frames ▶"
+				sf_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+				var submenu: PopupPanel = null
+
+				sf_btn.mouse_entered.connect(func():
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						_sprite_frames_submenu.hide()
+						_sprite_frames_submenu.queue_free()
+						_sprite_frames_submenu = null
+
+					_sprite_frames_submenu = PopupPanel.new()
+					_sprite_frames_submenu.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+					var vbox := VBoxContainer.new()
+					vbox.add_theme_constant_override("separation", 0)
+					_sprite_frames_submenu.add_child(vbox)
+					get_tree().root.add_child(_sprite_frames_submenu)
+
+					for sf_name in sf_dict.keys():
+						if not (sf_dict[sf_name] is String):
+							continue
+						var sub_btn := Button.new()
+						sub_btn.text = sf_name
+						sub_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+						sub_btn.pressed.connect(func():
+							file_popup.hide()
+							if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+								_sprite_frames_submenu.hide()
+								_sprite_frames_submenu.queue_free()
+								_sprite_frames_submenu = null
+							line._apply_selected_bg(sf_name))
+						vbox.add_child(sub_btn)
+
+					_sprite_frames_submenu.popup()
+					file_popup.grab_focus()
+					await get_tree().process_frame
+					var screen_height = DisplayServer.screen_get_size().y
+					var submenu_height = _sprite_frames_submenu.size.y
+					var btn_y = int(sf_btn.get_screen_position().y)
+					var submenu_y = btn_y
+					if btn_y + submenu_height > screen_height:
+						submenu_y = btn_y - submenu_height + int(sf_btn.size.y)
+					_sprite_frames_submenu.position = Vector2i(int(file_popup.position.x + file_popup.size.x), submenu_y))
+
+				sf_btn.mouse_exited.connect(func():
+					await get_tree().create_timer(0.2).timeout
+					if _sprite_frames_submenu != null and is_instance_valid(_sprite_frames_submenu):
+						var mouse_pos = _sprite_frames_submenu.get_mouse_position()
+						var rect = Rect2(Vector2.ZERO, _sprite_frames_submenu.size)
+						if not rect.has_point(mouse_pos):
+							_sprite_frames_submenu.queue_free()
+							_sprite_frames_submenu = null
+					file_popup.grab_focus())
+
+				file_box.add_child(sf_btn)
+
+		#% Second pass - everything else:
+		for filename in layer_dict.keys():
+			if filename.ends_with(".uid") or filename.ends_with(".tscn") or filename.ends_with(".txt") or filename == "Button Textures" or filename == "Animation Libraries" or filename == "Sprite Frames":
 				continue
 
+			#% Handle Animated subfolder:
+			if filename == "Animated" and layer_dict[filename] is Dictionary:
+				for anim_name in layer_dict["Animated"].keys():
+					var anim_entry = layer_dict["Animated"][anim_name]
+					if not (anim_entry is Dictionary):
+						continue
+					has_any = true
+					var btn_0 := Button.new()
+					btn_0.text = anim_name
+					btn_0.alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+					btn_0.mouse_entered.connect(func():
+						_preview_media_bg(layer_name, anim_name))
+					btn_0.mouse_exited.connect(func():
+						hide_media_preview_only())
+					btn_0.pressed.connect(func():
+						file_popup.hide()
+						line._apply_selected_bg(anim_name))
+					file_box.add_child(btn_0)
+				continue
+
+			#% Skip other subfolders:
+			if layer_dict[filename] is Dictionary:
+				continue
+
+			has_any = true
 			var btn := Button.new()
 			btn.text = filename
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
-			#% Hover: show preview image (keep panel open):
 			btn.mouse_entered.connect(func():
 				_preview_media_bg(layer_name, filename))
-
-			#% Unhover: hide only the preview rect, NOT the popup panel:
 			btn.mouse_exited.connect(func():
 				hide_media_preview_only())
-
-			#% Select:
 			btn.pressed.connect(func():
 				file_popup.hide()
 				line._apply_selected_bg(filename))
 			file_box.add_child(btn)
 
+		if not has_any:
+			var label := Label.new()
+			label.text = "[No backgrounds found]"
+			file_box.add_child(label)
 	else:
 		var label := Label.new()
 		label.text = "[No backgrounds found]"
@@ -2118,6 +2505,92 @@ func open_bg_file_menu(line: Node, field: LineEdit, layer_name: String) -> void:
 
 #* Preview an image file:
 func _preview_media_image(path: String) -> void:
+	print("_preview_media_image path: ", path)
+	if DirAccess.dir_exists_absolute(path):
+		var frames: Array = []
+		var anim_fps := 2.0
+		var folder_path := path
+		var dir = DirAccess.open(path)
+		if dir == null:
+			hide_media_preview_only()
+			return
+		dir.list_dir_begin()
+		var fname = dir.get_next()
+		while fname != "":
+			if not dir.current_is_dir() and not fname.ends_with(".import") and not fname.ends_with(".txt"):
+				var a_img := Image.new()
+				if a_img.load(path.path_join(fname)) == OK:
+					frames.append(ImageTexture.create_from_image(a_img))
+			fname = dir.get_next()
+		dir.list_dir_end()
+		frames.sort_custom(func(a, b):
+			if a == null or b == null: return false
+			return a.resource_path < b.resource_path)
+		var config_txt := folder_path.path_join("config.txt")
+		if FileAccess.file_exists(config_txt):
+			var f := FileAccess.open(config_txt, FileAccess.READ)
+			if f:
+				var line := f.get_as_text().strip_edges()
+				f.close()
+				if "=" in line:
+					var val := line.split("=")[1].strip_edges()
+					if val.is_valid_float():
+						anim_fps = float(val)
+
+		var empty_count := int(ceil(anim_fps))
+		for i in range(empty_count):
+			frames.append(null)
+
+		if frames.is_empty():
+			hide_media_preview_only()
+			return
+
+		media_image_preview.texture = frames[0]
+		media_image_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+
+		if media_image_preview.has_meta("frame_state"):
+			media_image_preview.get_meta("frame_state")["active"] = false
+		var frame_state := {"index": 0, "active": true}
+		media_image_preview.set_meta("frame_state", frame_state)
+
+		var timer := Timer.new()
+		timer.name = "MediaPreviewTimer"
+		timer.wait_time = 1.0 / anim_fps
+		timer.autostart = true
+		media_image_preview.add_child(timer)
+
+		var _animate := func():
+			while frame_state["active"]:
+				await timer.timeout
+				if not frame_state["active"]:
+					return
+				frame_state["index"] += 1
+				if frame_state["index"] >= frames.size():
+					frame_state["index"] = 0
+				media_image_preview.texture = frames[frame_state["index"]]
+		_animate.call_deferred()
+
+		var first = frames[0]
+		if first == null:
+			hide_media_preview_only()
+			return
+		var a_w := float(first.get_width())
+		var a_h := float(first.get_height())
+		var a_max_w = candy_dc.image_preview_max_w
+		var a_max_h = candy_dc.image_preview_max_h
+		if a_max_w > 0 or a_max_h > 0:
+			var ratio = a_w / a_h
+			if a_max_w > 0 and a_w > a_max_w:
+				a_w = a_max_w
+				a_h = a_w / ratio
+			if a_max_h > 0 and a_h > a_max_h:
+				a_h = a_max_h
+				a_w = a_h * ratio
+		media_image_preview.custom_minimum_size = Vector2(a_w, a_h)
+		portrait_popup.visible = true
+		media_image_preview.visible = true
+		return
+
 	if not FileAccess.file_exists(path):
 		hide_media_preview_only()
 		return
@@ -2132,7 +2605,6 @@ func _preview_media_image(path: String) -> void:
 	media_image_preview.texture = tex
 	media_image_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 
-	#% Respect global max size settings:
 	var w = tex.get_width()
 	var h = tex.get_height()
 	var max_w = candy_dc.image_preview_max_w
@@ -2147,7 +2619,6 @@ func _preview_media_image(path: String) -> void:
 			w = h * ratio
 
 	media_image_preview.custom_minimum_size = Vector2(w, h)
-
 	portrait_popup.visible = true
 	media_image_preview.visible = true
 
@@ -2192,62 +2663,100 @@ func _preview_media_bg(layer_name: String, filename: String) -> void:
 		return
 
 	var dict = candy_dc.resources["Backgrounds"][layer_name]
-	if not dict.has(filename):
+
+	var raw = dict.get(filename)
+	if raw == null and dict.has("Animated") and dict["Animated"].has(filename):
+		raw = dict["Animated"][filename]
+	if raw == null:
 		hide_media_preview_only()
 		return
 
-	var raw = dict[filename]
-	var path: String
+	var folder_path: String = ""
+	var frames: Array = []
+	var anim_fps := 2.0
+
 	if raw is Dictionary:
 		if raw.is_empty():
 			hide_media_preview_only()
 			return
-		path = raw.values()[0]
+		folder_path = raw.values()[0].get_base_dir()
+		for file_path in raw.values():
+			if file_path is String:
+				var a_img := Image.new()
+				if a_img.load(file_path) == OK:
+					frames.append(ImageTexture.create_from_image(a_img))
+
+		#% Read FPS from config.txt:
+		var config_txt := folder_path.path_join("config.txt")
+		if FileAccess.file_exists(config_txt):
+			var f := FileAccess.open(config_txt, FileAccess.READ)
+			if f:
+				var line := f.get_as_text().strip_edges()
+				f.close()
+				if "=" in line:
+					var val := line.split("=")[1].strip_edges()
+					if val.is_valid_float():
+						anim_fps = float(val)
+
+		#% Append empty frames to cover 1 second of blank:
+		var empty_count := int(ceil(anim_fps))
+		for i in range(empty_count):
+			frames.append(null)
+
 	elif raw is String:
-		path = raw
+		var img := Image.new()
+		if img.load(raw) != OK:
+			hide_media_preview_only()
+			return
+		var tex := ImageTexture.create_from_image(img)
+		if not (tex is Texture2D):
+			hide_media_preview_only()
+			return
+		frames.append(tex)
 	else:
 		hide_media_preview_only()
 		return
 
-	if DirAccess.dir_exists_absolute(path):
-		var dir = DirAccess.open(path)
-		if dir == null:
-			hide_media_preview_only()
-			return
-		dir.list_dir_begin()
-		var first_file := ""
-		var fname = dir.get_next()
-		while fname != "":
-			if not dir.current_is_dir() and not fname.ends_with(".import"):
-				first_file = fname
-				break
-			fname = dir.get_next()
-		dir.list_dir_end()
-		if first_file == "":
-			hide_media_preview_only()
-			return
-		path = path.path_join(first_file)
-
-	var img := Image.new()
-	if img.load(path) != OK:
+	if frames.is_empty():
 		hide_media_preview_only()
 		return
 
-	var tex := ImageTexture.create_from_image(img)
-	if not (tex is Texture2D):
+	background_preview.texture = frames[0]
+	background_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+
+	if frames.size() > 1:
+		if background_preview.has_meta("frame_state"):
+			background_preview.get_meta("frame_state")["active"] = false
+		var frame_state := {"index": 0, "active": true}
+		background_preview.set_meta("frame_state", frame_state)
+
+		var timer := Timer.new()
+		timer.name = "MediaPreviewTimer"
+		timer.wait_time = 1.0 / anim_fps
+		timer.autostart = true
+		background_preview.add_child(timer)
+
+		var _animate := func():
+			while frame_state["active"]:
+				await timer.timeout
+				if not frame_state["active"]:
+					return
+				frame_state["index"] += 1
+				if frame_state["index"] >= frames.size():
+					frame_state["index"] = 0
+				background_preview.texture = frames[frame_state["index"]]
+		_animate.call_deferred()
+
+	var first = frames[0]
+	if first == null:
 		hide_media_preview_only()
 		return
-
-	bust_preview.texture = tex
-	bust_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
-
-	#% Respect global max size settings:
-	var w = tex.get_width()
-	var h = tex.get_height()
+	var w := float(first.get_width())
+	var h := float(first.get_height())
 	var max_w = candy_dc.bg_preview_max_w
 	var max_h = candy_dc.bg_preview_max_h
 	if max_w > 0 or max_h > 0:
-		var ratio = float(w) / float(h)
+		var ratio = w / h
 		if max_w > 0 and w > max_w:
 			w = max_w
 			h = w / ratio
@@ -2255,46 +2764,112 @@ func _preview_media_bg(layer_name: String, filename: String) -> void:
 			h = max_h
 			w = h * ratio
 
-	bust_preview.custom_minimum_size = Vector2(w, h)
-
-	#% Show panel + rect; panel tracks cursor in _process:
+	background_preview.custom_minimum_size = Vector2(w, h)
 	portrait_popup.visible = true
-	bust_preview.visible = true
+	background_preview.visible = true
 
 
-
-#* Internal: preview a VN Bust:
+#* Preview a VN Bust:
 func _preview_media_bust(char_name: String, filename: String) -> void:
 	if not (candy_dc.resources.has("*Busts") and candy_dc.resources["*Busts"].has(char_name)):
 		hide_media_preview_only()
 		return
 
 	var dict = candy_dc.resources["*Busts"][char_name]
-	if not dict.has(filename):
+
+	var raw = dict.get(filename)
+	if raw == null and dict.has("Animated") and dict["Animated"].has(filename):
+		raw = dict["Animated"][filename]
+	if raw == null:
 		hide_media_preview_only()
 		return
 
-	var path: String = dict[filename]
-	var img := Image.new()
-	if img.load(path) != OK:
+	var folder_path: String = ""
+	var frames: Array = []
+	var anim_fps := 2.0
+
+	if raw is Dictionary:
+		if raw.is_empty():
+			hide_media_preview_only()
+			return
+		folder_path = raw.values()[0].get_base_dir()
+		for file_path in raw.values():
+			if file_path is String:
+				var a_img := Image.new()
+				if a_img.load(file_path) == OK:
+					frames.append(ImageTexture.create_from_image(a_img))
+
+		#% Read FPS from config.txt:
+		var config_txt := folder_path.path_join("config.txt")
+		if FileAccess.file_exists(config_txt):
+			var f := FileAccess.open(config_txt, FileAccess.READ)
+			if f:
+				var line := f.get_as_text().strip_edges()
+				f.close()
+				if "=" in line:
+					var val := line.split("=")[1].strip_edges()
+					if val.is_valid_float():
+						anim_fps = float(val)
+
+		#% Append empty frames to cover 1 second of blank:
+		var empty_count := int(ceil(anim_fps))
+		for i in range(empty_count):
+			frames.append(null)
+
+	elif raw is String:
+		var img := Image.new()
+		if img.load(raw) != OK:
+			hide_media_preview_only()
+			return
+		var tex := ImageTexture.create_from_image(img)
+		if not (tex is Texture2D):
+			hide_media_preview_only()
+			return
+		frames.append(tex)
+	else:
 		hide_media_preview_only()
 		return
 
-	var tex := ImageTexture.create_from_image(img)
-	if not (tex is Texture2D):
+	if frames.is_empty():
 		hide_media_preview_only()
 		return
 
-	bust_preview.texture = tex
+	bust_preview.texture = frames[0]
 	bust_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 
-	#% Respect global max size settings:
-	var w = tex.get_width()
-	var h = tex.get_height()
+	if frames.size() > 1:
+		if bust_preview.has_meta("frame_state"):
+			bust_preview.get_meta("frame_state")["active"] = false
+		var frame_state := {"index": 0, "active": true}
+		bust_preview.set_meta("frame_state", frame_state)
+
+		var timer := Timer.new()
+		timer.name = "MediaPreviewTimer"
+		timer.wait_time = 1.0 / anim_fps
+		timer.autostart = true
+		bust_preview.add_child(timer)
+
+		var _animate := func():
+			while frame_state["active"]:
+				await timer.timeout
+				if not frame_state["active"]:
+					return
+				frame_state["index"] += 1
+				if frame_state["index"] >= frames.size():
+					frame_state["index"] = 0
+				bust_preview.texture = frames[frame_state["index"]]
+		_animate.call_deferred()
+
+	var first = frames[0]
+	if first == null:
+		hide_media_preview_only()
+		return
+	var w := float(first.get_width())
+	var h := float(first.get_height())
 	var max_w = candy_dc.bust_preview_max_w
 	var max_h = candy_dc.bust_preview_max_h
 	if max_w > 0 or max_h > 0:
-		var ratio = float(w) / float(h)
+		var ratio = w / h
 		if max_w > 0 and w > max_w:
 			w = max_w
 			h = w / ratio
@@ -2309,10 +2884,19 @@ func _preview_media_bust(char_name: String, filename: String) -> void:
 	bust_preview.visible = true
 
 
+#* Hide media previews:
 func hide_media_preview_only() -> void:
-	#% DO NOT close the preview popup, only its content:
+	for preview in [portrait_preview, media_image_preview, bust_preview, background_preview]:
+		if preview.has_meta("frame_state"):
+			preview.get_meta("frame_state")["active"] = false
+		var timer = preview.get_node_or_null("MediaPreviewTimer")
+		if timer:
+			timer.stop()
+			timer.queue_free()
+		preview.texture = null
 	portrait_preview.visible = false
 	media_image_preview.visible = false
+	bust_preview.visible = false
 	background_preview.visible = false
 	portrait_preview.visible = false
 	media_audio_preview.stop()
@@ -2349,6 +2933,8 @@ func open_scene_menu(line: Node, field: LineEdit, type: String) -> void:
 				file_box.add_child(btn)
 
 	elif type == "BG":
+		print("Got here")
+		print(candy_dc.resources["BG Scenes"])
 		#% Get the files dictionary from candy_dc.resources:
 		if not candy_dc.resources.has("BG Scenes"):
 			var label := Label.new()
@@ -2538,7 +3124,7 @@ func open_vn_bust_node_menu(line: Node, field: LineEdit):
 
 		#% Select:
 		btn.pressed.connect(func():
-			file_popup.hide()				#/ List closes
+			file_popup.hide()			#/ List closes
 			hide_portrait_panel()
 			line._apply_selected_vn_bust_node(bust_node))
 		file_box.add_child(btn)
@@ -2584,6 +3170,8 @@ func open_vn_layer_node_menu(line: Node, field: LineEdit):
 
 		#% Create a button for each folder under Backgrounds:
 		for folder_name in bg_dict.keys():
+			if folder_name == "Animation Libraries":
+				continue
 			var btn := Button.new()
 			btn.text = folder_name
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -2677,7 +3265,7 @@ func open_vn_actors_menu(line: Node, field: LineEdit):
 
 
 #* Open a list of Animation Library files (for VN or BG commands):
-func open_vn_library_menu(line: Node, field: LineEdit, type: String):
+func open_vn_library_menu(line: Node, field: LineEdit, type: String, actor: String):
 	#% Clear any existing items in the shared file list:
 	for c in file_box.get_children():
 		c.queue_free()
@@ -2687,28 +3275,16 @@ func open_vn_library_menu(line: Node, field: LineEdit, type: String):
 	var dict := {}
 
 	if type == "VN":
-		#@ Step 1: Get the character name (Reference):
-		var char_name := ""
-		if line.line_data.has("Reference"):
-			char_name = str(line.line_data["Reference"]).strip_edges()
-		else:
-			var ref_field := line.get_node_or_null("HBox/VN/Reference/Ref")
-			if ref_field:
-				char_name = str(ref_field.text).strip_edges()
-
-		#% Stop if invalid:
-		if char_name == "" or not candy_dc.resources.has("*Busts") or not candy_dc.resources["*Busts"].has(char_name):
+		if actor == "" or not candy_dc.resources.has("*Busts") or not candy_dc.resources["*Busts"].has(actor):
 			var label := Label.new()
 			label.text = "[Not found]"
 			file_box.add_child(label)
-			#% Display popup immediately:
 			file_popup.position = field.get_global_position() + Vector2(0, field.size.y)
 			file_popup.popup()
 			return
 
-		#@ Step 2: Access the "Animation Libraries" subfolder inside the Bust folder:
-		var bust_dict = candy_dc.resources["*Busts"][char_name]
-		if not bust_dict.has("Animation Libraries"):
+		var bust_dict = candy_dc.resources["*Busts"][actor]
+		if not bust_dict.has("Animation Libraries") or bust_dict["Animation Libraries"].is_empty():
 			var label := Label.new()
 			label.text = "[No Animation Libraries]"
 			file_box.add_child(label)
@@ -2757,7 +3333,7 @@ func open_vn_library_menu(line: Node, field: LineEdit, type: String):
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.pressed.connect(func():
 			file_popup.hide()
-			line._apply_selected_media(filename))
+			line._apply_selected_vn_library(filename))
 		file_box.add_child(btn)
 
 	#@ Step 4: Display popup:
@@ -2783,24 +3359,50 @@ func open_vn_library_menu(line: Node, field: LineEdit, type: String):
 	file_popup.popup()
 
 
-func open_vn_effects_menu(line: Node, field: LineEdit):
+func open_vn_effects_menu(type: String, line: Node, field: LineEdit, library: String, actor: String):
+	print(candy_dc.resources)
 	#% Rebuild the list:
 	for c in file_box.get_children():
 		c.queue_free()
 
 	await get_tree().process_frame
 
-	for effect in candy_dc.effect_list:
-		var btn := Button.new()
-		btn.text = effect
-		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	#% Resolve library path based on type:
+	var lib_path := ""
+	if type == "BG":
+		lib_path = candy_dc.resources.get("Backgrounds", {}).get("Animation Libraries", {}).get(library, "")
+		if lib_path == "" and not library.ends_with(".tres") and not library.ends_with(".res"):
+			lib_path = candy_dc.resources.get("Backgrounds", {}).get("Animation Libraries", {}).get(library + ".tres", "")
+			if lib_path == "":
+				lib_path = candy_dc.resources.get("Backgrounds", {}).get("Animation Libraries", {}).get(library + ".res", "")
 
-		#% Select:
-		btn.pressed.connect(func():
-			file_popup.hide()				#/ List closes
-			hide_portrait_panel()
-			line._apply_selected_vn_effect(effect))
-		file_box.add_child(btn)
+	elif type == "VN":
+		var actor_libs = candy_dc.resources.get("*Busts", {}).get(actor, {}).get("Animation Libraries", {})
+		lib_path = actor_libs.get(library, "")
+		if lib_path == "" and not library.ends_with(".tres") and not library.ends_with(".res"):
+			lib_path = actor_libs.get(library + ".tres", "")
+			if lib_path == "":
+				lib_path = actor_libs.get(library + ".res", "")
+
+	if lib_path == "" or not ResourceLoader.exists(lib_path):
+		var label := Label.new()
+		label.text = "[Library not found]"
+		file_box.add_child(label)
+	else:
+		var anim_lib := load(lib_path)
+		if not (anim_lib is AnimationLibrary):
+			var label := Label.new()
+			label.text = "[Invalid library]"
+			file_box.add_child(label)
+		else:
+			for effect in anim_lib.get_animation_list():
+				var btn := Button.new()
+				btn.text = effect
+				btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+				btn.pressed.connect(func():
+					file_popup.hide()
+					line._apply_selected_vn_effects(effect))
+				file_box.add_child(btn)
 
 	#% Show popup:
 	var max_width := 0.0

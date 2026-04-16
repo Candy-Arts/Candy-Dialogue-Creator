@@ -2957,13 +2957,20 @@ func _on_media_file_mouse_entered() -> void:
 		return
 
 	if line.has("§Image"):
-		if candy_dc.resources.has("Images") \
-		and candy_dc.resources["Images"].has(media_player) \
-		and candy_dc.resources["Images"][media_player].has(filename):
-			var file = candy_dc.resources["Images"][media_player][filename]
+		var node_dict = candy_dc.resources.get("Images", {}).get(media_player, {})
+		var file = node_dict.get(filename)
+		if file == null and node_dict.has("Animated") and node_dict["Animated"].has(filename):
+			file = node_dict["Animated"][filename]
+		if file == null:
+			return
+		if file is Dictionary:
+			if file.is_empty():
+				return
+			main._preview_media_image(file.values()[0].get_base_dir())
+		elif file is String:
 			main._preview_media_image(file)
 
-	elif line.has("§BG"):
+	elif line.keys()[0].begins_with("§BG"):
 		if candy_dc.resources.has("Backgrounds") \
 		and candy_dc.resources["Backgrounds"].has(filename):
 			var file = candy_dc.resources["Backgrounds"][filename]
@@ -3062,7 +3069,8 @@ func _on_vn_scene_changed(new_text: String) -> void:
 func _on_vn_scene_button_pressed() -> void:
 	var field: LineEdit = $"HBox/VN/Scene/Scene"
 	var type = "VN"
-	if line.has("§BG"):
+	print(line)
+	if line.keys()[0].begins_with("§BG"):
 		type = "BG"
 	main.open_scene_menu(self, field, type)
 
@@ -3089,7 +3097,7 @@ func _on_vn_layer_button_pressed() -> void:
 	main.open_vn_layer_node_menu(self, field)
 
 func _apply_selected_vn_layer(filename: String) -> void:
-	if line.has("§BG"):
+	if line.keys()[0].begins_with("§BG"):
 		$"HBox/VN/Layers/Layer".text = filename
 		line_data["Layers"] = filename
 	else:
@@ -3108,9 +3116,17 @@ func _on_vn_library_changed(new_text: String) -> void:
 func _on_vn_library_button_pressed() -> void:
 	var field: LineEdit = $"HBox/VN/Libraries/Library"
 	var type = "VN"
-	if line.has("§BG"):
+	var actor = ""
+	if line.keys()[0].begins_with("§BG"):
 		type = "BG"
-	main.open_vn_library_menu(self, field, type)
+	if type == "VN":
+		var actor_raw = $"HBox/VN/Actors/Actors".text.strip_edges()
+		actor = actor_raw.split(",")[0].strip_edges()
+	main.open_vn_library_menu(self, field, type, actor)
+
+func _apply_selected_vn_library(filename: String) -> void:
+	$"HBox/VN/Libraries/Library".text = filename
+	line_data["Library"] = filename
 
 func _on_vn_animation_changed(new_text: String) -> void:
 	line_data["Animation"] = new_text
@@ -3138,17 +3154,29 @@ func _on_vn_effects_changed(new_text: String) -> void:
 
 func _on_vn_effects_button_pressed() -> void:
 	var field: LineEdit = $"HBox/VN/Effects/Effects"
-	main.open_vn_effects_menu(self, field)
+	var library = $"HBox/VN/Libraries/Library".text
+	var type = "VN"
+	var actor = ""
+	if line.keys()[0].begins_with("§BG"):
+		type = "BG"
+	if type == "VN":
+		var actor_raw = $"HBox/VN/Actors/Actors".text.strip_edges()
+		actor = actor_raw.split(",")[0].strip_edges()
+	main.open_vn_effects_menu(type, self, field, library, actor)
 
 func _apply_selected_vn_effects(effect: String) -> void:
-	#% If comma and no space, add space:
-	if $"HBox/VN/Effects/Effects".text.ends_with(","):
-		$"HBox/VN/Effects/Effects".text += " "
-	#% If not comma and space → never had comma:
-	if not $"HBox/VN/Effects/Effects".text.ends_with(", ") and $"HBox/VN/Effects/Effects".text != "":
-		$"HBox/VN/Effects/Effects".text += ", "
-	$"HBox/VN/Effects/Effects".text += effect + ", "
-	line_data["Effects"] = $"HBox/VN/Effects/Effects".text
+	var current = $"HBox/VN/Effects/Effects".text.strip_edges()
+	#% Remove trailing comma and spaces:
+	while current.ends_with(",") or current.ends_with(" "):
+		current = current.substr(0, current.length() - 1)
+	current = current.strip_edges()
+	#% Append with separator if needed:
+	if current == "":
+		current = effect
+	else:
+		current = current + ", " + effect
+	$"HBox/VN/Effects/Effects".text = current
+	line_data["Effects"] = current
 
 #* Hover preview for currently selected portrait (delegates to main)
 func _on_vn_bust_mouse_entered() -> void:

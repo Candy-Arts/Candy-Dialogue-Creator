@@ -108,9 +108,10 @@ offset_top = 224.0
 offset_right = 1312.0
 offset_bottom = 816.0
 theme_override_constants/side_margin = 0
-current_tab = 0
+current_tab = 2
 
 [node name="Preferences" type="Control" parent="TabContainer" unique_id=1189037346]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -835,7 +836,6 @@ file_mode = 2
 access = 2
 
 [node name="ProjectData" type="PanelContainer" parent="TabContainer" unique_id=1974200690]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -897,6 +897,7 @@ Values must be separated by a period (,)."
 placeholder_text = "Flag_1, Flag_2"
 wrap_mode = 1
 tab_input_mode = false
+scroll_fit_content_height = true
 
 [node name="Disposition" type="HBoxContainer" parent="TabContainer/ProjectData/Data/VBox" unique_id=484800268]
 custom_minimum_size = Vector2(0, 32)
@@ -947,6 +948,7 @@ Values must be separated by a period (,)."
 placeholder_text = "Like, Dislike"
 wrap_mode = 1
 tab_input_mode = false
+scroll_fit_content_height = true
 
 [node name="Actor" type="HBoxContainer" parent="TabContainer/ProjectData/Data/VBox" unique_id=679539881]
 custom_minimum_size = Vector2(0, 32)
@@ -998,6 +1000,7 @@ placeholder_text = "Alice, John
 "
 wrap_mode = 1
 tab_input_mode = false
+scroll_fit_content_height = true
 
 [node name="Role" type="HBoxContainer" parent="TabContainer/ProjectData/Data/VBox" unique_id=1010039869]
 custom_minimum_size = Vector2(0, 32)
@@ -1048,6 +1051,7 @@ Values must be separated by a period (,)."
 placeholder_text = "Ally_1, Enemy_1"
 wrap_mode = 1
 tab_input_mode = false
+scroll_fit_content_height = true
 
 [node name="Busts" type="HBoxContainer" parent="TabContainer/ProjectData/Data/VBox" unique_id=1707710302]
 layout_mode = 2
@@ -1072,6 +1076,7 @@ wrap_mode = 1
 tab_input_mode = false
 
 [node name="Effects" type="HBoxContainer" parent="TabContainer/ProjectData/Data/VBox" unique_id=1647310709]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0

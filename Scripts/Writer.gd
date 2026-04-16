@@ -240,17 +240,17 @@ func setup():
 
 	reset_variant_data()
 
-	#% Recreate custom inserts:
+	#@ Recreate custom inserts:
 	populate_custom_inserts()
 
-	#% Setup show/hide lines:
+	#@ Setup show/hide lines:
 	for l in $"Main/HBox/VBoxContainer/HideLines".get_children():
 		if show_hide_lines[l.name]["Hide"] == true:
 			l.modulate = Color(0.5, 0.5, 0.5)
 		elif show_hide_lines[l.name]["Hide"] == false:
 			l.modulate = Color(1, 1, 1)
 
-	#% Load text for the Default variant:
+	#@ Load text for the Default variant:
 	for i in range(variants.size()):
 		if variants[i].has("Default"):
 			idx = i
@@ -265,32 +265,42 @@ func setup():
 	$"Main/HBox/WritingArea/TopBar/Speaker/SpeakerField".text = line_speaker
 	$"Main/HBox/WritingArea/TopBar/Disposition/DispositionField".text = line_data["Disposition"]
 
+	#@ Tag buttons:
 	#% LLM button:
 	var llm_btn := $"Main/HBox/WritingArea/TopBar/LLM"
 	match line_data.get("AI", 0):
 		1:
 			llm_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["On"]		#/ green
 		-1:
-			llm_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]		#/ red
+			llm_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]	#/ red
 		_:
-			llm_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]		#/ white
+			llm_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]	#/ white
+
+	#% TTS button:
+	var tts_btn := $"Main/HBox/WritingArea/TopBar/TTS"
+	match line_data.get("TTS", 0):
+		1:
+			tts_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["On"]		#/ green
+		-1:
+			tts_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]	#/ red
+		_:
+			tts_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]	#/ white
 
 	#% Bubble Exempt button:
 	var bubble_btn := $"Main/HBox/WritingArea/TopBar/BubbleExempt"
 	if line_data.get("BubbleExempt", false):
 		bubble_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Neutral"]	#/ yellow
 	else:
-		bubble_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]		#/ white
+		bubble_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]	#/ white
 
 	#% Force Portrait button:
 	var force_btn := $"Main/HBox/WritingArea/TopBar/ForcePortrait"
 	if line_data.get("ForcePortrait", false):
-		force_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["On"]			#/ green
+		force_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["On"]		#/ green
 	else:
 		force_btn.modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]		#/ white
 
-
-	#% Load text direction for the Default variant:
+	#@ Load text direction for the Default variant:
 	var default_dir_button := get_node("Main/HBox/WritingArea/SplitSpeechComments/SplitDefaultVariants/Default/Stats/TextDirection")
 	var default_text_edit := get_node("Main/HBox/WritingArea/SplitSpeechComments/SplitDefaultVariants/Default/Text")
 	var default_text_preview := get_node("Main/HBox/WritingArea/Preview/DefaultPreview/Text")
@@ -316,35 +326,59 @@ func setup():
 		#default_text_edit.text_direction = Control.TEXT_DIRECTION_LTR
 		default_dir_button.text = "⇢"
 
-	#% Handle portrait:
+	#@ Handle portrait:
 	var portrait_name = line_data["Portrait"]
-	var portrait_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitPreview")
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
 	var portraits = candy_dc.resources.get("*Portraits", {})
 
 	$"Main/HBox/Options/DefaultOptions/Portrait/PortraitName".text = portrait_name
+
+	#% Reset both:
+	portrait_tex_rect.texture = null
+	portrait_video.stop()
+	portrait_video.visible = false
 
 	if line_speaker != "" and portraits.has(line_speaker):
 		var dict = portraits[line_speaker]
 		var portrait_to_load = portrait_name
 
 		#% Use "Default" portrait if none specified or missing:
-		if portrait_to_load == "" or not dict.has(portrait_to_load):
+		if portrait_to_load == "" or (not dict.has(portrait_to_load) and not (dict.has("Animated") and dict["Animated"].has(portrait_to_load))):
 			if dict.has("Default.png"):
 				portrait_to_load = "Default.png"
 
-		if dict.has(portrait_to_load):
-			var path = dict[portrait_to_load]
-			var img := Image.new()
-			if img.load(path) == OK:
-				var tex := ImageTexture.create_from_image(img)
-				portrait_rect.texture_normal = tex
-				portrait_rect.visible = true
+		var path = dict.get(portrait_to_load)
+		if path == null and dict.has("Animated") and dict["Animated"].has(portrait_to_load):
+			path = dict["Animated"][portrait_to_load]
+
+		#% Animated folder - show first frame:
+		if path is Dictionary:
+			if not path.is_empty():
+				var first_path = path.values()[0]
+				var img := Image.new()
+				if img.load(first_path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
+		elif path is String:
+			var ext = path.get_extension().to_lower()
+			if ext == "ogv" or ext == "webm" or ext == "mp4":
+				var stream := load(path)
+				if stream is VideoStream:
+					portrait_video.stream = stream
+					portrait_video.visible = true
+					portrait_video.play()
+					await get_tree().process_frame
+					await get_tree().process_frame
+					portrait_video.paused = true
+					portrait_video.stream_position = 0.0
 			else:
-				portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+				var img := Image.new()
+				if img.load(path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
 		else:
-			portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+			portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 	else:
-		portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+		portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 
 	#await get_tree().process_frame
 
@@ -443,7 +477,10 @@ func _on_enter_pressed() -> void:
 	$"Main/HBox/WritingArea/TopBar/Disposition/DispositionField".text = ""
 	$"Main/HBox/WritingArea/SplitSpeechComments/SplitDefaultVariants/Default/Stats/Total/Number".text = ""
 	$"Main/HBox/WritingArea/SplitSpeechComments/SplitDefaultVariants/Default/Stats/Limit/Number".text = ""
-	$"Main/HBox/Options/DefaultOptions/PortraitPreview".texture_normal = null
+	$"Main/HBox/Options/DefaultOptions/PortraitArea/PortraitButton".texture_normal = null
+	$"Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect".texture = null
+	$"Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer".stop()
+	$"Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer".visible = false
 	$"Main/HBox/Options/DefaultOptions/Portrait/PortraitName".text = ""
 	self.visible = false
 
@@ -1242,12 +1279,18 @@ func _on_speaker_text_changed(new_text: String) -> void:
 	candy_dc.conversations[candy_dc.current_conversation] = conv
 
 	#@ Refresh portrait display:
-	var portrait_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitPreview")
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
 	var portraits = candy_dc.resources.get("*Portraits", {})
 	var portrait_name = line_data["Portrait"]
 
+	#@ Reset both:
+	portrait_tex_rect.texture = null
+	portrait_video.stop()
+	portrait_video.visible = false
+
 	if new_text.strip_edges() == "" or new_text.begins_with(candy_dc.role_symbol):
-		portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+		portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 		update_spoken_lines_list()
 		return
 
@@ -1255,23 +1298,46 @@ func _on_speaker_text_changed(new_text: String) -> void:
 		var dict = portraits[new_text]
 		var portrait_to_load = portrait_name
 
-		if portrait_to_load == "" or not dict.has(portrait_to_load):
+		if portrait_to_load == "" or (not dict.has(portrait_to_load) and not (dict.has("Animated") and dict["Animated"].has(portrait_to_load))):
 			if dict.has("Default.png"):
 				portrait_to_load = "Default.png"
 
-		if dict.has(portrait_to_load):
-			var path = dict[portrait_to_load]
-			var img := Image.new()
-			if img.load(path) == OK:
-				var tex := ImageTexture.create_from_image(img)
-				portrait_rect.texture_normal = tex
-				portrait_rect.visible = true
+		var path = dict.get(portrait_to_load)
+		if path == null and dict.has("Animated") and dict["Animated"].has(portrait_to_load):
+			path = dict["Animated"][portrait_to_load]
+
+		if path is Dictionary:
+			if not path.is_empty():
+				var first_path = path.values()[0]
+				var img := Image.new()
+				if img.load(first_path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
+			update_spoken_lines_list()
+			return
+
+		elif path is String:
+			var ext = path.get_extension().to_lower()
+			if ext == "ogv" or ext == "webm" or ext == "mp4":
+				var stream := load(path)
+				if stream is VideoStream:
+					portrait_video.stream = stream
+					portrait_video.visible = true
+					portrait_video.play()
+					await get_tree().process_frame
+					await get_tree().process_frame
+					portrait_video.paused = true
+					portrait_video.stream_position = 0.0
+				update_spoken_lines_list()
+				return
+			else:
+				var img := Image.new()
+				if img.load(path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
 				update_spoken_lines_list()
 				return
 
 	#% Fallback - no portrait found:
-	portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
-
+	portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 	update_spoken_lines_list()
 
 
@@ -1288,8 +1354,6 @@ func _on_portrait_play_pressed() -> void:
 
 #* Called when the user edits the portrait name in the Writer:
 func _on_portrait_name_text_changed(new_text: String) -> void:
-	var portrait_rect
-
 	#@ Validate editing context:
 	if candy_dc.current_conversation == "" or candy_dc.current_block == "":
 		return
@@ -1311,39 +1375,61 @@ func _on_portrait_name_text_changed(new_text: String) -> void:
 	candy_dc.conversations[candy_dc.current_conversation] = conv
 
 	#@ Portrait update:
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
+
+	#@ Reset both:
+	portrait_tex_rect.texture = null
+	portrait_video.stop()
+	portrait_video.visible = false
+
 	#% Skip portrait display if this is a Role line:
-	if line_data.get("Reference", "").begins_with(candy_dc.role_symbol):
-		portrait_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitPreview")
-		portrait_rect.texture_normal_normal = "res://Resources/Writer_Empty_Portrait.png"
+	var speaker: String = line_data.get("Reference", "").strip_edges()
+	if speaker == "" or speaker.begins_with(candy_dc.role_symbol):
+		portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 		return
 
 	#% Refresh portrait display:
-	portrait_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitPreview")
-	var speaker: String = line_data.get("Reference", "").strip_edges()
 	var portrait_name: String = new_text.strip_edges()
 	var portraits = candy_dc.resources.get("*Portraits", {})
 
-	#% No speaker means we can’t look up portraits:
-	if speaker == "" or speaker.begins_with(candy_dc.role_symbol):
-		portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
-		return
-
 	if portraits.has(speaker):
 		var dict = portraits[speaker]
-		var portrait_to_load = portrait_name
 
-		#% Load portrait image if found:
-		if dict.has(portrait_to_load):
-			var path = dict[portrait_to_load]
-			var img := Image.new()
-			if img.load(path) == OK:
-				var tex := ImageTexture.create_from_image(img)
-				portrait_rect.texture_normal = tex
-				portrait_rect.visible = true
+		var path = dict.get(portrait_name)
+		if path == null and dict.has("Animated") and dict["Animated"].has(portrait_name):
+			path = dict["Animated"][portrait_name]
+
+		if path is Dictionary:
+			#% Animated folder - show first frame:
+			if not path.is_empty():
+				var first_path = path.values()[0]
+				var img := Image.new()
+				if img.load(first_path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
+			return
+
+		elif path is String:
+			var ext = path.get_extension().to_lower()
+			if ext == "ogv" or ext == "webm" or ext == "mp4":
+				var stream := load(path)
+				if stream is VideoStream:
+					portrait_video.stream = stream
+					portrait_video.visible = true
+					portrait_video.play()
+					await get_tree().process_frame
+					await get_tree().process_frame
+					portrait_video.paused = true
+					portrait_video.stream_position = 0.0
 				return
+			else:
+				var img := Image.new()
+				if img.load(path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
+					return
 
-	#% If no valid portrait found → hide it:
-	portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+	#% If no valid portrait found:
+	portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 
 
 #* Open portrait selection menu:
@@ -1367,8 +1453,111 @@ func _on_portrait_pressed() -> void:
 	if portraits_dict.is_empty():
 		return
 
-	#@ Create one entry (TextureRect + Label) per portrait file:
+	#@ Create one entry per portrait file:
 	for portrait_name in portraits_dict.keys():
+		#% Skip reserved subfolders:
+		if portrait_name == "Sprite Frames" or portrait_name == "Animation Libraries" or portrait_name == "Button Textures":
+			continue
+
+		#% Handle Animated subfolder:
+		if portrait_name == "Animated" and portraits_dict[portrait_name] is Dictionary:
+			for anim_name in portraits_dict["Animated"].keys():
+				var anim_entry = portraits_dict["Animated"][anim_name]
+				if not (anim_entry is Dictionary) or anim_entry.is_empty():
+					continue
+
+				var container_0 := Button.new()
+				container_0.custom_minimum_size = Vector2(192, 216)
+				container_0.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+				container_0.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				container_0.flat = true
+				container_0.focus_mode = Control.FOCUS_NONE
+
+				var tex_rect_0 := TextureRect.new()
+				tex_rect_0.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				tex_rect_0.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				tex_rect_0.custom_minimum_size = Vector2(192, 192)
+				tex_rect_0.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+				#% Load all frames:
+				var folder_frames: Array = []
+				for frame_path in anim_entry.values():
+					if frame_path is String:
+						var img := Image.new()
+						if img.load(frame_path) == OK:
+							folder_frames.append(ImageTexture.create_from_image(img))
+
+				if not folder_frames.is_empty():
+					tex_rect_0.texture = folder_frames[0]
+
+					#% Read FPS from config.txt:
+					var anim_fps := 2.0
+					var folder_path = anim_entry.values()[0].get_base_dir()
+					var config_txt = folder_path.path_join("config.txt")
+					if FileAccess.file_exists(config_txt):
+						var f := FileAccess.open(config_txt, FileAccess.READ)
+						if f:
+							var line_txt := f.get_as_text().strip_edges()
+							f.close()
+							if "=" in line_txt:
+								var val := line_txt.split("=")[1].strip_edges()
+								if val.is_valid_float():
+									anim_fps = float(val)
+
+					var anim_timer := Timer.new()
+					anim_timer.name = "FolderAnimTimer"
+					anim_timer.wait_time = 1.0 / anim_fps
+					container_0.add_child(anim_timer)
+
+					var fs := {"index": 0, "active": false, "gen": 0}
+
+					var _animate := func():
+						var my_gen = fs["gen"]
+						while fs["active"] and fs["gen"] == my_gen:
+							await anim_timer.timeout
+							if not fs["active"] or fs["gen"] != my_gen:
+								return
+							fs["index"] += 1
+							if fs["index"] >= folder_frames.size():
+								fs["index"] = 0
+							tex_rect_0.texture = folder_frames[fs["index"]]
+
+					container_0.mouse_entered.connect(func():
+						fs["gen"] += 1
+						fs["active"] = true
+						fs["index"] = 0
+						anim_timer.start()
+						_animate.call_deferred())
+					container_0.mouse_exited.connect(func():
+						fs["active"] = false
+						fs["gen"] += 1
+						anim_timer.stop()
+						fs["index"] = 0
+						tex_rect_0.texture = folder_frames[0])
+
+				var label_0 := Label.new()
+				label_0.text = anim_name
+				label_0.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				label_0.custom_minimum_size = Vector2(192, 24)
+				label_0.position = Vector2(0, 192)
+				label_0.add_theme_color_override("font_color", candy_dc.color_models[candy_dc.color_mode]["Null"])
+
+				container_0.add_child(tex_rect_0)
+				container_0.add_child(label_0)
+				grid.add_child(container_0)
+
+				container_0.pressed.connect(func():
+					_apply_selected_portrait(anim_name))
+			continue
+
+		#% Skip other subfolders:
+		if portraits_dict[portrait_name] is Dictionary:
+			continue
+
+		var path = portraits_dict[portrait_name]
+		if not (path is String):
+			continue
+
 		var container := Button.new()
 		container.custom_minimum_size = Vector2(192, 216)
 		container.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -1376,22 +1565,35 @@ func _on_portrait_pressed() -> void:
 		container.flat = true
 		container.focus_mode = Control.FOCUS_NONE
 
-		#% Load portrait texture:
 		var tex_rect := TextureRect.new()
 		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		tex_rect.custom_minimum_size = Vector2(192, 192)
 		tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-		var img := Image.new()
-		var path = portraits_dict[portrait_name]
-		if typeof(path) != TYPE_STRING:
-			continue
-		if FileAccess.file_exists(path) and img.load(path) == OK:
-			var tex := ImageTexture.create_from_image(img)
-			tex_rect.texture = tex
+		var ext = path.get_extension().to_lower()
+		#% Video portrait:
+		if ext == "ogv" or ext == "webm" or ext == "mp4":
+			var stream := load(path)
+			if stream is VideoStream:
+				var video := VideoStreamPlayer.new()
+				video.custom_minimum_size = Vector2(192, 192)
+				video.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				video.expand = true
+				video.stream = stream
+				video.name = "VideoStreamPlayer"
+				container.add_child(video)
+				container.mouse_entered.connect(func():
+					video.paused = false)
+				container.mouse_exited.connect(func():
+					video.paused = true
+					video.stream_position = 0.0)
+		#% Static image:
+		else:
+			var img := Image.new()
+			if FileAccess.file_exists(path) and img.load(path) == OK:
+				tex_rect.texture = ImageTexture.create_from_image(img)
 
-		#% Label below the image:
 		var label := Label.new()
 		label.text = portrait_name
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1399,12 +1601,18 @@ func _on_portrait_pressed() -> void:
 		label.position = Vector2(0, 192)
 		label.add_theme_color_override("font_color", candy_dc.color_models[candy_dc.color_mode]["Null"])
 
-		#% Add children:
 		container.add_child(tex_rect)
 		container.add_child(label)
 		grid.add_child(container)
 
-		#% Connect click:
+		if ext == "ogv" or ext == "webm" or ext == "mp4":
+			var video = container.get_node_or_null("VideoStreamPlayer")
+			if video:
+				video.play()
+				await get_tree().process_frame
+				video.paused = true
+				video.stream_position = 0.0
+
 		container.pressed.connect(func():
 			_apply_selected_portrait(portrait_name))
 
@@ -1436,20 +1644,82 @@ func _apply_selected_portrait(portrait_name: String) -> void:
 	#@ Display the selected portrait in the Writer preview:
 	var portraits = candy_dc.resources.get("*Portraits", {})
 	var speaker = line_data.get("Reference", "").strip_edges()
-	var portrait_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitPreview")
+	var portrait_button = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/PortraitButton")
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
 
-	if speaker != "" and not speaker.begins_with(candy_dc.role_symbol) and portraits.has(speaker) and portraits[speaker].has(portrait_name):
-		var path = portraits[speaker][portrait_name]
-		var img := Image.new()
-		if FileAccess.file_exists(path) and img.load(path) == OK:
-			var tex := ImageTexture.create_from_image(img)
-			portrait_rect.texture_normal = tex
-			portrait_rect.visible = true
+	#@ Reset all three:
+	portrait_tex_rect.texture = null
+	portrait_video.stop()
+	portrait_video.visible = false
+
+	if speaker != "" and not speaker.begins_with(candy_dc.role_symbol) and portraits.has(speaker):
+		var char_dict = portraits[speaker]
+		var path = char_dict.get(portrait_name)
+		if path == null and char_dict.has("Animated") and char_dict["Animated"].has(portrait_name):
+			path = char_dict["Animated"][portrait_name]
+
+		if path is Dictionary:
+			#% Animated folder - show first frame and store animation data:
+			if not path.is_empty():
+				var folder_frames: Array = []
+				for frame_path in path.values():
+					if frame_path is String:
+						var img := Image.new()
+						if img.load(frame_path) == OK:
+							folder_frames.append(ImageTexture.create_from_image(img))
+				if not folder_frames.is_empty():
+					portrait_tex_rect.texture = folder_frames[0]
+					portrait_tex_rect.set_meta("frames", folder_frames)
+					portrait_tex_rect.set_meta("frame_state", {"index": 0, "active": false, "gen": 0})
+					var anim_timer = portrait_tex_rect.get_node_or_null("PortraitAreaAnimTimer")
+					if not anim_timer:
+						anim_timer = Timer.new()
+						anim_timer.name = "PortraitAreaAnimTimer"
+						portrait_tex_rect.add_child(anim_timer)
+					var anim_fps := 2.0
+					var folder_path = path.values()[0].get_base_dir()
+					var config_txt = folder_path.path_join("config.txt")
+					if FileAccess.file_exists(config_txt):
+						var f := FileAccess.open(config_txt, FileAccess.READ)
+						if f:
+							var line_txt := f.get_as_text().strip_edges()
+							f.close()
+							if "=" in line_txt:
+								var val := line_txt.split("=")[1].strip_edges()
+								if val.is_valid_float():
+									anim_fps = float(val)
+					anim_timer.wait_time = 1.0 / anim_fps
+		elif path is String:
+			var ext = path.get_extension().to_lower()
+			if ext == "ogv" or ext == "webm" or ext == "mp4":
+				#% Video portrait:
+				var stream := load(path)
+				if stream is VideoStream:
+					portrait_video.stream = stream
+					portrait_video.visible = true
+					portrait_video.play()
+					await get_tree().process_frame
+					await get_tree().process_frame
+					portrait_video.paused = true
+					portrait_video.stream_position = 0.0
+			else:
+				#% Static image:
+				var img := Image.new()
+				if img.load(path) == OK:
+					portrait_tex_rect.texture = ImageTexture.create_from_image(img)
+				if portrait_tex_rect.has_meta("frames"):
+					portrait_tex_rect.remove_meta("frames")
+				if portrait_tex_rect.has_meta("frame_state"):
+					portrait_tex_rect.remove_meta("frame_state")
+				var old_timer = portrait_tex_rect.get_node_or_null("PortraitAreaAnimTimer")
+				if old_timer:
+					old_timer.stop()
+					old_timer.queue_free()
 		else:
-			portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
-
+			portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 	else:
-		portrait_rect.texture_normal = load("res://Resources/Writer_Empty_Portrait.png")
+		portrait_tex_rect.texture = load("res://Resources/Writer_Empty_Portrait.png")
 
 	#@ Close the portrait menu:
 	_on_select_portrait_pressed()
@@ -3395,3 +3665,57 @@ func _on_variant_default_pressed() -> void:
 
 func _on_v_scroll_bar_value_changed(_value: float) -> void:
 	update_variant_list()
+
+
+func _on_portrait_button_mouse_entered() -> void:
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
+
+	#% Play video if visible:
+	if portrait_video.visible and portrait_video.stream != null:
+		portrait_video.paused = false
+		return
+
+	#% Play folder animation if meta exists:
+	if portrait_tex_rect.has_meta("frame_state") and portrait_tex_rect.has_meta("frames"):
+		var fs = portrait_tex_rect.get_meta("frame_state")
+		var folder_frames = portrait_tex_rect.get_meta("frames")
+		var anim_timer = portrait_tex_rect.get_node_or_null("PortraitAreaAnimTimer")
+		if anim_timer:
+			fs["active"] = true
+			fs["gen"] += 1
+			var my_gen = fs["gen"]
+			var _animate := func():
+				while fs["active"] and fs["gen"] == my_gen:
+					await anim_timer.timeout
+					if not fs["active"] or fs["gen"] != my_gen:
+						return
+					fs["index"] += 1
+					if fs["index"] >= folder_frames.size():
+						fs["index"] = 0
+					portrait_tex_rect.texture = folder_frames[fs["index"]]
+			anim_timer.start()
+			_animate.call_deferred()
+
+
+func _on_portrait_button_mouse_exited() -> void:
+	var portrait_tex_rect = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/TextureRect")
+	var portrait_video = get_node("Main/HBox/Options/DefaultOptions/PortraitArea/VideoStreamPlayer")
+
+	#% Pause video:
+	if portrait_video.visible and portrait_video.stream != null:
+		portrait_video.paused = true
+		portrait_video.stream_position = 0.0
+		return
+
+	#% Stop folder animation:
+	if portrait_tex_rect.has_meta("frame_state") and portrait_tex_rect.has_meta("frames"):
+		var fs = portrait_tex_rect.get_meta("frame_state")
+		var folder_frames = portrait_tex_rect.get_meta("frames")
+		var anim_timer = portrait_tex_rect.get_node_or_null("PortraitAreaAnimTimer")
+		fs["active"] = false
+		fs["gen"] += 1
+		if anim_timer:
+			anim_timer.stop()
+		fs["index"] = 0
+		portrait_tex_rect.texture = folder_frames[0]

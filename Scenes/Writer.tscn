@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dmiwlgms3it3" path="res://Scripts/Writer.gd" id="1_6m1i3"]
 [ext_resource type="PackedScene" uid="uid://bn874huxg2k4p" path="res://Scenes/Writer_Line.tscn" id="2_ldu7j"]
-[ext_resource type="Texture2D" uid="uid://cjafu7reaqalu" path="res://Resources/Writer_Empty_Portrait.png" id="2_prclb"]
 [ext_resource type="PackedScene" uid="uid://bhu4o7cgh0dxx" path="res://Scenes/Writer_Variant_Button.tscn" id="4_ldu7j"]
 [ext_resource type="Texture2D" uid="uid://slkvvmv6p1co" path="res://Resources/Volume Icon.png" id="4_uetnw"]
 [ext_resource type="Texture2D" uid="uid://dloxy1o8fpqva" path="res://Resources/Progress Icon.png" id="5_rd5pl"]
@@ -1383,12 +1382,22 @@ theme_override_constants/separation = 12
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PortraitPreview" type="TextureButton" parent="Main/HBox/Options/DefaultOptions" unique_id=1630108945]
+[node name="PortraitArea" type="PanelContainer" parent="Main/HBox/Options/DefaultOptions" unique_id=1538649000]
+layout_mode = 2
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Main/HBox/Options/DefaultOptions/PortraitArea" unique_id=437268094]
+layout_mode = 2
+expand = true
+
+[node name="TextureRect" type="TextureRect" parent="Main/HBox/Options/DefaultOptions/PortraitArea" unique_id=1516689266]
+layout_mode = 2
+expand_mode = 1
+
+[node name="PortraitButton" type="TextureButton" parent="Main/HBox/Options/DefaultOptions/PortraitArea" unique_id=1630108945]
 custom_minimum_size = Vector2(192, 192)
 layout_mode = 2
 tooltip_text = "Speaker Portrait
 Click to select or change."
-texture_normal = ExtResource("2_prclb")
 ignore_texture_size = true
 stretch_mode = 4
 
@@ -2605,7 +2614,9 @@ text = "⇢"
 [node name="CustomInsertRC" type="PopupMenu" parent="." unique_id=817538361]
 oversampling_override = 1.0
 
-[connection signal="pressed" from="Main/HBox/Options/DefaultOptions/PortraitPreview" to="." method="_on_portrait_pressed"]
+[connection signal="mouse_entered" from="Main/HBox/Options/DefaultOptions/PortraitArea/PortraitButton" to="." method="_on_portrait_button_mouse_entered"]
+[connection signal="mouse_exited" from="Main/HBox/Options/DefaultOptions/PortraitArea/PortraitButton" to="." method="_on_portrait_button_mouse_exited"]
+[connection signal="pressed" from="Main/HBox/Options/DefaultOptions/PortraitArea/PortraitButton" to="." method="_on_portrait_pressed"]
 [connection signal="focus_entered" from="Main/HBox/Options/DefaultOptions/Portrait/PortraitName" to="." method="_on_edit_focus_entered"]
 [connection signal="text_changed" from="Main/HBox/Options/DefaultOptions/Portrait/PortraitName" to="." method="_on_portrait_name_text_changed"]
 [connection signal="pressed" from="Main/HBox/Options/DefaultOptions/Portrait/Play" to="." method="_on_portrait_play_pressed"]

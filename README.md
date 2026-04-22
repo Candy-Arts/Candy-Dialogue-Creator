@@ -7,6 +7,7 @@
 > [!TIP]
 > We've just opened our [Youtube channel](https://www.youtube.com/@CandyArtsStudio/playlists) and released several tutorial videos that will explain how to use Candy Dialogue Engine and Candy Dialogue Creator!
 > Please look at the playlists, to watch videos in the right order.
+>
 > The PDF guides (provided with downloads of Candy DE and Candy DC, in the Documents/Guides folder) are simpler and faster, but videos can be helpful for users who prefer more visual explanations.
 
 > [!TIP]

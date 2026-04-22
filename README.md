@@ -1,5 +1,9 @@
 ![Candy Arts Logo](Screenshots/Logo.png)
 
+> [!NOTE]
+> Big news: Candy DC 1.1 is being worked on and will release soon! It will bring many improvements.
+> Please see our [discussion post](https://github.com/Candy-Arts/Candy-Arts/discussions/10) and share your thoughts, ideas or requests.
+
 > [!TIP]
 > We've just opened our [Youtube channel](https://www.youtube.com/@CandyArtsStudio/playlists) and released several tutorial videos that will explain how to use Candy Dialogue Engine and Candy Dialogue Creator!
 > Please look at the playlists, to watch videos in the right order.

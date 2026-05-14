@@ -59,7 +59,7 @@ Candy Dialogue Creator can be used in three different ways:
 
 ### Integration (Advanced - For adding Candy Dialogue Creator inside your game)
 > [!Warning]
-> This requires good understanding of the Candy Dialogue Creator code. A special version of Candy Dialogue Engine, designed for easy integration into your projects, will release this week. We recommended that you wait for it: it makes the setup process much simpler.
+> This requires good understanding of the Candy Dialogue Creator code. A special version of Candy Dialogue Engine, designed for easy integration into your projects, will release in the future.
 
 1. Download the source code.
 2. Unpack the downloaded compressed file to any location you want on your computer.

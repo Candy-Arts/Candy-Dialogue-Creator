@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://bifq4tybby8ur"]
+
+[ext_resource type="Script" uid="uid://c8ksu8gqdh2qx" path="res://Scripts/data_input.gd" id="1_bi22i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bi22i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6abx"]
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5j12g"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6666667, 0.6666667, 1)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqqq0"]
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kciqa"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gigdb"]
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bi22i"]
+content_margin_left = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6666667, 0.6666667, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8r2x"]
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.3)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i87ht"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[node name="DataInput" type="VBoxContainer" unique_id=1207183639]
+offset_right = 69.0
+offset_bottom = 39.0
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 0
+script = ExtResource("1_bi22i")
+
+[node name="Label" type="Label" parent="." unique_id=10065169]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 1
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxEmpty_bi22i")
+theme_override_styles/focus = SubResource("StyleBoxFlat_o6abx")
+text = "Title"
+vertical_alignment = 2
+
+[node name="HBox" type="HBoxContainer" parent="." unique_id=67654900]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Button" type="Button" parent="HBox" unique_id=98819718]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.6666667, 0.6666667, 0.6666667, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_5j12g")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fqqq0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kciqa")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gigdb")
+theme_override_styles/focus = SubResource("StyleBoxFlat_kciqa")
+text = "⫶"
+
+[node name="LineEdit" type="LineEdit" parent="HBox" unique_id=847368939]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_bi22i")
+theme_override_styles/read_only = SubResource("StyleBoxFlat_v8r2x")
+theme_override_styles/focus = SubResource("StyleBoxFlat_i87ht")
+caret_blink = true
+
+[connection signal="pressed" from="HBox/Button" to="." method="populate_dropdown"]
+[connection signal="focus_entered" from="HBox/LineEdit" to="." method="_on_line_edit_focus_entered" flags=18]
+[connection signal="focus_exited" from="HBox/LineEdit" to="." method="_on_line_edit_focus_exited" flags=18]
+[connection signal="text_changed" from="HBox/LineEdit" to="." method="_on_line_edit_text_changed"]

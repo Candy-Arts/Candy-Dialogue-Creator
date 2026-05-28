@@ -1,0 +1,946 @@
+[gd_scene format=3 uid="uid://c4srvaoetcl2i"]
+
+[ext_resource type="Script" uid="uid://dt36vy7hnbso3" path="res://Scripts/settings_menu.gd" id="1_svoao"]
+[ext_resource type="PackedScene" uid="uid://baqkgfpgdg8wf" path="res://Scenes/ProjectPathInput.tscn" id="2_jttlj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_326oq"]
+bg_color = Color(0, 0, 0, 0.60784316)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb4hl"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 32.0
+bg_color = Color(0, 0.4099307, 0.70747656, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svoao"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+draw_center = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jttlj"]
+content_margin_left = 64.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4hfd5"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rr0xh"]
+content_margin_left = 4.0
+draw_center = false
+
+[node name="SettingsMenu" type="PanelContainer" unique_id=1837653134]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_326oq")
+script = ExtResource("1_svoao")
+
+[node name="Menu" type="PanelContainer" parent="." unique_id=1133625362]
+custom_minimum_size = Vector2(768, 768)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb4hl")
+
+[node name="VBox" type="VBoxContainer" parent="Menu" unique_id=1223822415]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Menu/VBox" unique_id=2017498422]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="Tabs" type="TabContainer" parent="Menu/VBox" unique_id=1527377877]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/side_margin = 0
+tab_alignment = 1
+current_tab = 3
+tab_1/title = "Project Paths"
+tab_2/title = "Project Data"
+
+[node name="Preferences" type="ScrollContainer" parent="Menu/VBox/Tabs" unique_id=809051829]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
+metadata/_tab_index = 0
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/Preferences" unique_id=765216145]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="NewConversation" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=872281113]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/NewConversation" unique_id=733074475]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default name for Conversations.
+This is the name that is written by default in the prompt when creating a new Conversation."
+mouse_filter = 1
+text = "New Conversation Name:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/NewConversation" unique_id=419860827]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NewBlock" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1708755102]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/NewBlock" unique_id=680111515]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default name for Blocks.
+This is the name that is written by default in the prompt when creating a new Block, as well as the name of the first Block when creating a new Conversation."
+mouse_filter = 1
+text = "New Block Name:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/NewBlock" unique_id=1872474291]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=400653403]
+layout_mode = 2
+
+[node name="Limit" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1816801502]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/Limit" unique_id=1669907910]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The character limit for Spoken Lines.
+
+This is only used by the Limit counter for informational purposes. It does not prevent writing longer text."
+mouse_filter = 1
+text = "Speech Limit:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/Limit" unique_id=877165330]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="NearLimit" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=808656303]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/NearLimit" unique_id=928376069]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The number of characters, before the Speech Limit, upon which the Limit counter turns yellow.
+
+For example, if the Speech Limit is 250 and the Near Limit is 50, the Limit counter will display in yellow when the number of characters is between 200 and 250.
+
+This is used to warn you that you are approaching the limit and should consider shortening the text or splitting it across multiple Spoken Lines."
+mouse_filter = 1
+text = "Near Limit:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/NearLimit" unique_id=118932507]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1604212799]
+layout_mode = 2
+
+[node name="Save" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=749306512]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/Save" unique_id=1159456920]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "Saving method when clicking the 'Save' button in the main UI.
+
+Normal: Save over the last manual save file you loaded or saved to.
+Incremental: create a new save file, with the data and time as a suffix.
+
+"
+mouse_filter = 1
+text = "Default Save Mode"
+
+[node name="LineEdit" type="OptionButton" parent="Menu/VBox/Tabs/Preferences/VBox/Save" unique_id=683486860]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Normal"
+popup/item_0/id = 0
+popup/item_1/text = "Incremental"
+popup/item_1/id = 1
+
+[node name="QuickSaves" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1158576408]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/QuickSaves" unique_id=613585523]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "Maximum number of quick save files.
+0: Infinite quick save files.
+-1: Disable (no quick saving possible).
+
+Save files use very little disk space. High numbers are fine, but may result in many files to sort through when selecting a file to load."
+mouse_filter = 1
+text = "Quick Saves Max.:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/QuickSaves" unique_id=636869635]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="AutoSaves" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1598869679]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/AutoSaves" unique_id=2114705929]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "Maximum number of auto save files.
+0: Infinite auto save files.
+-1: Disable.
+
+Save files use very little disk space. High numbers are fine, but may result in many files to sort through when selecting a file to load."
+mouse_filter = 1
+text = "Auto Saves Max.:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/AutoSaves" unique_id=2097589176]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="AutoSaveFreq" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1628009279]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/AutoSaveFreq" unique_id=351365088]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "How often Candy Dialogue Creator will perform an auto-save.
+
+This value represents the time in seconds.
+
+If the value is less than 5 seconds, Candy Dialogue Creator will auto-save every 5 seconds.
+
+Saving is very light in computing power and shouldn't have a noticeable impact on performance."
+mouse_filter = 1
+text = "Auto Save Frequency:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/AutoSaveFreq" unique_id=1771279799]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="HSeparator4" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=317897417]
+layout_mode = 2
+
+[node name="WarningDuration" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=927023597]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/WarningDuration" unique_id=1451040418]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "How long warning messages are displayed for.
+
+This value is multiplied by the number of letters. A value of 1 would mean the message remains on screen for 1 second per letter.
+
+A value of approximately 0.05 is recommended."
+mouse_filter = 1
+text = "Warning Duration:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/WarningDuration" unique_id=2053363533]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1908672819]
+layout_mode = 2
+
+[node name="UndoMinSteps" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=305015651]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMinSteps" unique_id=726444959]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The minimum number of undo steps that Candy DC will store in memory."
+mouse_filter = 1
+text = "Undo Min. Steps:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMinSteps" unique_id=1204808972]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="UndoMaxSteps" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1123875821]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMaxSteps" unique_id=586156979]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The maximum number of undo steps that Candy DC will store in memory, provided that Undo Min. Memory has been reached."
+mouse_filter = 1
+text = "Undo Max. Steps:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMaxSteps" unique_id=1866049821]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="UndoMinMemory" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1314429238]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMinMemory" unique_id=772895973]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The minimum amount of memory that will be used for storing undo steps.
+
+Note: Memory usage is a vague estimate and may not be exact."
+mouse_filter = 1
+text = "Undo Min. Memory:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMinMemory" unique_id=462240005]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="UndoMaxMemory" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1988266606]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMaxMemory" unique_id=1942837504]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The maximum amount of memory that will be used for storing undo steps, provided that Undo Min. Steps has been reached.
+
+Note: Memory usage is a vague estimate and may not be exact."
+mouse_filter = 1
+text = "Undo Max. Memory:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/UndoMaxMemory" unique_id=1351339317]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1147608055]
+layout_mode = 2
+
+[node name="PortraitPreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1248116874]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/PortraitPreviewWidth" unique_id=1675276928]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of portrait previews.
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Portrait Preview Width:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/PortraitPreviewWidth" unique_id=40279231]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="PortraitPreviewFPS" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=590772974]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/PortraitPreviewFPS" unique_id=1232645228]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default FPS value to use for playing animated portrait previews."
+mouse_filter = 1
+text = "Portrait Preview FPS:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/PortraitPreviewFPS" unique_id=720779942]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="BustPreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=594916624]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/BustPreviewWidth" unique_id=317316577]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of Bust previews (§VNBust command).
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Bust Preview Width:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/BustPreviewWidth" unique_id=358399704]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="BustPreviewFPS" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=483645064]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS" unique_id=650895674]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default FPS value to use for playing animated Bust previews."
+mouse_filter = 1
+text = "Bust Preview FPS:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS" unique_id=1303445570]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="VideoPreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=296369556]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/VideoPreviewWidth" unique_id=663875392]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of video previews (§Video command).
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Video Preview Width:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/VideoPreviewWidth" unique_id=2087126308]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="ImagePreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1298489798]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/ImagePreviewWidth" unique_id=1031409955]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of image previews (§Image command).
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Image Preview Width:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/ImagePreviewWidth" unique_id=1306703350]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="BGPreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1781400105]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/BGPreviewWidth" unique_id=552300909]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of Background previews (§BG command).
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Background Preview FPS:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/BGPreviewWidth" unique_id=892043212]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="BGPreviewFPS" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=303431235]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/BGPreviewFPS" unique_id=1972978183]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default FPS value to use for playing animated Background previews."
+mouse_filter = 1
+text = "Background Preview FPS:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/BGPreviewFPS" unique_id=1659040744]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="HSeparator6" type="HSeparator" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=41335351]
+layout_mode = 2
+
+[node name="ProjectPaths" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=117082172]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
+metadata/_tab_index = 1
+metadata/_tab_name = "Project Paths"
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/ProjectPaths" unique_id=2065421106]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Project" type="HBoxContainer" parent="Menu/VBox/Tabs/ProjectPaths/VBox" unique_id=528263405]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/ProjectPaths/VBox/Project" unique_id=1762683836]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+tooltip_text = "Path to your Godot project's root folder."
+mouse_filter = 1
+theme_override_font_sizes/font_size = 16
+text = "Project Path:"
+vertical_alignment = 1
+
+[node name="Path" type="HBoxContainer" parent="Menu/VBox/Tabs/ProjectPaths/VBox/Project" unique_id=997037422]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/ProjectPaths/VBox/Project/Path" unique_id=1492843262]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileBrowser" type="Button" parent="Menu/VBox/Tabs/ProjectPaths/VBox/Project/Path" unique_id=1206511312]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "..."
+
+[node name="HSeparator" type="HSeparator" parent="Menu/VBox/Tabs/ProjectPaths/VBox" unique_id=1231115197]
+layout_mode = 2
+
+[node name="SubPaths" type="ScrollContainer" parent="Menu/VBox/Tabs/ProjectPaths/VBox" unique_id=1013730274]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/scrollbar_h_separation = 8
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jttlj")
+horizontal_scroll_mode = 0
+
+[node name="PathInputs" type="VBoxContainer" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths" unique_id=249290802]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DialoguesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1211740785 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Dialogues"
+label_text = "Dialogues:"
+
+[node name="PortraitsPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1554118100 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "*Portraits"
+label_text = "Portraits:"
+
+[node name="BustsPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=549309919 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "*Busts"
+label_text = "Busts:"
+
+[node name="VoiceFilesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=862280055 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "*Voice_Files"
+label_text = "Voice Files:"
+
+[node name="BackgroundsPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=2108805506 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Backgrounds"
+label_text = "Backgrounds:"
+
+[node name="ImagesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=174813110 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Images"
+label_text = "Images:"
+
+[node name="AudioPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1241090531 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Audio"
+label_text = "Audio:"
+
+[node name="VideosPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1810833080 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Videos"
+label_text = "Videos:"
+
+[node name="BGScenesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1692706303 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "BG_Scenes"
+label_text = "Background Scenes:"
+
+[node name="VNScenesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=2041898281 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "VN_Scenes"
+label_text = "VN Scenes:"
+
+[node name="InputMenusPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=709526903 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Player_Input_Scenes"
+label_text = "Input Menu Scenes:"
+
+[node name="ChoiceMenusPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=690982781 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Choice_Menu_Scenes"
+label_text = "Choice Menu Scenes:"
+
+[node name="ChoiceCategoriesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1707749548 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Choice_Category_Scenes"
+label_text = "Choice Category Scenes:"
+
+[node name="ChoiceButtonsPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1758704360 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "Choice_Button_Scenes"
+label_text = "Choice Button Scenes:"
+
+[node name="ProjectData" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=1288671437]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4hfd5")
+metadata/_tab_index = 2
+metadata/_tab_name = "Project Data"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu/VBox/Tabs/ProjectData" unique_id=1002602007]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/ProjectData/ScrollContainer" unique_id=30731917]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Normal" type="VBoxContainer" parent="Menu/VBox/Tabs/ProjectData/ScrollContainer/VBox" unique_id=75844682]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Symbols" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=1561862561]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4hfd5")
+metadata/_tab_index = 3
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/Symbols" unique_id=873389842]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=846300654]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Symbols"
+
+[node name="Script" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=45395197]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Script" unique_id=615193351]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+tooltip_text = "The path to the script that contains the Candy DE symbols in your Godot project (Candy_Properties.gs by default)."
+mouse_filter = 1
+text = "Script:"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Script" unique_id=69871193]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Button" type="Button" parent="Menu/VBox/Tabs/Symbols/VBox/Script" unique_id=1736194398]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "..."
+
+[node name="Update" type="Button" parent="Menu/VBox/Tabs/Symbols/VBox/Script" unique_id=509108587]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Click to automatically import symbols from your project (recommended)."
+theme_override_font_sizes/font_size = 12
+text = "Update"
+
+[node name="Singleton" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=98174067]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Singleton" unique_id=1375516759]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Singleton:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Singleton" unique_id=235576613]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Node" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=384389908]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Node" unique_id=1847054296]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Node:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Node" unique_id=891380813]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Vardict" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=1251321862]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Vardict" unique_id=227297816]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Vardict:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Vardict" unique_id=494267234]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="SuperSingleton" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=620301947]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/SuperSingleton" unique_id=1692979434]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Super Singleton:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/SuperSingleton" unique_id=402656213]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="SuperNode" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=772223717]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/SuperNode" unique_id=1816092689]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Super Node:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/SuperNode" unique_id=649141955]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="SuperVardict" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=1202023136]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/SuperVardict" unique_id=1895488431]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Super Vardict:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/SuperVardict" unique_id=1868381424]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Role" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=1400759677]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Role" unique_id=211685800]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Role:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Role" unique_id=1409529077]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="SpeechStart" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=127344624]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/SpeechStart" unique_id=135790413]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Speech Start:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/SpeechStart" unique_id=1604135084]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="SpeechEnd" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=1802036558]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/SpeechEnd" unique_id=1097615927]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Speech End:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/SpeechEnd" unique_id=1294562353]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Substitution" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=499082560]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Substitution" unique_id=1080347172]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Substitution:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Substitution" unique_id=1588942421]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Separator" type="HBoxContainer" parent="Menu/VBox/Tabs/Symbols/VBox" unique_id=126952179]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Symbols/VBox/Separator" unique_id=906537946]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Separator:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Symbols/VBox/Separator" unique_id=97953547]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Variants" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=1482886213]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
+metadata/_tab_index = 4
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/Variants" unique_id=134121218]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Menu/VBox/Tabs/Variants/VBox" unique_id=1338532023]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="AddLanguage" type="Button" parent="Menu/VBox/Tabs/Variants/VBox/Buttons" unique_id=553112784]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+tooltip_text = "Add a new language."
+text = "Add Language"
+
+[node name="AddVariant" type="Button" parent="Menu/VBox/Tabs/Variants/VBox/Buttons" unique_id=1002389836]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+tooltip_text = "Add a new variant."
+text = "Add Variant"
+
+[node name="Tree" type="Tree" parent="Menu/VBox/Tabs/Variants/VBox" unique_id=888580691]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/guide_color = Color(0.2574, 0.28182, 0.99, 0)
+theme_override_constants/inner_item_margin_right = -16
+columns = 3
+
+[node name="Colors" type="TabContainer" parent="Menu/VBox/Tabs" unique_id=477646797]
+visible = false
+layout_mode = 2
+theme_override_constants/side_margin = 0
+theme_override_font_sizes/font_size = 14
+current_tab = 0
+metadata/_tab_index = 5
+
+[node name="Line Colors" type="PanelContainer" parent="Menu/VBox/Tabs/Colors" unique_id=437990564]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rr0xh")
+metadata/_tab_index = 0
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/Colors/Line Colors" unique_id=787871341]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox" unique_id=1220425544]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Line" type="Label" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox/HBox" unique_id=181548146]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+text = "Line Type"
+
+[node name="Text" type="Label" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox/HBox" unique_id=1662538791]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Text"
+
+[node name="BG" type="Label" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox/HBox" unique_id=1579067497]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+text = "BG"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox" unique_id=1830619276]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Menu/VBox/Tabs/Colors/Line Colors/VBox/ScrollContainer" unique_id=588204454]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="Message" type="RichTextLabel" parent="Menu/VBox" unique_id=128809805]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="Buttons" type="HBoxContainer" parent="Menu/VBox" unique_id=1144892303]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+alignment = 1
+
+[node name="Close" type="Button" parent="Menu/VBox/Buttons" unique_id=213300956]
+custom_minimum_size = Vector2(128, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Close"
+
+[connection signal="text_changed" from="Menu/VBox/Tabs/Preferences/VBox/NewConversation/LineEdit" to="." method="_on_new_conversation_changed"]
+[connection signal="text_changed" from="Menu/VBox/Tabs/Preferences/VBox/NewBlock/LineEdit" to="." method="_on_new_block_text_changed"]
+[connection signal="item_selected" from="Menu/VBox/Tabs/Preferences/VBox/Save/LineEdit" to="." method="_on_save_mode_selected"]
+[connection signal="text_changed" from="Menu/VBox/Tabs/ProjectPaths/VBox/Project/Path/LineEdit" to="." method="_on_project_path_changed"]
+[connection signal="pressed" from="Menu/VBox/Tabs/ProjectPaths/VBox/Project/Path/FileBrowser" to="." method="_on_project_file_browser_pressed"]
+[connection signal="pressed" from="Menu/VBox/Tabs/Symbols/VBox/Script/Button" to="." method="_on_symbols_script_path_pressed"]
+[connection signal="pressed" from="Menu/VBox/Tabs/Symbols/VBox/Script/Update" to="." method="_on_symbols_update_pressed"]
+[connection signal="pressed" from="Menu/VBox/Tabs/Variants/VBox/Buttons/AddLanguage" to="." method="_on_add_language_pressed"]
+[connection signal="pressed" from="Menu/VBox/Tabs/Variants/VBox/Buttons/AddVariant" to="." method="_on_add_variant_pressed"]
+[connection signal="pressed" from="Menu/VBox/Buttons/Close" to="." method="_on_close_pressed"]

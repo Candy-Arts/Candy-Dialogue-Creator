@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://dwfi5a0g3e3pa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mhoyl"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5971761, 0.5971762, 0.59717584, 1)
+corner_detail = 5
+
+[node name="LineColorItem" type="PanelContainer" unique_id=1843823049]
+offset_right = 72.0
+offset_bottom = 20.0
+
+[node name="HBox" type="HBoxContainer" parent="." unique_id=274513198]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Line" type="RichTextLabel" parent="HBox" unique_id=184259523]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/bold_font_size = 12
+theme_override_font_sizes/bold_italics_font_size = 12
+theme_override_font_sizes/italics_font_size = 12
+theme_override_font_sizes/mono_font_size = 12
+text = "Line Type"
+scroll_active = false
+vertical_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="HBox" unique_id=2131999436]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Text" type="ColorPickerButton" parent="HBox/HBox" unique_id=1888747823]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_mhoyl")
+
+[node name="BG" type="ColorPickerButton" parent="HBox/HBox" unique_id=1558484919]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_mhoyl")

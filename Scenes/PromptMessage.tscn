@@ -1,0 +1,148 @@
+[gd_scene format=3 uid="uid://b4n024aruxcxd"]
+
+[ext_resource type="Script" uid="uid://cmd1g1ylcpwu" path="res://Scripts/prompt_message.gd" id="1_326oq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_326oq"]
+content_margin_top = 256.0
+bg_color = Color(0, 0, 0, 0.60784316)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7sqs"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0, 0.4099307, 0.70747656, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oatms"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1837653134]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_326oq")
+script = ExtResource("1_326oq")
+
+[node name="PromptMessage" type="PanelContainer" parent="." unique_id=1133625362]
+custom_minimum_size = Vector2(768, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_d7sqs")
+
+[node name="VBox" type="VBoxContainer" parent="PromptMessage" unique_id=475318844]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="RichTextLabel" parent="PromptMessage/VBox" unique_id=1254657437]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+text = "Title"
+fit_content = true
+
+[node name="Panel" type="Panel" parent="PromptMessage/VBox" unique_id=357767880]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oatms")
+
+[node name="Warning" type="RichTextLabel" parent="PromptMessage/VBox" unique_id=1582292795]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_font_sizes/bold_italics_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
+text = "Warning message"
+fit_content = true
+
+[node name="Panel2" type="Panel" parent="PromptMessage/VBox" unique_id=1941991743]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oatms")
+
+[node name="Message" type="RichTextLabel" parent="PromptMessage/VBox" unique_id=368031278]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Message"
+fit_content = true
+
+[node name="Input" type="LineEdit" parent="PromptMessage/VBox" unique_id=581025563]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Notice" type="RichTextLabel" parent="PromptMessage/VBox" unique_id=339949851]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.77, 0.7571667, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+text = "Notice message"
+fit_content = true
+
+[node name="Error" type="RichTextLabel" parent="PromptMessage/VBox" unique_id=1205484760]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+text = "Error message"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="PromptMessage/VBox" unique_id=1307018125]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="PromptMessage/VBox" unique_id=459817072]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 128
+alignment = 1
+
+[node name="Cancel" type="Button" parent="PromptMessage/VBox/Buttons" unique_id=1594440108]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Cancel"
+
+[node name="Special" type="Button" parent="PromptMessage/VBox/Buttons" unique_id=1731490593]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Special"
+
+[node name="Confirm" type="Button" parent="PromptMessage/VBox/Buttons" unique_id=1209469740]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Confirm
+"
+
+[connection signal="pressed" from="PromptMessage/VBox/Buttons/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="PromptMessage/VBox/Buttons/Special" to="." method="_on_special_pressed"]
+[connection signal="pressed" from="PromptMessage/VBox/Buttons/Confirm" to="." method="_on_confirm_pressed"]

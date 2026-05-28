@@ -1,0 +1,200 @@
+[gd_scene format=3 uid="uid://brkuych7x436w"]
+
+[ext_resource type="Texture2D" uid="uid://b2s2c63mgr7io" path="res://Resources/Candy Arts Logo.png" id="1_ti3ws"]
+[ext_resource type="Script" uid="uid://bc5msts8mnpqm" path="res://Scripts/landing_screen.gd" id="2_7xyja"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7xyja"]
+texture = ExtResource("1_ti3ws")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hw2xl"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ti3ws"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 32.0
+bg_color = Color(0, 0, 0, 0.60784316)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ypii"]
+bg_color = Color(0, 0, 0, 0.49019608)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5014063, 0.5014066, 0.50140643, 1)
+
+[node name="LandingScreen" type="PanelContainer" unique_id=968163562]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_7xyja")
+script = ExtResource("2_7xyja")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=414105682]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TopBar" type="PanelContainer" parent="VBox" unique_id=1048604290]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hw2xl")
+
+[node name="HBox" type="HBoxContainer" parent="VBox/TopBar" unique_id=1823172017]
+layout_mode = 2
+
+[node name="Right" type="HBoxContainer" parent="VBox/TopBar/HBox" unique_id=2074352342]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="Minimize" type="Button" parent="VBox/TopBar/HBox/Right" unique_id=811133899]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Minimize"
+text = "_"
+
+[node name="Window" type="Button" parent="VBox/TopBar/HBox/Right" unique_id=1319208594]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Fullscreen/Windowed"
+text = "❐"
+
+[node name="Exit" type="Button" parent="VBox/TopBar/HBox/Right" unique_id=1168500857]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Exit"
+text = "X"
+
+[node name="Top" type="PanelContainer" parent="VBox" unique_id=307405763]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBox" type="HBoxContainer" parent="VBox" unique_id=2678313]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Left" type="PanelContainer" parent="VBox/HBox" unique_id=606068194]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Center" type="PanelContainer" parent="VBox/HBox" unique_id=1407187520]
+custom_minimum_size = Vector2(1024, 768)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_ti3ws")
+
+[node name="VBox" type="VBoxContainer" parent="VBox/HBox/Center" unique_id=562366415]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="RichTextLabel" parent="VBox/HBox/Center/VBox" unique_id=961330641]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 32
+text = "Select Profile"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="VBox/HBox/Center/VBox" unique_id=1720577517]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="UserButtons" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=755633040]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="NewUser" type="Button" parent="VBox/HBox/Center/VBox/Buttons/UserButtons" unique_id=1539145012]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Create new User."
+text = "+"
+
+[node name="UserSelect" type="OptionButton" parent="VBox/HBox/Center/VBox/Buttons/UserButtons" unique_id=2091827455]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="ProfileButtons" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=2059086560]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Select" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons" unique_id=948817613]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+tooltip_text = "Load selected profile."
+theme_override_colors/font_color = Color(1.1070073e-06, 0.84357554, 0.11075137, 1)
+text = "Select Profile"
+
+[node name="NewProfile" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons" unique_id=1693674951]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+tooltip_text = "Create new profile."
+text = "New Profile"
+
+[node name="ProfileButtons2" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=1536594575]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="Rename" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons2" unique_id=1509192461]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+tooltip_text = "Rename selected profile."
+theme_override_colors/font_color = Color(0.8990207, 0.91918933, 7.70092e-07, 1)
+text = "Rename"
+
+[node name="Delete" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons2" unique_id=578634509]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+tooltip_text = "Delete selected profile."
+theme_override_colors/font_color = Color(0.88, 0, 0, 1)
+text = "Delete"
+
+[node name="ProfileList" type="PanelContainer" parent="VBox/HBox/Center/VBox" unique_id=287393208]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5ypii")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox/HBox/Center/VBox/ProfileList" unique_id=900289434]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/HBox/Center/VBox/ProfileList/ScrollContainer" unique_id=2055112748]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Right" type="PanelContainer" parent="VBox/HBox" unique_id=1563588348]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Bottom" type="PanelContainer" parent="VBox" unique_id=195426744]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="VBox/TopBar/HBox/Right/Minimize" to="." method="_on_minimize_pressed"]
+[connection signal="pressed" from="VBox/TopBar/HBox/Right/Window" to="." method="_on_window_pressed"]
+[connection signal="pressed" from="VBox/TopBar/HBox/Right/Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/UserButtons/NewUser" to="." method="_on_new_user_pressed"]
+[connection signal="item_selected" from="VBox/HBox/Center/VBox/Buttons/UserButtons/UserSelect" to="." method="_on_user_selected"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons/Select" to="." method="_on_select_profile_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons/NewProfile" to="." method="_on_new_profile_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Rename" to="." method="_on_rename_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Delete" to="." method="_on_delete_pressed"]

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://cw4d62vkl8j7c"]
+
+[ext_resource type="Script" uid="uid://bs3fvf4x0j44r" path="res://Scripts/project_data.gd" id="1_bdvpb"]
+
+[node name="ProjectData" type="PanelContainer" unique_id=1244496121]
+offset_right = 804.0
+offset_bottom = 110.0
+script = ExtResource("1_bdvpb")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=446294362]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox" unique_id=184608049]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="Script" type="HBoxContainer" parent="VBox" unique_id=297214008]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Script" unique_id=790035625]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Script:"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="VBox/Script" unique_id=1291648034]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Button" type="Button" parent="VBox/Script" unique_id=1626453684]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "..."
+
+[node name="Variable" type="HBoxContainer" parent="VBox" unique_id=1136267073]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Variable" unique_id=1471504109]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Variable:"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="VBox/Variable" unique_id=1840869879]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+
+[node name="Button" type="Button" parent="VBox/Variable" unique_id=1461841134]
+custom_minimum_size = Vector2(93, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Import Data"
+
+[node name="Data" type="HBoxContainer" parent="VBox" unique_id=1650396141]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Data" unique_id=844206670]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Data:"
+vertical_alignment = 1
+
+[node name="TextEdit" type="TextEdit" parent="VBox/Data" unique_id=722217681]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 12
+scroll_fit_content_height = true
+
+[connection signal="pressed" from="VBox/Script/Button" to="." method="_on_browse_pressed"]
+[connection signal="pressed" from="VBox/Variable/Button" to="." method="_on_import_pressed"]

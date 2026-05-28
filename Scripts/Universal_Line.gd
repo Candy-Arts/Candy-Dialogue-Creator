@@ -1244,18 +1244,18 @@ func _apply_line_data_to_ui() -> void:
 				$"HBox/Media/AllLines".text = "All"
 
 			if line_data["Box"] == 0:
-				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]		#/ white
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]			#/ white
 			elif line_data["Box"] == 1:
 				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["On"]			#/ green
 			elif line_data["Box"] == -1:
-				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]		#/ red
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]			#/ red
 
 			if line_data["Portrait"] == 0:
 				$"HBox/Media/Portrait".modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]	#/ white
 			elif line_data["Portrait"] == 1:
-				$"HBox/Media/Portrait".modulate = candy_dc.color_models[candy_dc.color_mode]["On"]	#/ green
+				$"HBox/Media/Portrait".modulate = candy_dc.color_models[candy_dc.color_mode]["On"]		#/ green
 			elif line_data["Portrait"] == -1:
-				$"HBox/Media/Portrait".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]	#/ red
+				$"HBox/Media/Portrait".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]		#/ red
 
 			#% Toggle Visibility:
 			$"HBox/Media".visible = true
@@ -1275,10 +1275,19 @@ func _apply_line_data_to_ui() -> void:
 			#% Get data:
 			$"HBox/Media/Node/NodeName".text = str(line_data.get("Node", ""))
 
+			if line_data["Box"] == 0:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]			#/ white
+			elif line_data["Box"] == 1:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["On"]			#/ green
+			elif line_data["Box"] == -1:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]			#/ red
+
 			#% Toggle Visibility:
 			$"HBox/Media".visible = true
 			$"HBox/Media/Node".visible = true
 			$"HBox/Media/Node/Button".visible = true
+			$"HBox/Media/Box".visible = true
+			$"HBox/Media/Portrait".visible = true
 
 			stylebox.bg_color = candy_dc.line_colors[key_name]["BG"]
 			stylebox.border_color = candy_dc.line_colors[key_name]["Border"]
@@ -1476,10 +1485,19 @@ func _apply_line_data_to_ui() -> void:
 			#% Get data:
 			$"HBox/Media/Node/NodeName".text = str(line_data.get("Node", ""))
 
+			if line_data["Box"] == 0:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Null"]		#/ white
+			elif line_data["Box"] == 1:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["On"]			#/ green
+			elif line_data["Box"] == -1:
+				$"HBox/Media/Box".modulate = candy_dc.color_models[candy_dc.color_mode]["Off"]		#/ red
+
 			#% Toggle Visibility:
 			$"HBox/Media".visible = true
 			$"HBox/Media/Node".visible = true
 			$"HBox/Media/Node/Button".visible = true
+			$"HBox/Media/Box".visible = true
+			$"HBox/Media/Portrait".visible = true
 
 			stylebox.bg_color = candy_dc.line_colors[key_name]["BG"]
 			stylebox.border_color = candy_dc.line_colors[key_name]["Border"]
@@ -1601,7 +1619,6 @@ func _apply_line_data_to_ui() -> void:
 			#% Get data:
 			$"HBox/Media/Node/NodeName".text = str(line_data.get("Node", ""))
 			$"HBox/Media/Lines/Lines".text = str(line_data.get("Lines", ""))
-			$"HBox/Media/Wait/Wait".text = str(line_data.get("Wait", ""))
 
 			if line_data["All"] == 0:
 				$"HBox/Media/AllLines".text = "Spoken"
@@ -1614,7 +1631,6 @@ func _apply_line_data_to_ui() -> void:
 			$"HBox/Media/Node/Button".visible = true
 			$"HBox/Media/Lines".visible = true
 			$"HBox/Media/AllLines".visible = true
-			$"HBox/Media/Wait".visible = true
 
 			stylebox.bg_color = candy_dc.line_colors[key_name]["BG"]
 			stylebox.border_color = candy_dc.line_colors[key_name]["Border"]

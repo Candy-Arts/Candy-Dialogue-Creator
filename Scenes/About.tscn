@@ -18,7 +18,6 @@ corner_detail = 5
 bg_color = Color(0, 0, 0, 0.39215687)
 
 [node name="About" type="CanvasLayer" unique_id=426920074]
-visible = false
 script = ExtResource("1_8rnfx")
 
 [node name="Shield" type="ColorRect" parent="." unique_id=1403345603]

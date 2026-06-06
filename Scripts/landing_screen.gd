@@ -1,7 +1,10 @@
 extends PanelContainer
 
 @onready var main = get_node("/root/MainUI")
-@onready var select_user = get_node("VBox/HBox/Center/VBox/Buttons/UserButtons/UserSelect")
+@onready var select_user = get_node("VBox/HBox/Center/VBox/UserButtons/UserSelect")
+@onready var select_profile_btn = get_node("VBox/HBox/Center/VBox/Buttons/ProfileButtons/Select")
+@onready var rename_profile_btn = get_node("VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Rename")
+@onready var delete_profile_btn = get_node("VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Delete")
 @onready var profile_list = get_node("VBox/HBox/Center/VBox/ProfileList/ScrollContainer/VBox")
 
 var selected_user = ""
@@ -243,6 +246,9 @@ func populate_profile_list() -> void:
 func _on_user_selected(index: int) -> void:
 	selected_user = select_user.get_item_text(index)
 	selected_profile = ""
+	select_profile_btn.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55))
+	rename_profile_btn.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55))
+	delete_profile_btn.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55))
 	populate_profile_list()
 
 
@@ -253,6 +259,9 @@ func _on_profile_selected(profile: String, button: Button) -> void:
 		if child is Button:
 			child.button_pressed = false
 	button.button_pressed = true
+	select_profile_btn.add_theme_color_override("font_color", Color(0.0, 0.85, 0.0))
+	rename_profile_btn.add_theme_color_override("font_color", Color(0.898, 0.918, 0.0))
+	delete_profile_btn.add_theme_color_override("font_color", Color(0.878, 0.0, 0.0))
 
 
 #* New user:
@@ -275,7 +284,6 @@ func _on_select_profile_pressed() -> void:
 		self.visible = false
 
 
-
 #* Delete profile:
 func _on_delete_pressed() -> void:
 	main.prompt_menu.setup("Delete Profile")
@@ -283,8 +291,6 @@ func _on_delete_pressed() -> void:
 #* Rename profile:
 func _on_rename_pressed() -> void:
 	main.prompt_menu.setup("Rename Profile")
-
-
 
 
 #* Minimize button pressed:
@@ -301,4 +307,3 @@ func _on_window_pressed():
 #* Open exit confirmation prompt:
 func _on_exit_pressed() -> void:
 	get_tree().quit()
-

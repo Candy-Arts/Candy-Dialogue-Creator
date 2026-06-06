@@ -11,10 +11,15 @@ extends PanelContainer
 @onready var cancel_button = get_node("PromptMessage/VBox/Buttons/Cancel")
 @onready var special_button = get_node("PromptMessage/VBox/Buttons/Special")
 @onready var confirm_button = get_node("PromptMessage/VBox/Buttons/Confirm")
+@onready var text_dir_button = get_node("PromptMessage/VBox/TextDirectionButton")
 
 #? What the prompt menu is doing:
 var prompt_type = ""
 var old_editor_state = ""
+
+var sort_target_name := ""
+var sort_target_is_block := false
+var sort_target_conv := ""
 
 #* Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -49,21 +54,23 @@ func setup(type: String) -> void:
 			title.text = "Delete Profile?"
 		"New Conversation":
 			title.text = "New Conversation:"
-			input_field.text = globals.conversation_default_name
+			input_field.text = globals.conversation_new_name
 			input_field.visible = true
 			error.visible = true
 		"New Block":
 			title.text = "New Block:"
-			input_field.text = globals.block_default_name
+			input_field.text = globals.block_new_name
 			input_field.visible = true
 			error.visible = true
 		"Rename Conversation":
 			title.text = "Rename Conversation:"
 			input_field.visible = true
+			input_field.text = sort_target_name
 			error.visible = true
 		"Rename Block":
 			title.text = "Rename Block:"
 			input_field.visible = true
+			input_field.text = sort_target_name
 			error.visible = true
 
 		"Export":
@@ -102,6 +109,7 @@ func setup(type: String) -> void:
 			title.text = "New language:"
 			input_field.visible = true
 			error.visible = true
+			text_dir_button.visible = true
 		"New Variant":
 			title.text = "New variant:"
 			input_field.visible = true
@@ -175,6 +183,8 @@ func clear() -> void:
 	confirm_button.visible = true
 	confirm_button.text = "Confirm"
 	prompt_type = ""
+	text_dir_button.visible = false
+	text_dir_button.select(0)
 	globals.editor_state = old_editor_state
 
 
@@ -271,20 +281,20 @@ func _on_confirm_pressed() -> void:
 			if globals.dialogue.has(conv_name):
 				error.text = "A conversation with that name already exists."
 				return
-			main.rename_conversation(conv_name)
+			main.rename_conversation(sort_target_name, conv_name)
 
 		"Rename Block":
 			var block_name = input_field.text.strip_edges()
 			if block_name == "":
 				return
-			#% Check if block already exists in current conversation:
-			if globals.dialogue.has(globals.current_conversation) and globals.dialogue[globals.current_conversation].has(block_name):
+			if globals.dialogue.has(sort_target_conv) and globals.dialogue[sort_target_conv].has(block_name):
 				error.text = "A block with that name already exists in this conversation."
 				return
-			main.rename_block(block_name)
+			main.rename_block(sort_target_conv, sort_target_name, block_name)
 
 		"New Language":
 			var language_name = input_field.text.strip_edges()
+			var direction = text_dir_button.get_item_text(text_dir_button.selected)
 			if language_name == "":
 				return
 			#% Check for invalid characters:
@@ -295,7 +305,7 @@ func _on_confirm_pressed() -> void:
 			if globals.languages.has(language_name):
 				error.text = "A language with that name already exists."
 				return
-			main.settings_menu.create_language(language_name)
+			main.settings_menu.create_language(language_name, direction)
 
 		"New Variant":
 			var variant_name = input_field.text.strip_edges()

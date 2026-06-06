@@ -74,12 +74,11 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 tab_alignment = 1
-current_tab = 3
+current_tab = 0
 tab_1/title = "Project Paths"
 tab_2/title = "Project Data"
 
 [node name="Preferences" type="ScrollContainer" parent="Menu/VBox/Tabs" unique_id=809051829]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
 metadata/_tab_index = 0
@@ -106,6 +105,21 @@ text = "New Conversation Name:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="DefaultBlock" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=962362175]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/DefaultBlock" unique_id=1712614275]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The name of the first Block when creating a new Conversation."
+mouse_filter = 1
+text = "Default Block Name:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/DefaultBlock" unique_id=2028370498]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="NewBlock" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=1708755102]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -113,8 +127,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/NewBlock" unique_id=680111515]
 custom_minimum_size = Vector2(192, 0)
 layout_mode = 2
-tooltip_text = "The default name for Blocks.
-This is the name that is written by default in the prompt when creating a new Block, as well as the name of the first Block when creating a new Conversation."
+tooltip_text = "The name that is written by default in the prompt when creating a new Block."
 mouse_filter = 1
 text = "New Block Name:"
 
@@ -403,6 +416,37 @@ text = "Bust Preview FPS:"
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 
+[node name="SpritePreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=2043924607]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/SpritePreviewWidth" unique_id=999510577]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The width of Bust previews (§VNBust command).
+Indirectly determines the height, as proportions are preserved by previews."
+mouse_filter = 1
+text = "Sprite Preview Width:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/SpritePreviewWidth" unique_id=845390966]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="SpritePreviewFPS" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=722953223]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/Tabs/Preferences/VBox/SpritePreviewFPS" unique_id=1441898018]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+tooltip_text = "The default FPS value to use for playing animated Bust previews."
+mouse_filter = 1
+text = "Sprite Preview FPS:"
+
+[node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/SpritePreviewFPS" unique_id=1451286200]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
 [node name="VideoPreviewWidth" type="HBoxContainer" parent="Menu/VBox/Tabs/Preferences/VBox" unique_id=296369556]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -445,7 +489,7 @@ layout_mode = 2
 tooltip_text = "The width of Background previews (§BG command).
 Indirectly determines the height, as proportions are preserved by previews."
 mouse_filter = 1
-text = "Background Preview FPS:"
+text = "Background Preview Width:"
 
 [node name="LineEdit" type="LineEdit" parent="Menu/VBox/Tabs/Preferences/VBox/BGPreviewWidth" unique_id=892043212]
 custom_minimum_size = Vector2(64, 0)
@@ -538,6 +582,11 @@ layout_mode = 2
 path_key = "*Busts"
 label_text = "Busts:"
 
+[node name="SpritesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=1321947519 instance=ExtResource("2_jttlj")]
+layout_mode = 2
+path_key = "*Sprites"
+label_text = "Sprites:"
+
 [node name="VoiceFilesPath" parent="Menu/VBox/Tabs/ProjectPaths/VBox/SubPaths/PathInputs" unique_id=862280055 instance=ExtResource("2_jttlj")]
 layout_mode = 2
 path_key = "*Voice_Files"
@@ -614,6 +663,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Symbols" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=1561862561]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4hfd5")
 metadata/_tab_index = 3
@@ -935,6 +985,7 @@ theme_override_font_sizes/font_size = 16
 text = "Close"
 
 [connection signal="text_changed" from="Menu/VBox/Tabs/Preferences/VBox/NewConversation/LineEdit" to="." method="_on_new_conversation_changed"]
+[connection signal="text_changed" from="Menu/VBox/Tabs/Preferences/VBox/DefaultBlock/LineEdit" to="." method="_on_default_block_text_changed"]
 [connection signal="text_changed" from="Menu/VBox/Tabs/Preferences/VBox/NewBlock/LineEdit" to="." method="_on_new_block_text_changed"]
 [connection signal="item_selected" from="Menu/VBox/Tabs/Preferences/VBox/Save/LineEdit" to="." method="_on_save_mode_selected"]
 [connection signal="text_changed" from="Menu/VBox/Tabs/ProjectPaths/VBox/Project/Path/LineEdit" to="." method="_on_project_path_changed"]

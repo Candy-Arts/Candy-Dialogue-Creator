@@ -137,7 +137,7 @@ Candy Dialogue Creator can be used in three different ways:
 ## Instructions
 > [!WARNING]
 > Dialogue and save files made in version 1.0 must be converted to version 1.1!
-> See [this document](Conversion_Instructions.doc) for instructions.
+> See [this document](Dialogue_Conversion_Instructions.doc) for instructions.
 
 Please see the following documents for instructions on using Candy Dialogue Creator:
 - [Setup](Setup_Instructions.doc)

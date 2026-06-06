@@ -18,14 +18,206 @@ content_margin_left = 32.0
 content_margin_top = 16.0
 content_margin_right = 32.0
 content_margin_bottom = 32.0
-bg_color = Color(0, 0, 0, 0.60784316)
+bg_color = Color(0, 0, 0, 0.6862745)
 corner_radius_top_left = 64
 corner_radius_top_right = 64
 corner_radius_bottom_right = 64
 corner_radius_bottom_left = 64
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f65gx"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctyj1"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2is13"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.22, 0.22, 0.22, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mpqyq"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o53wr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qok0q"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmydy"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.22, 0.22, 0.22, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2fs8"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p5ilq"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w24gm"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.22, 0.22, 0.22, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4g28v"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ohdde"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_byvel"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.22, 0.22, 0.22, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v1afl"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21m1w"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w76vv"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.22, 0.22, 0.22, 0.8039216)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ypii"]
-bg_color = Color(0, 0, 0, 0.49019608)
+bg_color = Color(0, 0, 0, 0.60784316)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -90,7 +282,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Center" type="PanelContainer" parent="VBox/HBox" unique_id=1407187520]
-custom_minimum_size = Vector2(1024, 768)
+custom_minimum_size = Vector2(640, 640)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -107,44 +299,54 @@ text = "Select Profile"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Buttons" type="HBoxContainer" parent="VBox/HBox/Center/VBox" unique_id=1720577517]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-theme_override_constants/separation = 64
-
-[node name="UserButtons" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=755633040]
+[node name="UserButtons" type="HBoxContainer" parent="VBox/HBox/Center/VBox" unique_id=755633040]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="NewUser" type="Button" parent="VBox/HBox/Center/VBox/Buttons/UserButtons" unique_id=1539145012]
+[node name="NewUser" type="Button" parent="VBox/HBox/Center/VBox/UserButtons" unique_id=1539145012]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 tooltip_text = "Create new User."
+theme_override_styles/normal = SubResource("StyleBoxFlat_f65gx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ctyj1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2is13")
 text = "+"
 
-[node name="UserSelect" type="OptionButton" parent="VBox/HBox/Center/VBox/Buttons/UserButtons" unique_id=2091827455]
-custom_minimum_size = Vector2(256, 0)
+[node name="UserSelect" type="OptionButton" parent="VBox/HBox/Center/VBox/UserButtons" unique_id=2091827455]
+custom_minimum_size = Vector2(224, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_mpqyq")
 fit_to_longest_item = false
+
+[node name="Buttons" type="HBoxContainer" parent="VBox/HBox/Center/VBox" unique_id=1720577517]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="ProfileButtons" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=2059086560]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="Select" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons" unique_id=948817613]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-tooltip_text = "Load selected profile."
-theme_override_colors/font_color = Color(1.1070073e-06, 0.84357554, 0.11075137, 1)
-text = "Select Profile"
-
 [node name="NewProfile" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons" unique_id=1693674951]
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 tooltip_text = "Create new profile."
+theme_override_styles/normal = SubResource("StyleBoxFlat_o53wr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qok0q")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kmydy")
 text = "New Profile"
+
+[node name="Select" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons" unique_id=948817613]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+tooltip_text = "Load selected profile."
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_l2fs8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_p5ilq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w24gm")
+text = "Select Profile"
 
 [node name="ProfileButtons2" type="HBoxContainer" parent="VBox/HBox/Center/VBox/Buttons" unique_id=1536594575]
 layout_mode = 2
@@ -156,14 +358,20 @@ alignment = 2
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 tooltip_text = "Rename selected profile."
-theme_override_colors/font_color = Color(0.8990207, 0.91918933, 7.70092e-07, 1)
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_4g28v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ohdde")
+theme_override_styles/hover = SubResource("StyleBoxFlat_byvel")
 text = "Rename"
 
 [node name="Delete" type="Button" parent="VBox/HBox/Center/VBox/Buttons/ProfileButtons2" unique_id=578634509]
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 tooltip_text = "Delete selected profile."
-theme_override_colors/font_color = Color(0.88, 0, 0, 1)
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_v1afl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_21m1w")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w76vv")
 text = "Delete"
 
 [node name="ProfileList" type="PanelContainer" parent="VBox/HBox/Center/VBox" unique_id=287393208]
@@ -192,9 +400,9 @@ size_flags_vertical = 3
 [connection signal="pressed" from="VBox/TopBar/HBox/Right/Minimize" to="." method="_on_minimize_pressed"]
 [connection signal="pressed" from="VBox/TopBar/HBox/Right/Window" to="." method="_on_window_pressed"]
 [connection signal="pressed" from="VBox/TopBar/HBox/Right/Exit" to="." method="_on_exit_pressed"]
-[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/UserButtons/NewUser" to="." method="_on_new_user_pressed"]
-[connection signal="item_selected" from="VBox/HBox/Center/VBox/Buttons/UserButtons/UserSelect" to="." method="_on_user_selected"]
-[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons/Select" to="." method="_on_select_profile_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/UserButtons/NewUser" to="." method="_on_new_user_pressed"]
+[connection signal="item_selected" from="VBox/HBox/Center/VBox/UserButtons/UserSelect" to="." method="_on_user_selected"]
 [connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons/NewProfile" to="." method="_on_new_profile_pressed"]
+[connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons/Select" to="." method="_on_select_profile_pressed"]
 [connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Rename" to="." method="_on_rename_pressed"]
 [connection signal="pressed" from="VBox/HBox/Center/VBox/Buttons/ProfileButtons2/Delete" to="." method="_on_delete_pressed"]

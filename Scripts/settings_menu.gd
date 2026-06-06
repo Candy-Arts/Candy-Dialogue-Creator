@@ -52,8 +52,9 @@ func create_project_data_input() -> void:
 func setup() -> void:
 	#@ Preferences:
 	#% Default Conversation/Block names:
-	$"Menu/VBox/Tabs/Preferences/VBox/NewConversation/LineEdit".text = globals.conversation_default_name
-	$"Menu/VBox/Tabs/Preferences/VBox/NewBlock/LineEdit".text = globals.block_default_name
+	$"Menu/VBox/Tabs/Preferences/VBox/NewConversation/LineEdit".text = globals.conversation_new_name
+	$"Menu/VBox/Tabs/Preferences/VBox/DefaultBlock/LineEdit".text = globals.block_default_name
+	$"Menu/VBox/Tabs/Preferences/VBox/NewBlock/LineEdit".text = globals.block_new_name
 
 	#% Save settings:
 	$"Menu/VBox/Tabs/Preferences/VBox/Save/LineEdit".select(globals.default_save_mode)
@@ -79,6 +80,8 @@ func setup() -> void:
 	$"Menu/VBox/Tabs/Preferences/VBox/PortraitPreviewFPS/LineEdit".text = str(globals.portrait_sprite_fps)
 	$"Menu/VBox/Tabs/Preferences/VBox/BustPreviewWidth/LineEdit".text = str(globals.bust_preview_width)
 	$"Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS/LineEdit".text = str(globals.bust_sprite_fps)
+	$"Menu/VBox/Tabs/Preferences/VBox/SpritePreviewWidth/LineEdit".text = str(globals.sprite_preview_width)
+	$"Menu/VBox/Tabs/Preferences/VBox/SpritePreviewFPS/LineEdit".text = str(globals.sprite_preview_fps)
 	$"Menu/VBox/Tabs/Preferences/VBox/VideoPreviewWidth/LineEdit".text = str(globals.video_preview_width)
 	$"Menu/VBox/Tabs/Preferences/VBox/ImagePreviewWidth/LineEdit".text = str(globals.image_preview_width)
 	$"Menu/VBox/Tabs/Preferences/VBox/BGPreviewWidth/LineEdit".text = str(globals.bg_preview_width)
@@ -148,6 +151,10 @@ func _on_close_pressed() -> void:
 		globals.bust_preview_width = int($"Menu/VBox/Tabs/Preferences/VBox/BustPreviewWidth/LineEdit".text)
 	if $"Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS/LineEdit".text.is_valid_float():
 		globals.bust_sprite_fps = float($"Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS/LineEdit".text)
+	if $"Menu/VBox/Tabs/Preferences/VBox/BustPreviewWidth/LineEdit".text.is_valid_int():
+		globals.sprite_preview_width = int($"Menu/VBox/Tabs/Preferences/VBox/SpritePreviewWidth/LineEdit".text)
+	if $"Menu/VBox/Tabs/Preferences/VBox/BustPreviewFPS/LineEdit".text.is_valid_float():
+		globals.sprite_preview_fps = float($"Menu/VBox/Tabs/Preferences/VBox/SpritePreviewFPS/LineEdit".text)
 	if $"Menu/VBox/Tabs/Preferences/VBox/VideoPreviewWidth/LineEdit".text.is_valid_int():
 		globals.video_preview_width = int($"Menu/VBox/Tabs/Preferences/VBox/VideoPreviewWidth/LineEdit".text)
 	if $"Menu/VBox/Tabs/Preferences/VBox/ImagePreviewWidth/LineEdit".text.is_valid_int():
@@ -201,11 +208,13 @@ func _on_project_file_browser_pressed() -> void:
 	main.path_dialogue.visible = true
 
 func _on_new_conversation_changed(new_text: String) -> void:
-	globals.conversation_default_name = new_text
+	globals.conversation_new_name = new_text
 
+func _on_default_block_text_changed(new_text: String) -> void:
+	globals.block_default_name = new_text
 
 func _on_new_block_text_changed(new_text: String) -> void:
-	globals.block_default_name = new_text
+	globals.block_new_name = new_text
 
 
 func _on_save_mode_selected(index: int) -> void:
@@ -221,7 +230,7 @@ func _on_add_variant_pressed() -> void:
 	main.prompt_menu.setup("New Variant")
 
 
-func create_language(language_string: String) -> void:
+func create_language(language_string: String, direction: String) -> void:
 	var language_list = language_string.split(",")
 	for language in language_list:
 		language = language.strip_edges()
@@ -229,7 +238,7 @@ func create_language(language_string: String) -> void:
 		for variant in globals.variants:
 			variants_dict[variant] = {}
 		globals.languages[language] = {
-			"Default_Direction": "LtR",
+			"Default_Direction": direction,
 			"Variants": variants_dict,
 		}
 
@@ -251,6 +260,7 @@ func create_variant(variant_string: String) -> void:
 
 func refresh_variant_tree() -> void:
 	variant_tree.clear()
+	variant_tree.columns = 3
 	variant_tree.set_column_expand(0, false)
 	variant_tree.set_column_custom_minimum_width(0, 40)
 	variant_tree.set_column_expand(1, true)
@@ -276,10 +286,13 @@ func refresh_variant_tree() -> void:
 		variants_sorted.push_front("")
 
 		for variant in variants_sorted:
+			var combined = language + variant
 			var var_item = variant_tree.create_item(lang_item)
-			var_item.set_metadata(0, {"type": "variant", "language": language, "variant": variant})
+			var_item.set_metadata(0, {"type": "variant", "language": language, "variant": variant, "combined": combined})
 			var_item.add_button(0, preload("res://Resources/Delete Icon.png"))
-			var_item.set_text(1, "    " + language + variant)
+			var_item.set_text(1, "    " + combined)
+			var is_disabled = combined in globals.disabled_variants
+			var_item.add_button(2, preload("res://Resources/Auto_Off.png") if is_disabled else preload("res://Resources/Auto_On.png"))
 
 
 func _on_variant_tree_button_clicked(item: TreeItem, column: int, _id: int, _mouse_button_index: int) -> void:
@@ -291,11 +304,17 @@ func _on_variant_tree_button_clicked(item: TreeItem, column: int, _id: int, _mou
 		elif meta["type"] == "variant":
 			to_delete_or_rename = meta["variant"]
 			main.prompt_menu.setup("Delete Variant")
-
 	elif column == 2:
 		if meta["type"] == "language":
 			var current = globals.languages[meta["language"]]["Default_Direction"]
 			globals.languages[meta["language"]]["Default_Direction"] = "RtL" if current == "LtR" else "LtR"
+			refresh_variant_tree()
+		elif meta["type"] == "variant":
+			var combined = meta["combined"]
+			if combined in globals.disabled_variants:
+				globals.disabled_variants.erase(combined)
+			else:
+				globals.disabled_variants.append(combined)
 			refresh_variant_tree()
 
 
@@ -357,6 +376,8 @@ func _delete_language(language: String) -> void:
 
 	_reset_variant_selection()
 	refresh_variant_tree()
+	main.export_user_presets()
+	main.export_profile_presets()
 	main.save_undo_step()
 
 
@@ -392,6 +413,8 @@ func _delete_variant(variant: String) -> void:
 
 	_reset_variant_selection()
 	refresh_variant_tree()
+	main.export_user_presets()
+	main.export_profile_presets()
 	main.save_undo_step()
 
 

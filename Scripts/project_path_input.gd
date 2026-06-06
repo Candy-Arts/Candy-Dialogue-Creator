@@ -15,6 +15,7 @@ var titles = {
 	"*Portraits": "Select Portraits Folder:",
 	"*Busts": "Select Busts Folder:",
 	"*Voice_Files": "Select Voice Files Folder:",
+	"*Sprites": "Select Sprites Folder:",
 
 	"Backgrounds": "Select Background Files Folder:",
 	"Images": "Select Image Files Folder:",
@@ -84,7 +85,7 @@ func _on_file_browser_pressed() -> void:
 
 	else:
 		if globals.project_path == "":
-			main.show_warning("[color=d0d400]Please provide a Project Path first.[/color]") 
+			main.show_warning("[color=d0d400]Please provide a Project Path first.[/color]")
 		else:
 			main.show_warning("[color=d0d400]The Project Path you provided does not point to a valid folder.[/color]")
 		return

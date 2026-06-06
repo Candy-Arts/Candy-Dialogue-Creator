@@ -131,6 +131,9 @@ func _on_pressed() -> void:
 
 	#% Display the data for the line type:
 	if globals.current_line != -1 and not main.sort_dialogue == true:
+		if command == "§Comment":
+			lines[globals.current_line]["§Comment"]["Color"] = var_to_str(globals.line_colors["§Comment"]["Text"])
+			main.comment_color_button.color = globals.line_colors["§Comment"]["Text"]
 		main._suppress_undo_save = true
 		main._show_line_editor()
 		main._suppress_undo_save = false

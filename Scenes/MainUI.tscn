@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://brkuych7x436w" path="res://Scenes/LandingScreen.tscn" id="3_j4ict"]
 [ext_resource type="PackedScene" uid="uid://b4n024aruxcxd" path="res://Scenes/PromptMessage.tscn" id="3_skpw3"]
 [ext_resource type="PackedScene" uid="uid://wf0gum1knslb" path="res://Scenes/DataInputX.tscn" id="4_y7llr"]
+[ext_resource type="Script" uid="uid://cxj7ll1pvt2re" path="res://Scripts/go_button.gd" id="5_0oxgv"]
+[ext_resource type="Script" uid="uid://bpgviabk70ib1" path="res://Scripts/choice_tree.gd" id="5_t8puo"]
 [ext_resource type="Script" uid="uid://dskhyo0rpl72t" path="res://Scripts/path_dialogue.gd" id="6_0fmn1"]
 [ext_resource type="PackedScene" uid="uid://csl5w0ap1nefv" path="res://Scenes/AboutMenu.tscn" id="6_8xjv5"]
 [ext_resource type="PackedScene" uid="uid://c4srvaoetcl2i" path="res://Scenes/SettingsMenu.tscn" id="6_ijr42"]
@@ -115,20 +117,12 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 4
-corner_radius_bottom_left = 4
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugv1v"]
-content_margin_left = 4.0
-content_margin_right = 4.0
 bg_color = Color(0.1, 0.1, 0.1, 0.3)
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsn4d"]
@@ -495,6 +489,15 @@ expand_margin_bottom = 2.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhwfg"]
 bg_color = Color(0, 0, 0, 0.8039216)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iwtqo"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+bg_color = Color(0.35906908, 0.35906908, 0.35906908, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsf0u"]
 bg_color = Color(0, 0.58, 0.39633337, 0)
 
@@ -745,13 +748,13 @@ tooltip_text = "Add new Block."
 text = "+"
 
 [node name="Sort" type="Button" parent="UI/VBox/Top/HBox" unique_id=1805643154]
-custom_minimum_size = Vector2(32, 0)
+custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
 tooltip_text = "Reorder Conversations/Blocks"
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_colors/font_pressed_color = Color(0.6706895, 0.6706895, 0.6706895, 1)
 toggle_mode = true
-text = "Tree"
+text = "Lines"
 
 [node name="NodeGraph" type="Button" parent="UI/VBox/Top/HBox" unique_id=1889848069]
 visible = false
@@ -878,7 +881,8 @@ theme_override_constants/separation = 0
 [node name="Label" type="Label" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Meta" unique_id=374572244]
 layout_mode = 2
 size_flags_vertical = 8
-tooltip_text = "Custom summary or hint as to the purpose of the current line. Has no effect in Candy DE."
+tooltip_text = "Custom summary or hint as to the purpose of the current line.
+Has no effect in Candy DE."
 mouse_filter = 1
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxEmpty_y7llr")
@@ -1260,7 +1264,6 @@ theme_override_font_sizes/bold_font_size = 14
 theme_override_font_sizes/bold_italics_font_size = 14
 theme_override_font_sizes/italics_font_size = 14
 theme_override_font_sizes/mono_font_size = 14
-bbcode_enabled = true
 fit_content = true
 selection_enabled = true
 
@@ -1307,6 +1310,9 @@ text = "◀ ⸩"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+max_value = 5.0
+step = 0.01
+value = 1.0
 
 [node name="Progress" type="HBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters/VoiceControls/Sliders" unique_id=1129742250]
 layout_mode = 2
@@ -1324,6 +1330,8 @@ text = "▶▶"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
 
 [node name="Counters" type="HBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters" unique_id=219135483]
 layout_mode = 2
@@ -1679,6 +1687,9 @@ text = "◀ ⸩"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+max_value = 5.0
+step = 0.01
+value = 1.0
 
 [node name="Progress" type="HBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders" unique_id=2002377438]
 layout_mode = 2
@@ -1696,6 +1707,8 @@ text = "▶▶"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
 
 [node name="VoiceFile" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls" unique_id=2103975585 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -1724,6 +1737,7 @@ size_flags_horizontal = 3
 label_text = "LLM Override:"
 parent_container = NodePath("../../../..")
 line_key = "AI"
+list_logic = "SpokenLineOverride"
 label_tooltip = "Whether to use an LLM to generate text for this line, overriding the engine settings.
 0 = Use engine settings.
 1 = Always use LLM (override).
@@ -1737,6 +1751,7 @@ size_flags_horizontal = 3
 label_text = "TTS Override:"
 parent_container = NodePath("../../../..")
 line_key = "TTS"
+list_logic = "SpokenLineOverride"
 label_tooltip = "Whether to use a TTS tool to generate voice for this line, overriding the engine settings.
 0 = Use engine settings.
 1 = Always use TTS (override).
@@ -1754,6 +1769,7 @@ size_flags_horizontal = 3
 label_text = "Portrait Override:"
 parent_container = NodePath("../../../..")
 line_key = "ForcePortrait"
+list_logic = "SpokenLineOverride"
 label_tooltip = "Whether to display a portrait for this line, overriding the engine settings.
 0 = Use engine settings.
 1 = Always display portrait (override).
@@ -1765,6 +1781,7 @@ size_flags_horizontal = 3
 label_text = "Speech Bubbles Override:"
 parent_container = NodePath("../../../..")
 line_key = "ForceBubbles"
+list_logic = "SpokenLineOverride"
 label_tooltip = "Whether to use speech bubbles for this line, overriding the engine settings.
 0 = Use engine settings.
 1 = Always use speech bubbles (override).
@@ -1920,7 +1937,8 @@ Use SUPER symbols to provide a variable reference instead (default: ££, $$ or 
 layout_mode = 2
 label_text = "Operator:"
 parent_container = NodePath("../..")
-line_key = "Operators"
+line_key = "Operator"
+list_logic = "Operators"
 label_tooltip = "The operator to use for modifying the variable."
 
 [node name="Expression" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Set/Data" unique_id=4346765 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
@@ -1930,7 +1948,7 @@ parent_container = NodePath("../..")
 line_key = "Expression"
 label_tooltip = "The value or expression to modify the variable by.
 
-This is processed by Godot's Expression parsers."
+This is processed by Godot's Expression parser."
 
 [node name="Flag" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1213007996]
 visible = false
@@ -2125,7 +2143,7 @@ Skip: skips exporting if a file already exists.
 Duplicate: exports a file with an incremental number added to the name. E.g. \"File.txt\" → \"File(1).txt\"
 Timestamp: exports a file with the current date and time added to the name."
 
-[node name="Data" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Export/Data" unique_id=1114307872 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+[node name="Data" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Export/Data" unique_id=2134469287 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
 label_text = "Data"
 parent_container = NodePath("../..")
@@ -2233,13 +2251,16 @@ If empty, Candy DE will transition to the first line in the Block (at index 0).
 
 Provide a line index or an §LM command reference."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Jump/Data/Transition" unique_id=1968384923]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Jump/Data/Transition" unique_id=1968384923 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="Bridge" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1567945748]
 visible = false
@@ -2290,13 +2311,16 @@ If empty, Candy DE will transition to the first line in the Block (at index 0).
 
 Provide a line index or an §LM command reference."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Bridge/Data/Transition" unique_id=940359482]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Bridge/Data/Transition" unique_id=940359482 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="Return" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=642473829]
 visible = false
@@ -2505,11 +2529,23 @@ layout_mode = 2
 label_text = "Mouse Mode:"
 parent_container = NodePath("../..")
 line_key = "Mouse Mode"
-list_logic = "MouseMode"
+list_logic = "MouseModeCommand"
 label_tooltip = "The Mouse Mode to switch to."
+
+[node name="PlayerAdvance" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1478683472]
+visible = false
+layout_mode = 2
+tooltip_text = "Make dialogue wait (pause) for a specified duration."
+theme_override_font_sizes/font_size = 20
+title = "§Player Advance"
+metadata/command = "§Player_Advance"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/PlayerAdvance" unique_id=434943723]
+layout_mode = 2
 
 [node name="ChoiceList" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=662268175]
 visible = false
+custom_minimum_size = Vector2(0, 768)
 layout_mode = 2
 tooltip_text = "Display a list of choices for the user to select."
 theme_override_font_sizes/font_size = 20
@@ -2560,6 +2596,7 @@ theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 0
 theme_override_constants/item_margin = 8
 theme_override_font_sizes/font_size = 14
+script = ExtResource("5_t8puo")
 
 [node name="VSeparator" type="VSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox" unique_id=472072025]
 layout_mode = 2
@@ -2615,6 +2652,10 @@ parent_container = NodePath("../../..")
 line_key = "Reference"
 label_tooltip = "A reference to display in the line tree in Candy DC, to help you identify this command. Serves no purpose in Candy DE."
 
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Reference" unique_id=1158859575]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="Title" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=574074744 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Title:"
@@ -2635,6 +2676,7 @@ This requires that the chosen menu scene supports displaying a title."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Prompt" unique_id=1815357208]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Setup" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=1640976281]
 layout_mode = 2
@@ -2672,7 +2714,7 @@ label_tooltip = "The Line to BRIDGE to as part of the Setup Transition.
 
 Setup Transitions run before the Choice Menu and its contents are created. They can be used to make last-minute changes when a Choice Menu is instantiated, at runtime."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Setup" unique_id=518461869]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Setup" unique_id=518461869 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -2682,36 +2724,44 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Setup" unique_id=1678671588]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Main" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=38107170 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Main Category:"
 parent_container = NodePath("../../..")
 line_key = "Main"
+list_logic = "ChoiceCategories"
 label_tooltip = "The first Category that displays when the Menu opens."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Main" unique_id=761624514]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Mouse" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=1258910225 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Mouse Mode:"
 parent_container = NodePath("../../..")
 line_key = "Mouse"
-list_logic = "MouseMode"
+list_logic = "MouseModeDefaultNone"
 label_tooltip = "The Mouse Mode to change to when the Menu opens."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Mouse" unique_id=494523935]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="MenuScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=1401900336 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Menu Scene:"
 parent_container = NodePath("../../..")
 line_key = "Menu Scene"
+list_logic = "ChoiceMenuScenes"
 label_tooltip = "The Scene to use for this Menu."
 
 [node name="CategoryScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=1823786947 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -2719,17 +2769,20 @@ layout_mode = 2
 label_text = "Default Category Scene:"
 parent_container = NodePath("../../..")
 line_key = "Category Scene"
+list_logic = "ChoiceCategoryScenes"
 label_tooltip = "The scene to use for Categories."
 
 [node name="ChoiceScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=2088566919 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Default Choice Button Scene:"
 parent_container = NodePath("../../..")
-line_key = "Choice Scene"
+line_key = "Button Scene"
+list_logic = "ChoiceButtonScenes"
 label_tooltip = "The Scene to use for choice buttons."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceScene" unique_id=851227141]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Tags" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=40782955 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -2740,6 +2793,7 @@ label_tooltip = "Custom tags that can be used by §Choice_Status and §Timer_Sta
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Tags" unique_id=484346679]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Custom" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=126821304 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
@@ -2748,15 +2802,17 @@ parent_container = NodePath("../../..")
 line_key = "Custom"
 label_tooltip = "Custom data that can be used by custom code in the Choice Menu's, the Categories' or the Choice Buttons' scripts."
 
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Custom" unique_id=732251316]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="CategorySettings" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=1577901456]
 visible = false
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=1595393305]
 layout_mode = 2
-
-[node name="HSeparator2" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=980181027]
-layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Label" type="Label" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=711205733]
 layout_mode = 2
@@ -2810,7 +2866,7 @@ This requires that the chosen Category scene supports displaying a title."
 
 [node name="Prompt" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=334965804 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
-label_text = "Prompt"
+label_text = "Prompt:"
 parent_container = NodePath("../../../..")
 input_logic = 3
 line_key = "Prompt"
@@ -2818,14 +2874,22 @@ label_tooltip = "The prompt to display for this Category.
 
 This requires that the chosen Category scene supports displaying a title."
 
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Prompt" unique_id=1339523127]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="Mouse" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=1144160864 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Mouse Mode:"
 parent_container = NodePath("../../../..")
 input_logic = 3
 line_key = "Mouse"
-list_logic = "MouseMode"
+list_logic = "MouseModeMenuDefaultNone"
 label_tooltip = "The Mouse Mode to change to when this Category is navigated to by the user."
+
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Mouse" unique_id=2012499046]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Setup" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=966125076]
 layout_mode = 2
@@ -2863,7 +2927,7 @@ label_tooltip = "The Line to BRIDGE to as part of the Setup Transition.
 
 Setup Transitions run before the Choice Menu and its contents are created. They can be used to make last-minute changes when a Choice Menu is instantiated, at runtime."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Setup" unique_id=824432818]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Setup" unique_id=824432818 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -2873,16 +2937,21 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Setup" unique_id=885778442]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="CategoryScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=871770495 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
-label_text = "Scene:"
+label_text = "Category Scene:"
 parent_container = NodePath("../../../..")
 input_logic = 3
 line_key = "Category Scene"
+list_logic = "ChoiceCategoryScenes"
 label_tooltip = "The Scene to use for this Category. Overrides the 'Category Scenes' data key in the Menu Settings."
 
 [node name="ChoiceScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=677030433 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -2890,11 +2959,13 @@ layout_mode = 2
 label_text = "Choice Button Scenes:"
 parent_container = NodePath("../../../..")
 input_logic = 3
-line_key = "Choice Scene"
+line_key = "Button Scene"
+list_logic = "ChoiceButtonScenes"
 label_tooltip = "The Scene to use for this Category's Choice Buttons."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/ChoiceScene" unique_id=1499914356]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Tags" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=2005293249 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -2906,6 +2977,7 @@ label_tooltip = "Custom tags that can be used by §Choice_Status and §Timer_Sta
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Tags" unique_id=1968850810]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Custom" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings" unique_id=186306205 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
@@ -2921,9 +2993,7 @@ layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1950150496]
 layout_mode = 2
-
-[node name="HSeparator2" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=520869212]
-layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Label" type="Label" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1676599473]
 layout_mode = 2
@@ -2974,6 +3044,10 @@ input_logic = 4
 line_key = "Tooltip"
 label_tooltip = "The tooltip text to display when hovering this Choice Button with the mouse."
 
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Tooltip" unique_id=436562117]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="Setup" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1052764165]
 layout_mode = 2
 
@@ -3010,7 +3084,7 @@ label_tooltip = "The Line to BRIDGE to as part of the Setup Transition.
 
 Setup Transitions run before the Choice Menu and its contents are created. They can be used to make last-minute changes when a Choice Menu is instantiated, at runtime."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Setup" unique_id=1927427499]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Setup" unique_id=1927427499 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -3020,20 +3094,26 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Setup" unique_id=101465820]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="ChoiceScene" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=75742517 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
-label_text = "Scene:"
+label_text = "Button Scene:"
 parent_container = NodePath("../../../..")
 input_logic = 4
-line_key = "Choice Scene"
+line_key = "Button Scene"
+list_logic = "ChoiceButtonScenes"
 label_tooltip = "The Scene to use for this Choice Button. Overrides the 'Choice Button Scenes' keys in Menu Settings and Category Settings."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/ChoiceScene" unique_id=275029358]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Enabled" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1623309955 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3041,6 +3121,7 @@ label_text = "Choice Enabled:"
 parent_container = NodePath("../../../..")
 input_logic = 4
 line_key = "Enabled"
+list_logic = "BoolNum2"
 label_tooltip = "Whether to set the Choice as enabled or disabled by default."
 
 [node name="Active" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1307408337 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -3049,26 +3130,36 @@ label_text = "Choice Active:"
 parent_container = NodePath("../../../..")
 input_logic = 4
 line_key = "Active"
+list_logic = "BoolNum2"
 label_tooltip = "Whether to set the Choice as active or inactive by default."
 
 [node name="Visible" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=688952310 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
-label_text = "Choice Visible:"
+label_text = "Choice Invisible:"
 parent_container = NodePath("../../../..")
 input_logic = 4
-line_key = "Visible"
-label_tooltip = "Whether to set the Choice as visible or invisible by default."
+line_key = "Invisible"
+list_logic = "BoolNum2"
+label_tooltip = "Whether to set the Choice as visible or invisible by default.
+0 = Visible
+1 = Invisible"
+
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Visible" unique_id=708305055]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Navigation" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1370079501 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Navigation:"
 parent_container = NodePath("../../../..")
 input_logic = 4
-line_key = "Navigation"
+line_key = "Navigate"
+list_logic = "ChoiceCategories"
 label_tooltip = "The Category that this Choice opens when selected (optional)."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Navigation" unique_id=1828759286]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Selected" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1180606533]
 layout_mode = 2
@@ -3079,10 +3170,8 @@ label_text = "Choice Selected Transition:"
 parent_container = NodePath("../../../../..")
 input_logic = 10
 line_key = "Type"
+list_logic = "ChoiceTransitionType"
 label_tooltip = "The type of transition to perform when this Choice is selected."
-
-[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected/Transition" unique_id=1164743537]
-layout_mode = 2
 
 [node name="Conversation" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected" unique_id=1566153891 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3111,7 +3200,7 @@ line_key = "Line"
 list_logic = "TransLine"
 label_tooltip = "The Line to transition to when this Choice is selected."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected" unique_id=517936470]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected" unique_id=517936470 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -3121,6 +3210,13 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
+
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected" unique_id=1164743537]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Tags" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=1935295946 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3132,6 +3228,7 @@ label_tooltip = "Custom tags that can be used by §Choice_Status and §Timer_Sta
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Tags" unique_id=1485321305]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Custom" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings" unique_id=2080985937 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
@@ -3141,14 +3238,15 @@ input_logic = 4
 line_key = "Custom"
 label_tooltip = "Custom data that can be used by custom code in the Choice Button's script."
 
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Custom" unique_id=501160385]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="TimerSettings" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data" unique_id=285731380]
 visible = false
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=686524885]
-layout_mode = 2
-
-[node name="HSeparator2" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=1219072171]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=1790459537]
@@ -3168,6 +3266,11 @@ text = "Setup"
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Timeout"
+
+[node name="Display" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters" unique_id=1217197607]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Display"
 
 [node name="Tags" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters" unique_id=371436817]
 layout_mode = 2
@@ -3215,7 +3318,7 @@ label_tooltip = "The Line to BRIDGE to as part of the Setup Transition.
 
 Setup Transitions run before the Choice Menu and its contents are created. They can be used to make last-minute changes when a Choice Menu is instantiated, at runtime."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup" unique_id=2117149412]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup" unique_id=2117149412 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -3225,9 +3328,13 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup" unique_id=1347645410]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Time" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=1124408148 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3255,6 +3362,7 @@ label_text = "Automatic Start:"
 parent_container = NodePath("../../../..")
 input_logic = 5
 line_key = "Auto"
+list_logic = "ChoiceTimerAuto"
 label_tooltip = "Whether the Timer should automatically start counting down when the Choice Menu is opened."
 
 [node name="Display" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=1435888511 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -3279,9 +3387,6 @@ line_key = "Conversation"
 list_logic = "TransConversation"
 label_tooltip = "The Conversation to BRIDGE to when the timer reaches 0."
 
-[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout/Conversation" unique_id=1686040716]
-layout_mode = 2
-
 [node name="Block" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout" unique_id=784932524 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Timeout Block:"
@@ -3300,7 +3405,7 @@ line_key = "Line"
 list_logic = "TransLine"
 label_tooltip = "The Line to BRIDGE to when the timer reaches 0."
 
-[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout" unique_id=1832811932]
+[node name="Go" type="Button" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout" unique_id=1832811932 node_paths=PackedStringArray("conversation_node", "block_node")]
 custom_minimum_size = Vector2(128, 28)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -3310,19 +3415,28 @@ tooltip_text = "Click to create the transition Conversation and Block (if it doe
 CTRL+Click to create the Conversation and Block without navigating to it."
 theme_override_font_sizes/font_size = 12
 text = "Go to Block ⤞"
+script = ExtResource("5_0oxgv")
+conversation_node = NodePath("../Conversation")
+block_node = NodePath("../Block")
+
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout" unique_id=1686040716]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Select" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=635833574 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Choice Select:"
 parent_container = NodePath("../../../..")
 input_logic = 5
-line_key = "Tags"
+line_key = "Timer Choices"
+list_logic = "TimerChoiceSelect"
 label_tooltip = "The Choice to select when the Timer expires.
 
 Use the following format: 'Category, Choice' (without the quotes)."
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Select" unique_id=1524441236]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Tags" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=1983018505 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3334,6 +3448,7 @@ label_tooltip = "Custom tags that can be used by §Choice_Status and §Timer_Sta
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Tags" unique_id=1829238413]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Custom" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings" unique_id=444509188 node_paths=PackedStringArray("parent_container") instance=ExtResource("4_y7llr")]
 layout_mode = 2
@@ -3344,6 +3459,10 @@ line_key = "Custom"
 label_tooltip = "Custom data that can be used by custom code in the Choice Menu script.
 
 Note: This is not used or passed anywhere in Candy DE by default. This key is provided as a convenience feature, in case you wish to add custom code to use it."
+
+[node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Custom" unique_id=241560746]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="ChoiceStatus" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1569530738]
 visible = false
@@ -3710,6 +3829,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHide"
 label_tooltip = "Whether to reset the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box."
 
 [node name="Portrait" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Hide/Data" unique_id=38817114 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -3717,6 +3837,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHide"
 label_tooltip = "Whether to reset the Z-Index of the portrait display."
 
 [node name="Clear" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=382387438]
@@ -3816,8 +3937,7 @@ label_text = "Loops:"
 parent_container = NodePath("../..")
 line_key = "Loop"
 label_tooltip = "The number of times to play the video.
-Set to 0 to play indefinitely.
-Cumulative with Time."
+Set to 0 to play indefinitely."
 
 [node name="Time" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Video/Data" unique_id=544257168 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -3848,6 +3968,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -3859,6 +3980,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -3881,6 +4003,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to make dialogue wait on.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -3916,6 +4039,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -3927,6 +4051,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -3949,6 +4074,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to change the volume of.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -3996,6 +4122,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to pause.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -4009,13 +4136,14 @@ parent_container = NodePath("../..")
 line_key = "Lines"
 label_tooltip = "The number of dialogue lines to process before the video resumes automatically.
 
-Set to 0 to disable: only the §VResume command will resume the video."
+Set to -1 to disable: only the §VResume command will resume the video."
 
 [node name="All" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VPause/Data" unique_id=1031903831 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Line Type:"
 parent_container = NodePath("../..")
 line_key = "All"
+list_logic = "PauseLinesMedia"
 label_tooltip = "Whether all types of lines should count towards the number of processed lines, or only Spoken Lines should count.
 
 0 = Only Spoken Lines are counted.
@@ -4028,6 +4156,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4039,6 +4168,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4061,6 +4191,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to resume.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -4072,6 +4203,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4083,6 +4215,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4105,6 +4238,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to skip to a different timestamp or frame.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -4136,6 +4270,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to stop.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -4158,6 +4293,7 @@ layout_mode = 2
 label_text = "Video Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "VideoPlayers"
 label_tooltip = "The VideoStreamPlayer to hide/show UI elements under/above.
 
 Provide either the name of a VideoStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Video), or a path to one (e.g. $/root/path/VideoStreamPlayer).
@@ -4169,6 +4305,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4180,6 +4317,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the video.
 
 -1 = Reset the Z-Index to the default (hide under the video).
@@ -4223,6 +4361,7 @@ layout_mode = 2
 label_text = "Play Image:"
 parent_container = NodePath("../..")
 line_key = "Animated"
+list_logic = "BoolNum2"
 
 [node name="Duration" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Image/Data" unique_id=1216164123 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -4277,6 +4416,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4288,6 +4428,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4310,6 +4451,7 @@ layout_mode = 2
 label_text = "Image Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "ImagePlayers"
 label_tooltip = "The image node to make dialogue wait on.
 
 Provide either the name of an image node in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Images), or a path to one (e.g. $/root/path/TextureRect).
@@ -4345,6 +4487,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4356,6 +4499,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4381,6 +4525,7 @@ layout_mode = 2
 label_text = "Image Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "ImagePlayers"
 label_tooltip = "The image node to pause.
 
 For static images, this pauses the countdown until the image stops being displayed. For animated images, this pauses both the countdown and the animation.
@@ -4396,13 +4541,14 @@ parent_container = NodePath("../..")
 line_key = "Lines"
 label_tooltip = "The number of dialogue lines to process before the image countdown (and optionally the animation) resumes automatically.
 
-Set to 0 to disable: only the §IResume command will resume the countdown/animation."
+Set to -1 to disable: only the §IResume command will resume the countdown/animation."
 
 [node name="All" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/IPause/Data" unique_id=1973985376 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Line Type:"
 parent_container = NodePath("../..")
 line_key = "All"
+list_logic = "PauseLinesMedia"
 label_tooltip = "Whether all types of lines should count towards the number of processed lines, or only Spoken Lines should count.
 
 0 = Only Spoken Lines are counted.
@@ -4415,6 +4561,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4426,6 +4573,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4449,6 +4597,7 @@ layout_mode = 2
 label_text = "Image Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "ImagePlayers"
 label_tooltip = "The image node to resume.
 
 Provide either the name of an image node in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Images), or a path to one (e.g. $/root/path/TextureRect).
@@ -4460,6 +4609,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4471,6 +4621,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4492,6 +4643,7 @@ layout_mode = 2
 label_text = "Image Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "ImagePlayers"
 label_tooltip = "The image node to hide/show UI elements under/above.
 
 Provide either the name of an image node in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Images), or a path to one (e.g. $/root/path/TextureRect).
@@ -4503,6 +4655,7 @@ layout_mode = 2
 label_text = "Show/Hide Text:"
 parent_container = NodePath("../..")
 line_key = "Box"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the dialogue box, subtitles, speech bubbles, or chat box, so that they are visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4514,6 +4667,7 @@ layout_mode = 2
 label_text = "Show/Hide Portrait:"
 parent_container = NodePath("../..")
 line_key = "Portrait"
+list_logic = "ShowHideMedia"
 label_tooltip = "Whether to change the Z-Index of the portrait display, so that it is visible above / hidden below the image.
 
 -1 = Reset the Z-Index to the default (hide under the image).
@@ -4535,6 +4689,7 @@ layout_mode = 2
 label_text = "Image Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "ImagePlayers"
 label_tooltip = "The image node to stop displaying.
 
 Provide either the name of an image node in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Images), or a path to one (e.g. $/root/path/TextureRect).
@@ -4578,8 +4733,7 @@ label_text = "Loops:"
 parent_container = NodePath("../..")
 line_key = "Loop"
 label_tooltip = "The number of times to play the audio file.
-Set to 0 to play indefinitely.
-Cumulative with Time."
+Set to 0 to play indefinitely."
 
 [node name="Time" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Audio/Data" unique_id=1707348946 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -4601,9 +4755,7 @@ parent_container = NodePath("../..")
 line_key = "Wait"
 label_tooltip = "Make dialogue wait (pause) until the audio file has played the specified number of times.
 
-If Wait > Loops, dialogue resumes when all loops have played.
-
-Cumulative with Time."
+If Wait > Loops, dialogue resumes when all loops have played."
 
 [node name="AWait" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=727328391]
 visible = false
@@ -4621,6 +4773,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to make dialogue wait on.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4667,6 +4820,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to change the volume of.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4714,6 +4868,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to pause.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4727,13 +4882,14 @@ parent_container = NodePath("../..")
 line_key = "Lines"
 label_tooltip = "The number of dialogue lines to process before the audio file resumes automatically.
 
-Set to 0 to disable: only the §AResume command will resume the audio file."
+Set to -1 to disable: only the §AResume command will resume the audio file."
 
 [node name="All" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/APause/Data" unique_id=1020410068 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Line Type:"
 parent_container = NodePath("../..")
 line_key = "All"
+list_logic = "PauseLinesMedia"
 label_tooltip = "Whether all types of lines should count towards the number of processed lines, or only Spoken Lines should count.
 
 0 = Only Spoken Lines are counted.
@@ -4757,6 +4913,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to resume.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4779,6 +4936,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to use.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4810,6 +4968,7 @@ layout_mode = 2
 label_text = "Audio Player:"
 parent_container = NodePath("../..")
 line_key = "Node"
+list_logic = "AudioPlayers"
 label_tooltip = "The AudioStreamPlayer to stop.
 
 Provide either the name of an AudioStreamPlayer in your media_players_locations in Candy_Engine.gd (i.e. the same name as the folders in Candy_DE/Media/Audio), or a path to one (e.g. $/root/path/AudioStreamPlayer).
@@ -4910,34 +5069,6 @@ If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
 
-[node name="BGStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1608409326]
-visible = false
-layout_mode = 2
-tooltip_text = "Stop an active Background Layer animation."
-theme_override_font_sizes/font_size = 20
-title = "§BG_Stop"
-metadata/command = "§BG_Stop"
-
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop" unique_id=2146673542]
-layout_mode = 2
-
-[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop/Data" unique_id=1390299346 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Layer Node(s):"
-parent_container = NodePath("../..")
-line_key = "Layers"
-list_logic = "BGLayers"
-label_tooltip = "The Layer node(s) to stop playing animations on, separated by a comma (,)."
-
-[node name="Default" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop/Data" unique_id=714588655 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Stop Frame:"
-parent_container = NodePath("../..")
-line_key = "Default"
-label_tooltip = "Whether to freeze on the current frame, or reset to the first frame.
-0 = Freez on current frame.
-1 = Reset to first frame."
-
 [node name="BGWait" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=668988772]
 visible = false
 layout_mode = 2
@@ -4979,24 +5110,34 @@ If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
 
-[node name="BGRemove" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1159787504]
-visible = false
+[node name="BGStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1608409326]
 layout_mode = 2
-tooltip_text = "Remove the file from a Background Layer."
+tooltip_text = "Stop an active Background Layer animation."
 theme_override_font_sizes/font_size = 20
-title = "§BG_Remove"
-metadata/command = "§BG_Remove"
+title = "§BG_Stop"
+metadata/command = "§BG_Stop"
 
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGRemove" unique_id=2081917028]
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop" unique_id=2146673542]
 layout_mode = 2
 
-[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGRemove/Data" unique_id=682536569 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop/Data" unique_id=1390299346 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
 label_text = "Layer Node(s):"
 parent_container = NodePath("../..")
 line_key = "Layers"
 list_logic = "BGLayers"
-label_tooltip = "The Layer nodes to remove files from, separated by a comma (,)."
+label_tooltip = "The Layer node(s) to stop playing animations on, separated by a comma (,)."
+
+[node name="Default" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGStop/Data" unique_id=714588655 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Stop Frame:"
+parent_container = NodePath("../..")
+line_key = "Default"
+list_logic = "StopFrame"
+label_tooltip = "Which frame to stop on.
+-1 = Stop on last frame.
+0 = Stop on current frame.
+1 or more = Stop on that frame."
 
 [node name="BGMirror" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1184783627]
 visible = false
@@ -5031,6 +5172,25 @@ V Flip = Mirror vertically.
 Both = Mirror on both axes.
 Reset = Reset both axes to their defaults."
 
+[node name="BGRemove" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1159787504]
+visible = false
+layout_mode = 2
+tooltip_text = "Remove the file from a Background Layer."
+theme_override_font_sizes/font_size = 20
+title = "§BG_Remove"
+metadata/command = "§BG_Remove"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGRemove" unique_id=2081917028]
+layout_mode = 2
+
+[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGRemove/Data" unique_id=682536569 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Layer Node(s):"
+parent_container = NodePath("../..")
+line_key = "Layers"
+list_logic = "BGLayers"
+label_tooltip = "The Layer nodes to remove files from, separated by a comma (,)."
+
 [node name="BGEffect" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1760763536]
 visible = false
 layout_mode = 2
@@ -5055,6 +5215,7 @@ layout_mode = 2
 label_text = "Animation Library:"
 parent_container = NodePath("../..")
 line_key = "Library"
+list_logic = "BGAnimationLibraries"
 label_tooltip = "The Animation Library to load."
 
 [node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffect/Data" unique_id=991334291 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -5062,6 +5223,8 @@ layout_mode = 2
 label_text = "Effect(s):"
 parent_container = NodePath("../..")
 line_key = "Effects"
+list_logic = "BGEffects"
+append_data = true
 label_tooltip = "The names of the effects to play, separated by a comma (,)."
 
 [node name="Loop" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffect/Data" unique_id=1648426824 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -5099,34 +5262,6 @@ Set to 0 or leave empty to disable wait.
 If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
-
-[node name="BGEffectStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=479637819]
-visible = false
-layout_mode = 2
-tooltip_text = "Stop an active visual effect on a Background Layer."
-theme_override_font_sizes/font_size = 20
-title = "§BG_Effect_Stop"
-metadata/command = "§BG_Effect_Stop"
-
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop" unique_id=656209471]
-layout_mode = 2
-
-[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop/Data" unique_id=1668598598 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Layer Node(s):"
-parent_container = NodePath("../..")
-line_key = "Layers"
-list_logic = "BGLayers"
-label_tooltip = "The Layer nodes to stop effects on, separated by a comma (,)."
-
-[node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop/Data" unique_id=873504035 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Effect(s):"
-parent_container = NodePath("../..")
-line_key = "Effects"
-label_tooltip = "The effects to stop, separated by a comma (,).
-
-Effects not listed here will not be stopped."
 
 [node name="BGEffectWait" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=2102651425]
 visible = false
@@ -5179,6 +5314,34 @@ Set to 0 or leave empty to disable wait.
 If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
+
+[node name="BGEffectStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=479637819]
+visible = false
+layout_mode = 2
+tooltip_text = "Stop an active visual effect on a Background Layer."
+theme_override_font_sizes/font_size = 20
+title = "§BG_Effect_Stop"
+metadata/command = "§BG_Effect_Stop"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop" unique_id=656209471]
+layout_mode = 2
+
+[node name="Layers" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop/Data" unique_id=1668598598 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Layer Node(s):"
+parent_container = NodePath("../..")
+line_key = "Layers"
+list_logic = "BGLayers"
+label_tooltip = "The Layer nodes to stop effects on, separated by a comma (,)."
+
+[node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/BGEffectStop/Data" unique_id=873504035 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Effect(s):"
+parent_container = NodePath("../..")
+line_key = "Effects"
+label_tooltip = "The effects to stop, separated by a comma (,).
+
+Effects not listed here will not be stopped."
 
 [node name="VNScene" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1272900423]
 visible = false
@@ -5235,6 +5398,7 @@ layout_mode = 2
 label_text = "Bust File:"
 parent_container = NodePath("../..")
 line_key = "File"
+list_logic = "Busts"
 label_tooltip = "The Bust file to assign.
 
 For AnimatedSprite2D or AnimatedSprite3D, assign a Sprite Frames resource."
@@ -5244,6 +5408,7 @@ layout_mode = 2
 label_text = "Animation:"
 parent_container = NodePath("../..")
 line_key = "Animation"
+list_logic = "VNBustAnimation"
 label_tooltip = "The animation to play (AnimatedSprite2D or AnimatedSprite3D)."
 
 [node name="Loop" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBust/Data" unique_id=1801935632 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -5251,6 +5416,7 @@ layout_mode = 2
 label_text = "Loops:"
 parent_container = NodePath("../..")
 line_key = "Loop"
+list_logic = "Loop"
 label_tooltip = "How many times to play the animation.
 0 = Freeze on the first frame (no animation).
 -1 = Play indefinitely."
@@ -5312,68 +5478,6 @@ line_key = "Bust"
 list_logic = "BustNodes"
 label_tooltip = "The Bust node to move the actor to."
 
-[node name="VNBustStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=960387120]
-visible = false
-layout_mode = 2
-tooltip_text = "Stop a Bust animation."
-theme_override_font_sizes/font_size = 20
-title = "§VN_Bust_Stop"
-metadata/command = "§VN_Bust_Stop"
-
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop" unique_id=1603335526]
-layout_mode = 2
-
-[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop/Data" unique_id=1159112535 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Reference(s):"
-parent_container = NodePath("../..")
-line_key = "Actors"
-list_logic = "SpeakerRef"
-label_tooltip = "The actors to stop Bust animations for.
-
-Provide either actor references or a role references, separated by a comma (,)."
-
-[node name="Default" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop/Data" unique_id=720125124 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Stop Frame:"
-parent_container = NodePath("../..")
-line_key = "Default"
-label_tooltip = "Whether to freeze on the current frame, or reset to the first frame.
-0 = Freez on current frame.
-1 = Reset to first frame."
-
-[node name="VNMirror" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1644896603]
-visible = false
-layout_mode = 2
-tooltip_text = "Mirror (flip) a Bust."
-theme_override_font_sizes/font_size = 20
-title = "§VN_Mirror"
-metadata/command = "§VN_Mirror"
-
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror" unique_id=1424542306]
-layout_mode = 2
-
-[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror/Data" unique_id=735669309 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Reference(s):"
-parent_container = NodePath("../..")
-line_key = "Actors"
-list_logic = "SpeakerRef"
-label_tooltip = "The actors whose Bust nodes to mirror.
-
-Provide either actor references or a role references, separated by a comma (,)."
-
-[node name="Axis" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror/Data" unique_id=1526927800 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Mirror:"
-parent_container = NodePath("../..")
-line_key = "Axis"
-label_tooltip = "The axis to mirror on.
-H Flip = Mirror horizontally.
-V Flip = Mirror vertically.
-Both = Mirror on both axes.
-Reset = Reset both axes to their defaults."
-
 [node name="VNBustWait" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=283950084]
 visible = false
 layout_mode = 2
@@ -5420,6 +5524,71 @@ Set to 0 or leave empty to disable wait.
 If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
+
+[node name="VNBustStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=960387120]
+visible = false
+layout_mode = 2
+tooltip_text = "Stop a Bust animation."
+theme_override_font_sizes/font_size = 20
+title = "§VN_Bust_Stop"
+metadata/command = "§VN_Bust_Stop"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop" unique_id=1603335526]
+layout_mode = 2
+
+[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop/Data" unique_id=1159112535 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Reference(s):"
+parent_container = NodePath("../..")
+line_key = "Actors"
+list_logic = "SpeakerRef"
+label_tooltip = "The actors to stop Bust animations for.
+
+Provide either actor references or a role references, separated by a comma (,)."
+
+[node name="Default" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNBustStop/Data" unique_id=720125124 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Stop Frame:"
+parent_container = NodePath("../..")
+line_key = "Default"
+list_logic = "StopFrame"
+label_tooltip = "Which frame to stop on.
+-1 = Stop on last frame.
+0 = Stop on current frame.
+1 or more = Stop on that frame."
+
+[node name="VNMirror" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1644896603]
+visible = false
+layout_mode = 2
+tooltip_text = "Mirror (flip) a Bust."
+theme_override_font_sizes/font_size = 20
+title = "§VN_Mirror"
+metadata/command = "§VN_Mirror"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror" unique_id=1424542306]
+layout_mode = 2
+
+[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror/Data" unique_id=735669309 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Reference(s):"
+parent_container = NodePath("../..")
+line_key = "Actors"
+list_logic = "SpeakerRef"
+label_tooltip = "The actors whose Bust nodes to mirror.
+
+Provide either actor references or a role references, separated by a comma (,)."
+
+[node name="Axis" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNMirror/Data" unique_id=1526927800 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Mirror:"
+parent_container = NodePath("../..")
+line_key = "Axis"
+list_logic = "Mirror"
+label_tooltip = "The axis to mirror on.
+H Flip = Mirror horizontally.
+V Flip = Mirror vertically.
+Both = Mirror on both axes.
+Reset = Reset both axes to their defaults."
 
 [node name="VNRemove" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1406041263]
 visible = false
@@ -5468,6 +5637,7 @@ layout_mode = 2
 label_text = "Animation Library:"
 parent_container = NodePath("../..")
 line_key = "Library"
+list_logic = "VNAnimationLibraries"
 label_tooltip = "The Animation Library to load."
 
 [node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffect/Data" unique_id=1775156962 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -5475,6 +5645,8 @@ layout_mode = 2
 label_text = "Effect(s):"
 parent_container = NodePath("../..")
 line_key = "Effects"
+list_logic = "VNEffects"
+append_data = true
 label_tooltip = "The names of the effects to play, separated by a comma (,)."
 
 [node name="Loop" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffect/Data" unique_id=1040833563 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -5482,6 +5654,7 @@ layout_mode = 2
 label_text = "Loops:"
 parent_container = NodePath("../..")
 line_key = "Loop"
+list_logic = "Loop"
 label_tooltip = "How many times to play the effects.
 0 = Freeze on the first frame (no animation).
 -1 = Play indefinitely."
@@ -5511,34 +5684,6 @@ Set to 0 or leave empty to disable wait.
 If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
-
-[node name="VNEffectStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=668250797]
-visible = false
-layout_mode = 2
-tooltip_text = "Stop visual effects on a Bust node."
-theme_override_font_sizes/font_size = 20
-title = "§VN_Effect_Stop"
-metadata/command = "§VN_Effect_Stop"
-
-[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop" unique_id=2108713519]
-layout_mode = 2
-
-[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop/Data" unique_id=191967677 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Reference(s):"
-parent_container = NodePath("../..")
-line_key = "Actors"
-list_logic = "SpeakerRef"
-label_tooltip = "The actors to whose Bust nodes to stop effects on.
-
-Provide either actor references or a role references, separated by a comma (,)."
-
-[node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop/Data" unique_id=875161017 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
-layout_mode = 2
-label_text = "Effect(s):"
-parent_container = NodePath("../..")
-line_key = "Effects"
-label_tooltip = "The names of the effects to stop, separated by a comma (,)."
 
 [node name="VNEffectWait" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=497149173]
 visible = false
@@ -5594,6 +5739,34 @@ If Wait > Loops, dialogue resumes when all loops have played.
 
 Cumulative with Time."
 
+[node name="VNEffectStop" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=668250797]
+visible = false
+layout_mode = 2
+tooltip_text = "Stop visual effects on a Bust node."
+theme_override_font_sizes/font_size = 20
+title = "§VN_Effect_Stop"
+metadata/command = "§VN_Effect_Stop"
+
+[node name="Data" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop" unique_id=2108713519]
+layout_mode = 2
+
+[node name="Actors" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop/Data" unique_id=191967677 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Reference(s):"
+parent_container = NodePath("../..")
+line_key = "Actors"
+list_logic = "SpeakerRef"
+label_tooltip = "The actors to whose Bust nodes to stop effects on.
+
+Provide either actor references or a role references, separated by a comma (,)."
+
+[node name="Effects" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/VNEffectStop/Data" unique_id=875161017 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Effect(s):"
+parent_container = NodePath("../..")
+line_key = "Effects"
+label_tooltip = "The names of the effects to stop, separated by a comma (,)."
+
 [node name="CSScene" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=693640612]
 visible = false
 layout_mode = 2
@@ -5629,6 +5802,18 @@ line_key = "Scene"
 label_tooltip = "The scene to instantiate.
 
 Provide this as 'res://', 'user://' or as a variable reference using the standard variable symbols."
+
+[node name="Name" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSScene/Data" unique_id=980299257 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+layout_mode = 2
+label_text = "Instance Name:"
+parent_container = NodePath("../..")
+line_key = "Name"
+label_tooltip = "The name(s) to assign to the creates instances.
+
+Names are matched to instances in order.
+Separate names with a comma (,).
+To skip an instance when assigning names, type an empty space followed by a comma (e.g. ' ,').
+Excess instances will not be assigned names."
 
 [node name="CSVisible" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=513853590]
 visible = false
@@ -5895,13 +6080,14 @@ label_text = "Animation:"
 parent_container = NodePath("../..")
 line_key = "Animation"
 
-[node name="Play" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSAnim/Data" unique_id=618324603 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+[node name="Loop" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSAnim/Data" unique_id=944581908 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
-label_text = "Play Animation:"
+label_text = "Loops:"
 parent_container = NodePath("../..")
-line_key = "Play"
-list_logic = "BoolNum2"
-label_tooltip = "Whether to play the animation or freeze on the first frame."
+line_key = "Loop"
+list_logic = "Loop"
+label_tooltip = "The number of times to play the animation.
+Set to -1 to play indefinitely, or 0 to stop on the first frame."
 
 [node name="Time" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSAnim/Data" unique_id=1024681472 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -5993,6 +6179,10 @@ label_text = "Stop Frame:"
 parent_container = NodePath("../..")
 line_key = "Default"
 list_logic = "StopFrame"
+label_tooltip = "Which frame to stop on.
+-1 = Stop on last frame.
+0 = Stop on current frame.
+1 or more = Stop on that frame."
 
 [node name="CSSprite" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1106151242]
 visible = false
@@ -6029,6 +6219,8 @@ layout_mode = 2
 label_text = "Sprite File:"
 parent_container = NodePath("../..")
 line_key = "File"
+list_logic = "CSSprites"
+append_data = true
 
 [node name="Animation" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSSprite/Data" unique_id=1915651637 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -6036,13 +6228,14 @@ label_text = "Animation:"
 parent_container = NodePath("../..")
 line_key = "Animation"
 
-[node name="Play" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSSprite/Data" unique_id=425740076 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
+[node name="Loop" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSSprite/Data" unique_id=395997890 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
-label_text = "Play Animation:"
+label_text = "Loops:"
 parent_container = NodePath("../..")
-line_key = "Play"
-list_logic = "BoolNum2"
-label_tooltip = "Animated sprites: whether to play the animation or freeze on the first frame."
+line_key = "Loop"
+list_logic = "Loop"
+label_tooltip = "The number of times to play the sprite animation.
+Set to -1 to play indefinitely, or 0 to stop on the first frame. "
 
 [node name="Time" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSSprite/Data" unique_id=790052464 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
 layout_mode = 2
@@ -6134,6 +6327,10 @@ label_text = "Stop Frame:"
 parent_container = NodePath("../..")
 line_key = "Default"
 list_logic = "StopFrame"
+label_tooltip = "Which frame to stop on.
+-1 = Stop on last frame.
+0 = Stop on current frame.
+1 or more = Stop on that frame."
 
 [node name="CSCam" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=1794258929]
 visible = false
@@ -6194,7 +6391,7 @@ layout_mode = 2
 label_text = "Operator:"
 parent_container = NodePath("../..")
 line_key = "Operator"
-list_logic = "Operators"
+list_logic = "BasicOperators"
 label_tooltip = "The operator to use for assigning the energy value to the light."
 
 [node name="Energy" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CSLight/Data" unique_id=1966754073 node_paths=PackedStringArray("parent_container") instance=ExtResource("2_guh61")]
@@ -6217,6 +6414,7 @@ label_tooltip = "The color to set the light to.
 Leave empty to keep the current light color."
 
 [node name="CSToggle" type="FoldableContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox" unique_id=827216034]
+visible = false
 layout_mode = 2
 tooltip_text = "Toggle the value of a boolean property on a node."
 theme_override_font_sizes/font_size = 20
@@ -6289,7 +6487,8 @@ theme_override_constants/separation = 0
 [node name="Label" type="Label" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/CustomData" unique_id=1050088348]
 layout_mode = 2
 size_flags_vertical = 8
-tooltip_text = "Custom summary or hint as to the purpose of the current line. Has no effect in Candy DE."
+tooltip_text = "Custom data for the line.
+Use in Candy DE requires custom code."
 mouse_filter = 1
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxEmpty_y7llr")
@@ -6321,7 +6520,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 8
 tooltip_text = "Write a note for yourself or for colleagues who will work on this dialogue.
-
 Development Comments are specific to each dialogue line, and have no effect in Candy DE."
 mouse_filter = 1
 theme_override_font_sizes/font_size = 12
@@ -6873,7 +7071,7 @@ text = "OL Color"
 
 [node name="HSeparator3" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer/Tools/VBox" unique_id=1028595474]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 
 [node name="Color" type="VBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer/Tools/VBox" unique_id=1852774705]
 layout_mode = 2
@@ -6977,7 +7175,7 @@ editable = false
 
 [node name="HSeparator" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer/Tools/VBox" unique_id=100912921]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 
 [node name="Symbols" type="HBoxContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer/Tools/VBox" unique_id=1905281895]
 layout_mode = 2
@@ -7171,7 +7369,7 @@ text = "v_user://"
 
 [node name="HSeparator2" type="HSeparator" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer/Tools/VBox" unique_id=917355808]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 
 [node name="User" type="PanelContainer" parent="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/SideBar/VBox/TabContainer" unique_id=797369509]
 visible = false
@@ -7232,6 +7430,7 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_0m37a")
 theme_override_styles/tab_focus = SubResource("StyleBoxFlat_40kt3")
 current_tab = 3
 clip_tabs = false
+drag_to_rearrange_enabled = true
 tab_0/title = "★"
 tab_1/title = "USER"
 tab_2/title = "PROFILE"
@@ -7267,51 +7466,61 @@ metadata/_tab_index = 3
 
 [node name="Call" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=1408873471 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Call a function."
 text = "Call"
 command = "§Call"
 
 [node name="Emit" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=350790142 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Emit a signal."
 text = "Emit"
 command = "§Emit"
 
 [node name="Await" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=376294135 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Wait for a signal."
 text = "Await"
 command = "§Await"
 
 [node name="Set" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=1804235813 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify a variable."
 text = "Set"
 command = "§Set"
 
 [node name="Role" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=1864420914 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Assign an actor to a role."
 text = "Role"
 command = "§Role"
 
 [node name="Flag" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=1437039282 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify a progression flag."
 text = "Flag"
 command = "§Flag"
 
 [node name="Name" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=437536660 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify an actor's Display Name."
 text = "Name"
 command = "§Name"
 
 [node name="Disposition" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=113987264 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify an actor's Disposition."
 text = "Disposition"
 command = "§Disposition"
 
 [node name="Export" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=909029793 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Save variables to an external file."
 text = "Export"
 command = "§Export"
 
 [node name="Import" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Control" unique_id=634404198 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Load variables from an external file."
 text = "Import"
 command = "§Import"
 
@@ -7324,26 +7533,31 @@ metadata/_tab_index = 4
 
 [node name="If" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Conditions" unique_id=717407894 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "'If' condition."
 text = "If"
 command = "§If"
 
 [node name="Elif" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Conditions" unique_id=1626010222 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "'Elif' condition."
 text = "Elif"
 command = "§Elif"
 
 [node name="Else" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Conditions" unique_id=926238375 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "'Else' condition."
 text = "Else"
 command = "§Else"
 
 [node name="For" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Conditions" unique_id=35409183 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "'For' loop."
 text = "For"
 command = "§For"
 
 [node name="While" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Conditions" unique_id=51654008 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "'While' loop."
 text = "While"
 command = "§While"
 
@@ -7356,26 +7570,31 @@ metadata/_tab_index = 5
 
 [node name="LineMark" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Transitions" unique_id=1148385386 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Insert a Line Mark reference."
 text = "Line Mark"
 command = "§LM"
 
 [node name="Jump" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Transitions" unique_id=491412080 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Permanently transition to another Conversation/Block/Line."
 text = "Jump"
 command = "§Jump"
 
 [node name="Bridge" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Transitions" unique_id=1687080628 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Momentarily transition to another Conversation/Block/Line."
 text = "Bridge"
 command = "§Bridge"
 
 [node name="Return" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Transitions" unique_id=346668384 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Return from a Bridge transition."
 text = "Return"
 command = "§Return"
 
 [node name="End" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Transitions" unique_id=1604606567 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "End dialogue."
 text = "End"
 command = "§End"
 
@@ -7386,18 +7605,21 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 6
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=1482978546 instance=ExtResource("3_hl57p")]
+[node name="ChoiceList" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=1482978546 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Display a list of choices to the Player."
 text = "Choice List"
 command = "§Choice_List"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=1392015037 instance=ExtResource("3_hl57p")]
+[node name="ChoiceStatus" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=1392015037 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify a choice in an open choice list."
 text = "Choice Status"
 command = "§Choice_Status"
 
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=315079927 instance=ExtResource("3_hl57p")]
+[node name="TimerStatus" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Choices" unique_id=315079927 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify a timer in an open choice list."
 text = "Timer Status"
 command = "§Timer_Status"
 
@@ -7408,15 +7630,23 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 7
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Input" unique_id=443836109 instance=ExtResource("3_hl57p")]
+[node name="Mouse" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Input" unique_id=443836109 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Change Mouse_Mode"
 text = "Mouse"
 command = "§Mouse"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Input" unique_id=1208424570 instance=ExtResource("3_hl57p")]
+[node name="Input" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Input" unique_id=1208424570 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Display an Input UI to the player."
 text = "Input"
 command = "§Input"
+
+[node name="PlayerAdvance" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Input" unique_id=1025191320 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+tooltip_text = "Pause dialogue until the player manually advances."
+text = "Player Advance"
+command = "§Player_Advance"
 
 [node name="Effects" type="HFlowContainer" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands" unique_id=893187912]
 visible = false
@@ -7425,33 +7655,39 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 8
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=518184244 instance=ExtResource("3_hl57p")]
+[node name="Effect" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=518184244 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Play a visual effect (with an AnimationPlayer node)."
 text = "Effect"
 command = "§Effect"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=409969415 instance=ExtResource("3_hl57p")]
+[node name="EffectWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=572277963 instance=ExtResource("3_hl57p")]
 layout_mode = 2
-text = "Effect Stop"
-command = "§Effect_Stop"
-
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=572277963 instance=ExtResource("3_hl57p")]
-layout_mode = 2
+tooltip_text = "Pause dialogue while a visual effect is playing."
 text = "Effect Wait"
 command = "§Effect_Wait"
 
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=829473864 instance=ExtResource("3_hl57p")]
+[node name="EffectStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=409969415 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Stop a visual effect."
+text = "Effect Stop"
+command = "§Effect_Stop"
+
+[node name="Wait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=829473864 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+tooltip_text = "Pause dialogue for a set amount of time."
 text = "Wait"
 command = "§Wait"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=2108794782 instance=ExtResource("3_hl57p")]
+[node name="Hide" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=2108794782 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Hide UI elements underneath media players."
 text = "Hide"
 command = "§Hide"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=311438458 instance=ExtResource("3_hl57p")]
+[node name="Clear" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Effects" unique_id=311438458 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Clear UI elements."
 text = "Clear"
 command = "§Clear"
 
@@ -7462,33 +7698,39 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 9
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=315451182 instance=ExtResource("3_hl57p")]
+[node name="Image" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=315451182 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Display an image."
 text = "Image"
 command = "§Image"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=87537703 instance=ExtResource("3_hl57p")]
+[node name="IWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=1230993444 instance=ExtResource("3_hl57p")]
 layout_mode = 2
-text = "Image Pause"
-command = "§I_Pause"
-
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=1230993444 instance=ExtResource("3_hl57p")]
-layout_mode = 2
+tooltip_text = "Pause dialogue while an image is displayed."
 text = "Image Wait"
 command = "§I_Wait"
 
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=729784975 instance=ExtResource("3_hl57p")]
+[node name="IPause" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=87537703 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Pause the image timer while dialogue continues."
+text = "Image Pause"
+command = "§I_Pause"
+
+[node name="IResume" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=729784975 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+tooltip_text = "Resume the image timer."
 text = "Image Resume"
 command = "§I_Resume"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=585829845 instance=ExtResource("3_hl57p")]
+[node name="IShow" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=585829845 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Show or hide the dialogue UI above/under an image."
 text = "Image Show"
 command = "§I_Show"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=481648469 instance=ExtResource("3_hl57p")]
+[node name="IStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Images" unique_id=481648469 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Stop displaying an image."
 text = "Image Stop"
 command = "§I_Stop"
 
@@ -7499,38 +7741,45 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 10
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=532688147 instance=ExtResource("3_hl57p")]
+[node name="Audio" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=532688147 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Play an audio file."
 text = "Audio"
 command = "§Audio"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=580583831 instance=ExtResource("3_hl57p")]
+[node name="AVolume" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=580583831 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify the volume of an audio file."
 text = "Audio Volume"
 command = "§A_Volume"
 
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1230443391 instance=ExtResource("3_hl57p")]
+[node name="AWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1252719477 instance=ExtResource("3_hl57p")]
 layout_mode = 2
-text = "Audio Pause"
-command = "§A_Pause"
-
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1252719477 instance=ExtResource("3_hl57p")]
-layout_mode = 2
+tooltip_text = "Pause dialogue while an audio file plays."
 text = "Audio Wait"
 command = "§A_Wait"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=320157819 instance=ExtResource("3_hl57p")]
+[node name="APause" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1230443391 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Pause an audio file while dialogue continues."
+text = "Audio Pause"
+command = "§A_Pause"
+
+[node name="AResume" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=320157819 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+tooltip_text = "Unpause an audio file."
 text = "Audio Resume"
 command = "§A_Resume"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1424849894 instance=ExtResource("3_hl57p")]
+[node name="ASkip" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1424849894 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Make an audio file skip forward/back."
 text = "Audio Skip"
 command = "§A_Skip"
 
-[node name="AddCommand7" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1473240862 instance=ExtResource("3_hl57p")]
+[node name="AStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Audio" unique_id=1473240862 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Stop an audio file."
 text = "Audio Stop"
 command = "§A_Stop"
 
@@ -7541,43 +7790,51 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 metadata/_tab_index = 11
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=424408364 instance=ExtResource("3_hl57p")]
+[node name="Video" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=424408364 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Play a video."
 text = "Video"
 command = "§Video"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1507735741 instance=ExtResource("3_hl57p")]
+[node name="VVolume" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1507735741 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Modify the volume of a video."
 text = "Video Volume"
 command = "§V_Volume"
 
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=480305702 instance=ExtResource("3_hl57p")]
+[node name="VWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=627375643 instance=ExtResource("3_hl57p")]
 layout_mode = 2
-text = "Video Pause"
-command = "§V_Pause"
-
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=627375643 instance=ExtResource("3_hl57p")]
-layout_mode = 2
+tooltip_text = "Pause dialogue while a video plays."
 text = "Video Wait"
 command = "§V_Wait"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=380775534 instance=ExtResource("3_hl57p")]
+[node name="VPause" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=480305702 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Pause a video while dialogue continues."
+text = "Video Pause"
+command = "§V_Pause"
+
+[node name="VResume" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=380775534 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+tooltip_text = "Unpause a video."
 text = "Video Resume"
 command = "§V_Resume"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1308487811 instance=ExtResource("3_hl57p")]
+[node name="VShow" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1308487811 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Show or hide the dialogue UI above/under a video."
 text = "Video Show"
 command = "§V_Show"
 
-[node name="AddCommand7" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1590896637 instance=ExtResource("3_hl57p")]
+[node name="VSkip" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1590896637 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Make a video skip forward/back."
 text = "Video Skip"
 command = "§V_Skip"
 
-[node name="AddCommand8" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1226883153 instance=ExtResource("3_hl57p")]
+[node name="VStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Video" unique_id=1226883153 instance=ExtResource("3_hl57p")]
 layout_mode = 2
+tooltip_text = "Stop a video."
 text = "Video Stop"
 command = "§V_Stop"
 
@@ -7589,50 +7846,50 @@ theme_override_constants/v_separation = 8
 metadata/_tab_index = 12
 metadata/_tab_name = "BG"
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=2062017109 instance=ExtResource("3_hl57p")]
+[node name="BGScene" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=2062017109 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Scene"
 command = "§BG_Scene"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1888730095 instance=ExtResource("3_hl57p")]
+[node name="BG" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1888730095 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Layer"
 command = "§BG"
 
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=933958218 instance=ExtResource("3_hl57p")]
-layout_mode = 2
-text = "BG Stop"
-command = "§BG_Stop"
-
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=909147540 instance=ExtResource("3_hl57p")]
-layout_mode = 2
-text = "BG Remove"
-command = "§BG_Remove"
-
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=428285585 instance=ExtResource("3_hl57p")]
+[node name="BGWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=428285585 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Wait"
 command = "§BG_Wait"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1089457957 instance=ExtResource("3_hl57p")]
+[node name="BGStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=933958218 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "BG Stop"
+command = "§BG_Stop"
+
+[node name="BGRemove" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=909147540 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "BG Remove"
+command = "§BG_Remove"
+
+[node name="BGMirror" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1089457957 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Mirror"
 command = "§BG_Mirror"
 
-[node name="AddCommand7" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1382386799 instance=ExtResource("3_hl57p")]
+[node name="BGEffect" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1382386799 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Effect"
 command = "§BG_Effect"
 
-[node name="AddCommand8" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=2087685723 instance=ExtResource("3_hl57p")]
-layout_mode = 2
-text = "BG Effect Stop"
-command = "§BG_Effect_Stop"
-
-[node name="AddCommand9" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1881879903 instance=ExtResource("3_hl57p")]
+[node name="BGEffectWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=1881879903 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "BG Effect Wait"
 command = "§BG_Effect_Wait"
+
+[node name="BGEffectStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Backgrounds" unique_id=2087685723 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "BG Effect Stop"
+command = "§BG_Effect_Stop"
 
 [node name="VisualNovels" type="HFlowContainer" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands" unique_id=1843834420]
 visible = false
@@ -7642,47 +7899,52 @@ theme_override_constants/v_separation = 8
 metadata/_tab_index = 13
 metadata/_tab_name = "VN"
 
-[node name="AddCommand" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=62635222 instance=ExtResource("3_hl57p")]
+[node name="VNScene" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=62635222 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Scene"
 command = "§VN_Scene"
 
-[node name="AddCommand2" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=43038696 instance=ExtResource("3_hl57p")]
+[node name="VNBust" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=43038696 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Bust"
 command = "§VN_Bust"
 
-[node name="AddCommand3" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=2106486231 instance=ExtResource("3_hl57p")]
+[node name="VNMove" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=2106486231 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Move"
 command = "§VN_Move"
 
-[node name="AddCommand4" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=85279918 instance=ExtResource("3_hl57p")]
+[node name="VNBustWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1859621116 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "VN Bust Wait"
+command = "§VN_Bust_Wait"
+
+[node name="VNBust Stop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=85279918 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Bust Stop"
 command = "§VN_Bust_Stop"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1037443168 instance=ExtResource("3_hl57p")]
+[node name="VNRemove" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1037443168 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Remove"
 command = "§VN_Remove"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1930667639 instance=ExtResource("3_hl57p")]
+[node name="VNMirror" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1930667639 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Mirror"
 command = "§VN_Mirror"
 
-[node name="AddCommand7" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=454134559 instance=ExtResource("3_hl57p")]
+[node name="VNEffect" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=454134559 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Effect"
 command = "§VN_Effect"
 
-[node name="AddCommand8" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1714348967 instance=ExtResource("3_hl57p")]
+[node name="VNEffectWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=1714348967 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Effect Wait"
 command = "§VN_Effect_Wait"
 
-[node name="AddCommand9" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=2017427714 instance=ExtResource("3_hl57p")]
+[node name="VNEffectStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/VisualNovels" unique_id=2017427714 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "VN Effect Stop"
 command = "§VN_Effect_Stop"
@@ -7710,6 +7972,16 @@ layout_mode = 2
 text = "CS Toggle"
 command = "§CS_Toggle"
 
+[node name="CSCam" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=77335573 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "CS Camera"
+command = "§CS_Cam"
+
+[node name="CSLight" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=2021622050 instance=ExtResource("3_hl57p")]
+layout_mode = 2
+text = "CS Light"
+command = "§CS_Light"
+
 [node name="CSLocation" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=33125044 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Location"
@@ -7725,45 +7997,35 @@ layout_mode = 2
 text = "CS Move"
 command = "§CS_Move"
 
-[node name="AddCommand5" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=169705245 instance=ExtResource("3_hl57p")]
+[node name="CSAnim" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=169705245 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Anim"
 command = "§CS_Anim"
 
-[node name="AddCommand6" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=1893021138 instance=ExtResource("3_hl57p")]
+[node name="CSAnimWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=1893021138 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Anim Wait"
 command = "§CS_Anim_Wait"
 
-[node name="AddCommand7" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=831583541 instance=ExtResource("3_hl57p")]
+[node name="CSAnimStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=831583541 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Anim Stop"
 command = "§CS_Anim_Stop"
 
-[node name="AddCommand8" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=709099401 instance=ExtResource("3_hl57p")]
+[node name="CSSprite" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=709099401 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Sprite"
 command = "§CS_Sprite"
 
-[node name="AddCommand9" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=1447333040 instance=ExtResource("3_hl57p")]
+[node name="CSSpriteWait" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=1447333040 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Sprite Wait"
 command = "§CS_Sprite_Wait"
 
-[node name="AddCommand10" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=944988512 instance=ExtResource("3_hl57p")]
+[node name="CSSpriteStop" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=944988512 instance=ExtResource("3_hl57p")]
 layout_mode = 2
 text = "CS Sprite Stop"
 command = "§CS_Sprite_Stop"
-
-[node name="CSCam" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=77335573 instance=ExtResource("3_hl57p")]
-layout_mode = 2
-text = "CS Camera"
-command = "§CS_Cam"
-
-[node name="CSLight" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands/Cutscene" unique_id=2021622050 instance=ExtResource("3_hl57p")]
-layout_mode = 2
-text = "CS Light"
-command = "§CS_Light"
 
 [node name="Custom" type="HFlowContainer" parent="UI/VBox/VSplit/PanelContainer/HBox/Commands" unique_id=487360672]
 visible = false
@@ -7787,6 +8049,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 size_flags_horizontal = 3
 mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_iwtqo")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/DropDownList/ScrollContainer" unique_id=120838641]
 layout_mode = 2
@@ -7805,6 +8068,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 size_flags_horizontal = 3
 mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_iwtqo")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/DropDownList2/ScrollContainer" unique_id=513929951]
 layout_mode = 2
@@ -8023,6 +8287,7 @@ libraries/ = SubResource("AnimationLibrary_4e2x3")
 [connection signal="pressed" from="UI/VBox/Top/HBox/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="UI/VBox/Top/HBox/Export" to="." method="_on_export_pressed"]
 [connection signal="pressed" from="UI/VBox/Top/HBox/Import" to="." method="_on_import_pressed"]
+[connection signal="gui_input" from="UI/VBox/Top/HBox/Save" to="." method="_on_save_btn_gui_input"]
 [connection signal="pressed" from="UI/VBox/Top/HBox/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="UI/VBox/Top/HBox/Load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="UI/VBox/Top/HBox/Undo" to="." method="_on_undo_pressed"]
@@ -8044,6 +8309,7 @@ libraries/ = SubResource("AnimationLibrary_4e2x3")
 [connection signal="focus_exited" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Meta/TextEdit" to="." method="_on_meta_focus_exited" flags=18]
 [connection signal="text_changed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Meta/TextEdit" to="." method="_on_meta_text_changed"]
 [connection signal="color_changed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Comment/Data/HBox/CommentColor" to="." method="_on_comment_color_color_changed"]
+[connection signal="popup_closed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Comment/Data/HBox/CommentColor" to="." method="_on_comment_color_popup_closed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Filters/Translation" to="." method="_on_toggle_translation_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Filters/Portrait" to="." method="_on_toggle_portrait_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Filters/Disposition" to="." method="_on_toggle_disposition_pressed"]
@@ -8064,6 +8330,8 @@ libraries/ = SubResource("AnimationLibrary_4e2x3")
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Button" to="." method="_on_spoken_voice_play_button_pressed"]
 [connection signal="value_changed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders/Volume/Slider" to="." method="_on_variant_volume_slider_value_changed"]
 [connection signal="value_changed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders/Progress/Slider" to="." method="_on_variant_progress_slider_value_changed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Jump/Data/Transition/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Jump/Data/Transition/Go" method="_on_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Bridge/Data/Transition/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Bridge/Data/Transition/Go" method="_on_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/ChoiceTree/Buttons/AddCategory" to="." method="_on_add_choice_category_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/ChoiceTree/Buttons/AddChoice" to="." method="_on_add_choice_item_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/ChoiceTree/Buttons/AddTimer" to="." method="_on_add_choice_timer_pressed"]
@@ -8073,21 +8341,28 @@ libraries/ = SubResource("AnimationLibrary_4e2x3")
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Filters/Scenes" to="." method="_on_choice_general_scenes_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Filters/Tags" to="." method="_on_choice_general_tags_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Filters/Custom" to="." method="_on_choice_general_custom_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Setup/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/Setup/Go" method="_on_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Prompt" to="." method="_on_choice_categories_prompt_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Mouse" to="." method="_on_choice_categories_mouse_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Setup" to="." method="_on_choice_categories_setup_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Scenes" to="." method="_on_choice_categories_scenes_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Tags" to="." method="_on_choice_categories_tags_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Filters/Custom" to="." method="_on_choice_categories_custom_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Setup/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/CategorySettings/Setup/Go" method="_on_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Filters/Tooltip" to="." method="_on_choice_item_tooltip_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Filters/Setup" to="." method="_on_choice_item_setup_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Filters/Scene" to="." method="_on_choice_item_scene_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Filters/Tags" to="." method="_on_choice_item_tags_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Filters/Custom" to="." method="_on_choice_item_custom_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Setup/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Setup/Go" method="_on_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/ChoiceSettings/Selected/Go" method="_on_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Setup" to="." method="_on_choice_timers_setup_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Timeout" to="." method="_on_choice_timers_timeout_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Display" to="." method="_on_choice_timers_display_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Tags" to="." method="_on_choice_timers_tags_pressed"]
 [connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Custom" to="." method="_on_choice_timers_custom_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup/Go" method="_on_pressed"]
+[connection signal="pressed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout/Go" to="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout/Go" method="_on_pressed"]
 [connection signal="focus_entered" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/DevComment/TextEdit" to="." method="_on_devcom_focus_entered" flags=18]
 [connection signal="focus_exited" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/DevComment/TextEdit" to="." method="_on_devcom_focus_exited" flags=18]
 [connection signal="text_changed" from="UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/DevComment/TextEdit" to="." method="_on_dev_comment_text_changed"]

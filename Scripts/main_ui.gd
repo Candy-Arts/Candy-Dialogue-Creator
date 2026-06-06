@@ -123,14 +123,19 @@ extends Control
 
 @onready var choice_timer_setup = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Setup")
 @onready var choice_timer_timeout = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Timeout")
+@onready var choice_timer_display = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Display")
 @onready var choice_timer_tags = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Tags")
 @onready var choice_timer_custom = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Custom")
+
+#^ Misc Data Fields:
+@onready var comment_color_button = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/Comment/Data/HBox/CommentColor")
 
 #^ Spoken Line Data Fields:
 @onready var overrides_area = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Tags")
 @onready var variant_voice_area = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice")
+@onready var variant_play_button = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Button")
 @onready var variant_volume_slider = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders/Volume/Slider")
-@onready var variant_translation_volume_slider = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders/Progress/Slider")
+@onready var variant_progress_slider = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Voice/VoiceControls/Sliders/Progress/Slider")
 @onready var translation_area = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation")
 @onready var portrait_bg = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Speaker/PortraitDisplay/PortraitBGColor")
 @onready var portrait_file = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/Speaker/VBox/PortraitFile")
@@ -155,6 +160,7 @@ extends Control
 @onready var translation_preview_raw_bg = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/PreviewRaw/ColorRect")
 @onready var translation_preview_final_bg = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/PreviewFinal/ColorRect")
 @onready var translation_voice_area = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters/VoiceControls")
+@onready var translation_play_button = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters/VoiceControls/Button")
 @onready var translation_volume_slider = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters/VoiceControls/Sliders/Volume/Slider")
 @onready var translation_progress_slider = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/SpokenLine/Data/VBox/Translation/HBox/VBox/Counters/VoiceControls/Sliders/Progress/Slider")
 
@@ -201,6 +207,7 @@ extends Control
 
 @onready var choice_timer_setup_filter = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Setup")
 @onready var choice_timer_timeout_filter = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Timeout")
+@onready var choice_timer_display_filter = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Display")
 @onready var choice_timer_tags_filter = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Tags")
 @onready var choice_timer_custom_filter = get_node("UI/VBox/VSplit/Middle/HSplit/EditArea/HBox/Editor/ScrollContainer/VBox/ChoiceList/HBox/Data/TimerSettings/Filters/Custom")
 
@@ -235,7 +242,6 @@ var _portrait_sprite_total_frames := 0
 var _suppress_undo_save := false
 var _applying_undo_step := false
 var _updating_ui := false
-
 
 
 #* Input
@@ -282,6 +288,7 @@ func _input(event: InputEvent) -> void:
 				return
 			sort_context_target = item
 			var is_block = item.get_parent() != line_tree.get_root()
+
 			#% Grey out Delete if last conversation or last block:
 			var delete_idx = sort_context_menu.get_item_index(2)
 			if is_block:
@@ -291,6 +298,22 @@ func _input(event: InputEvent) -> void:
 				sort_context_menu.set_item_disabled(delete_idx, globals.dialogue.size() <= 1)
 			sort_context_menu.popup()
 			sort_context_menu.position = Vector2i(event.global_position)
+			get_viewport().set_input_as_handled()
+			return
+
+		elif (hovered == choice_tree or choice_tree.is_ancestor_of(hovered)):
+			#% Clear last focus:
+			globals.last_focused_field = null
+
+			var item = choice_tree.get_item_at_position(choice_tree.get_local_mouse_position())
+			if item == null:
+				return
+			choice_tree.set_selected(item, 0)
+			choice_tree_context_menu.clear()
+			choice_tree_context_menu.add_item("Rename", 0)
+			choice_tree_context_menu.add_item("Delete", 1)
+			choice_tree_context_menu.position = Vector2i(event.global_position)
+			choice_tree_context_menu.popup()
 			get_viewport().set_input_as_handled()
 			return
 
@@ -309,7 +332,9 @@ func _input(event: InputEvent) -> void:
 			return
 
 		elif hovered == block_selector or block_selector.is_ancestor_of(hovered):
+			#% Clear last focus:
 			globals.last_focused_field = null
+
 			#% Grey out Delete if last block, accounting for presets:
 			var delete_idx = block_context_menu.get_item_index(1)
 			var block_count := 0
@@ -370,6 +395,8 @@ func _ready() -> void:
 	#% Populate context menus:
 	populate_line_context_menu()
 	populate_sort_context_menu()
+	populate_save_context_menu()
+	populate_choice_tree_context_menu()
 	populate_conversation_context_menu()
 	populate_block_context_menu()
 	populate_favorites_context_menu()
@@ -385,7 +412,20 @@ func _ready() -> void:
 
 	#% Connect choice tree button signals:
 	choice_tree.item_selected.connect(_on_choice_tree_item_selected)
-	choice_tree.set_drag_forwarding(_get_drag_data_fw, _can_drop_data_fw, _drop_data_fw)
+
+	#% Connect voice player signals:
+	variant_voice_player.finished.connect(func():
+		variant_play_button.text = "⏵"
+		variant_progress_slider.set_block_signals(true)
+		variant_progress_slider.value = 0.0
+		variant_progress_slider.set_block_signals(false))
+
+	translation_voice_player.finished.connect(func():
+		translation_play_button.text = "⏵"
+		translation_progress_slider.set_block_signals(true)
+		translation_progress_slider.value = 0.0
+		translation_progress_slider.set_block_signals(false))
+
 
 	#% Connect main menu buttons:
 	main_menu.id_pressed.connect(_on_main_menu_id_pressed)
@@ -436,12 +476,16 @@ func _process(_delta: float) -> void:
 	if variant_voice_player.playing and not variant_voice_player.stream_paused:
 		var length = variant_voice_player.stream.get_length()
 		if length > 0:
-			variant_translation_volume_slider.value = variant_voice_player.get_playback_position() / length
+			variant_progress_slider.set_block_signals(true)
+			variant_progress_slider.value = variant_voice_player.get_playback_position() / length
+			variant_progress_slider.set_block_signals(false)
 
 	if translation_voice_player.playing and not translation_voice_player.stream_paused:
 		var length = translation_voice_player.stream.get_length()
 		if length > 0:
+			translation_progress_slider.set_block_signals(true)
 			translation_progress_slider.value = translation_voice_player.get_playback_position() / length
+			translation_progress_slider.set_block_signals(false)
 
 
 #?######################################################################################
@@ -488,6 +532,17 @@ func populate_sort_context_menu() -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			favorites_context_menu.hide())
 
+
+#* Populate choice tree context menu:
+func populate_choice_tree_context_menu() -> void:
+	choice_tree_context_menu.add_item("Rename", 0)
+	choice_tree_context_menu.add_item("Delete", 1)
+	choice_tree_context_menu.id_pressed.connect(_on_choice_tree_context_menu_id_pressed)
+	choice_tree_context_menu.window_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			choice_tree_context_menu.hide())
+
+
 #* Populate the Conversation context menu with options:
 func populate_conversation_context_menu() -> void:
 	conversation_context_menu.add_item("Rename", 0)
@@ -533,6 +588,7 @@ func scan_project_resources() -> void:
 		"*Portraits": {},
 		"*Busts": {},
 		"*Voice_Files": {},
+		"*Sprites": {},
 		"Backgrounds": {},
 		"Images": {},
 		"Audio": {},
@@ -688,22 +744,19 @@ func _scan_bg_scene(scene_path: String) -> Array:
 	var nodes: Array = []
 	if not FileAccess.file_exists(scene_path):
 		return nodes
-
 	var file = FileAccess.open(scene_path, FileAccess.READ)
 	if file == null:
 		return nodes
 	var content = file.get_as_text()
 	file.close()
 
-	#% Get script path from scene:
-	var script_path = _get_script_path_from_scene(content)
-	if script_path == "":
+	#% Find bg_container NodePath assignment in scene:
+	var nodepath_regex := RegEx.new()
+	nodepath_regex.compile('bg_container\\s*=\\s*NodePath\\("([^"]+)"\\)')
+	var nodepath_result = nodepath_regex.search(content)
+	if nodepath_result == null:
 		return nodes
-
-	#% Get container node name from script:
-	var container_name = _get_container_node_name(script_path, "bg_container")
-	if container_name == "":
-		return nodes
+	var container_name = nodepath_result.get_string(1)
 
 	#% Find direct children of container in scene:
 	var name_regex := RegEx.new()
@@ -722,21 +775,21 @@ func _scan_vn_scene(scene_path: String) -> Array:
 	var nodes: Array = []
 	if not FileAccess.file_exists(scene_path):
 		return nodes
-
 	var file = FileAccess.open(scene_path, FileAccess.READ)
 	if file == null:
 		return nodes
 	var content = file.get_as_text()
 	file.close()
 
-	var script_path = _get_script_path_from_scene(content)
-	if script_path == "":
+	#% Find busts_container NodePath assignment in scene:
+	var nodepath_regex := RegEx.new()
+	nodepath_regex.compile('busts_container\\s*=\\s*NodePath\\("([^"]+)"\\)')
+	var nodepath_result = nodepath_regex.search(content)
+	if nodepath_result == null:
 		return nodes
+	var container_name = nodepath_result.get_string(1)
 
-	var container_name = _get_container_node_name(script_path, "busts_container")
-	if container_name == "":
-		return nodes
-
+	#% Find direct children of container in scene:
 	var name_regex := RegEx.new()
 	name_regex.compile('name="([^"]+)"')
 	for line in content.split("\n"):
@@ -908,7 +961,7 @@ func _on_main_menu_id_pressed(id: int) -> void:
 		0: #% New dialogue:
 			prompt_menu.setup("New Dialogue")
 
-		1: #% Open profiles menu (landing screen): 
+		1: #% Open profiles menu (landing screen):
 			prompt_menu.setup("Change Profile")
 
 		2: #% Convert Dialogues:
@@ -927,20 +980,17 @@ func _on_main_menu_id_pressed(id: int) -> void:
 #* New dialogue:
 func new_dialogue() -> void:
 	globals.current_save = ""
+	var comment = globals.line_templates["§Comment"].duplicate(true)
+	comment["Color"] = var_to_str(globals.line_colors["§Comment"]["Text"])
 	globals.dialogue = {
 		"Conversation_1": {
-			"Block_1": {
-				"Text":[
-					{"§Comment": {
-						"Color": "",
-						"Comment": "",
-					}},
-				]
+			globals.block_default_name: {
+				"Text": [{"§Comment": comment}]
 			},
 		}
 	}
 	globals.current_conversation = "Conversation_1"
-	globals.current_block = "Block_1"
+	globals.current_block = globals.block_default_name
 	globals.current_line = 0
 	globals.current_line_type = "§Comment"
 	globals.current_choice_category = ""
@@ -964,35 +1014,25 @@ func new_dialogue() -> void:
 func change_profile() -> void:
 	new_dialogue()
 	auto_save_timer.stop()
+	var comment = globals.line_templates["§Comment"].duplicate(true)
+	comment["Color"] = var_to_str(globals.line_colors["§Comment"]["Text"])
 	globals.user_presets = {
 		"USER PRESETS": {
 			"[Category_1] User_Preset_1": {
-				"Text": [
-					{"§Comment": {
-						"Color": "",
-						"Comment": "",
-					}},
-				]
+				"Text": [{"§Comment": comment.duplicate(true)}]
 			}
 		}
 	}
 	globals.profile_presets = {
 		"PROFILE PRESETS": {
 			"[Category_1] Profile_Preset_1": {
-				"Text": [
-					{"§Comment": {
-						"Color": "",
-						"Comment": "",
-					}},
-				]
+				"Text": [{"§Comment": comment.duplicate(true)}]
 			}
 		}
 	}
 	globals.user_inserts = {}
 	globals.profile_inserts = {}
 	landing_screen.display()
-
-
 
 
 #* Open Export Menu:
@@ -1166,6 +1206,7 @@ func _lines_delete() -> void:
 		lines.remove_at(i)
 	selected_lines.clear()
 	globals.current_line = -1
+	globals.current_line_type = ""
 	update_line_list()
 	hide_line_data(false)
 	save_undo_step()
@@ -1179,8 +1220,13 @@ func _on_sort_context_menu_pressed(id: int) -> void:
 	match id:
 		0:
 			if is_block:
+				prompt_menu.sort_target_name = entry_name
+				prompt_menu.sort_target_is_block = true
+				prompt_menu.sort_target_conv = sort_context_target.get_parent().get_text(0)
 				prompt_menu.setup("Rename Block")
 			else:
+				prompt_menu.sort_target_name = entry_name
+				prompt_menu.sort_target_is_block = false
 				prompt_menu.setup("Rename Conversation")
 		1:
 			if is_block:
@@ -1325,25 +1371,37 @@ func _on_new_block_pressed() -> void:
 
 #* Create a new conversation:
 func create_new_conversation(conv_name: String) -> void:
-	globals.dialogue[conv_name] = {globals.block_default_name: {"Text": [{"§Comment": globals.line_templates["§Comment"].duplicate(true)}]}}
+	var comment = globals.line_templates["§Comment"].duplicate(true)
+	comment["Color"] = var_to_str(globals.line_colors["§Comment"]["Text"])
+	globals.dialogue[conv_name] = {globals.block_default_name: {"Text": [{"§Comment": comment}]}}
 	globals.current_conversation = conv_name
 	globals.current_block = globals.block_default_name
+	_suppress_undo_save = true
 	update_conversation_selector(true)
 	update_block_selector(false)
-
+	_suppress_undo_save = false
+	hide_line_data(false)
+	save_undo_step()
 
 #* Create a new block:
 func create_new_block(block_name: String) -> void:
 	if globals.current_conversation == "":
 		return
-	elif globals.current_conversation == "USER PRESETS":
-		globals.user_presets[globals.current_conversation][block_name] = {"Text": [{"§Comment": globals.line_templates["§Comment"].duplicate(true)}]}
+	var comment = globals.line_templates["§Comment"].duplicate(true)
+	comment["Color"] = var_to_str(globals.line_colors["§Comment"]["Text"])
+	var new_block = {"Text": [{"§Comment": comment}]}
+	if globals.current_conversation == "USER PRESETS":
+		globals.user_presets[globals.current_conversation][block_name] = new_block
 	elif globals.current_conversation == "PROFILE PRESETS":
-		globals.profile_presets[globals.current_conversation][block_name] = {"Text": [{"§Comment": globals.line_templates["§Comment"].duplicate(true)}]}
+		globals.profile_presets[globals.current_conversation][block_name] = new_block
 	else:
-		globals.dialogue[globals.current_conversation][block_name] = {"Text": [{"§Comment": globals.line_templates["§Comment"].duplicate(true)}]}
+		globals.dialogue[globals.current_conversation][block_name] = new_block
 	globals.current_block = block_name
+	_suppress_undo_save = true
 	update_block_selector(true)
+	_suppress_undo_save = false
+	hide_line_data(false)
+	save_undo_step()
 
 
 #* Select Conversation:
@@ -1360,8 +1418,12 @@ func _on_conversation_selected(index: int) -> void:
 	globals.current_conversation = conversation_selector.get_item_text(index)
 
 	#% Update the Block selector and select the first Block:
+	_suppress_undo_save = true
 	update_block_selector(false)
 	populate_preset_buttons()
+	_suppress_undo_save = false
+	hide_line_data(false)
+	save_undo_step()
 
 
 #* Select Block:
@@ -1380,7 +1442,11 @@ func _on_block_selected(index: int) -> void:
 	line_tree.deselect_all()
 	populate_preset_buttons()
 	_reset_voice(true, true)
+	_suppress_undo_save = true
 	update_line_list()
+	_suppress_undo_save = false
+	hide_line_data(false)
+	save_undo_step()
 
 
 #* Update the conversation selector to list all conversations and select globals.current_conversation:
@@ -1392,6 +1458,7 @@ func update_conversation_selector(keep_current: bool) -> void:
 	#% Add presets first:
 	conversation_selector.add_item("USER PRESETS")
 	conversation_selector.add_item("PROFILE PRESETS")
+	conversation_selector.add_separator()
 
 	#% Add dialogue Conversations:
 	for conversation_name in globals.dialogue.keys():
@@ -1406,12 +1473,13 @@ func update_conversation_selector(keep_current: bool) -> void:
 			if conversation_selector.get_item_text(i) == globals.current_conversation:
 				conversation_selector.select(i)
 				break
+		update_block_selector(true)
 
 	#@ Select the first Conversation in the list:
 	#% This selects a different Conversation.
 	else:
-		conversation_selector.select(2)
-		globals.current_conversation = conversation_selector.get_item_text(2)
+		conversation_selector.select(3)
+		globals.current_conversation = conversation_selector.get_item_text(3)
 
 		#@ Update the Block selector and select the first Block:
 		#% Required because we're switching to a different Conversation.
@@ -1469,44 +1537,75 @@ func update_block_selector(keep_current: bool) -> void:
 #* Right-click Conversation selector:
 func _on_conversation_context_menu_pressed(id: int) -> void:
 	match id:
-		0: prompt_menu.setup("Rename Conversation")
+		0:
+			prompt_menu.sort_target_name = globals.current_conversation
+			prompt_menu.setup("Rename Conversation")
 		1: _delete_conversation()
 
 #* Right-click Block selector:
 func _on_block_context_menu_pressed(id: int) -> void:
 	match id:
-		0: prompt_menu.setup("Rename Block")
+		0:
+			prompt_menu.sort_target_conv = globals.current_conversation
+			prompt_menu.sort_target_name = globals.current_block
+			prompt_menu.setup("Rename Block")
 		1: _delete_block()
 
 
 #* Rename the current conversation:
-func rename_conversation(new_name: String) -> void:
-	if globals.current_conversation == "USER PRESETS" or globals.current_conversation == "PROFILE PRESETS":
+func rename_conversation(old_name: String, new_name: String) -> void:
+	if old_name == "USER PRESETS" or old_name == "PROFILE PRESETS":
 		return
-	var blocks = globals.dialogue[globals.current_conversation]
-	globals.dialogue.erase(globals.current_conversation)
-	globals.dialogue[new_name] = blocks
-	globals.current_conversation = new_name
+	if not globals.dialogue.has(old_name):
+		return
+	var keys = globals.dialogue.keys()
+	var values = globals.dialogue.values()
+	var idx = keys.find(old_name)
+	keys[idx] = new_name
+	globals.dialogue.clear()
+	for i in range(keys.size()):
+		globals.dialogue[keys[i]] = values[i]
+	if globals.current_conversation == old_name:
+		globals.current_conversation = new_name
 	update_conversation_selector(true)
+	save_undo_step()
 
 #* Rename the current block:
-func rename_block(new_name: String) -> void:
-	if globals.current_conversation == "USER PRESETS":
-		var block = globals.user_presets["USER PRESETS"][globals.current_block]
-		globals.user_presets["USER PRESETS"].erase(globals.current_block)
-		globals.user_presets["USER PRESETS"][new_name] = block
+func rename_block(conv: String, old_name: String, new_name: String) -> void:
+	if conv == "USER PRESETS":
+		var keys = globals.user_presets["USER PRESETS"].keys()
+		var values = globals.user_presets["USER PRESETS"].values()
+		var idx = keys.find(old_name)
+		keys[idx] = new_name
+		globals.user_presets["USER PRESETS"].clear()
+		for i in range(keys.size()):
+			globals.user_presets["USER PRESETS"][keys[i]] = values[i]
 		export_user_presets()
-	elif globals.current_conversation == "PROFILE PRESETS":
-		var block = globals.profile_presets["PROFILE PRESETS"][globals.current_block]
-		globals.profile_presets["PROFILE PRESETS"].erase(globals.current_block)
-		globals.profile_presets["PROFILE PRESETS"][new_name] = block
+	elif conv == "PROFILE PRESETS":
+		var keys = globals.profile_presets["PROFILE PRESETS"].keys()
+		var values = globals.profile_presets["PROFILE PRESETS"].values()
+		var idx = keys.find(old_name)
+		keys[idx] = new_name
+		globals.profile_presets["PROFILE PRESETS"].clear()
+		for i in range(keys.size()):
+			globals.profile_presets["PROFILE PRESETS"][keys[i]] = values[i]
 		export_profile_presets()
 	else:
-		var lines = globals.dialogue[globals.current_conversation][globals.current_block]["Text"]
-		globals.dialogue[globals.current_conversation].erase(globals.current_block)
-		globals.dialogue[globals.current_conversation][new_name] = {"Text": lines}
-	globals.current_block = new_name
+		if not globals.dialogue.has(conv) or not globals.dialogue[conv].has(old_name):
+			return
+		var keys = globals.dialogue[conv].keys()
+		var values = globals.dialogue[conv].values()
+		var idx = keys.find(old_name)
+		keys[idx] = new_name
+		globals.dialogue[conv].clear()
+		for i in range(keys.size()):
+			globals.dialogue[conv][keys[i]] = values[i]
+	if globals.current_conversation == conv and globals.current_block == old_name:
+		globals.current_block = new_name
+	_suppress_undo_save = true
 	update_block_selector(true)
+	_suppress_undo_save = false
+	save_undo_step()
 
 
 #* Delete Conversation:
@@ -1517,6 +1616,7 @@ func _delete_conversation() -> void:
 	globals.current_conversation = ""
 	globals.current_block = ""
 	update_conversation_selector(false)
+	save_undo_step()
 
 #* Delete Block:
 func _delete_block() -> void:
@@ -1530,6 +1630,7 @@ func _delete_block() -> void:
 		globals.dialogue[globals.current_conversation].erase(globals.current_block)
 	globals.current_block = ""
 	update_block_selector(false)
+	save_undo_step()
 
 #endregion
 
@@ -1538,11 +1639,21 @@ func _delete_block() -> void:
 #& LINE TREE:
 #?###########
 #region
+
+func _deferred_update_line_list() -> void:
+	_updating_ui = true
+	update_line_list()
+	_updating_ui = false
+
 #* Update the line list in the Tree node:
 func update_line_list() -> void:
+	if not is_inside_tree():
+		return
 	line_tree.clear()
 	line_tree.set_column_titles_visible(false)
 	var root = line_tree.create_item()
+	if root == null:
+		return
 	line_tree.hide_root = true
 
 	#% Display conversations and blocks for reordering:
@@ -1753,6 +1864,9 @@ func _get_line_display_text(line: Dictionary, index: int) -> String:
 			var meta = data.get("Meta", "")
 			return str(index) + " | " + key + ": " + meta
 
+		"§Player_Advance":
+			return str(index) + " | " + key + ": " + "----- WAIT FOR PLAYER ADVANCE -----"
+
 		"§Choice_List":
 			var reference = data.get("Reference", "")
 			return str(index) + " | " + key + ": " + reference
@@ -1847,7 +1961,7 @@ func _get_line_display_text(line: Dictionary, index: int) -> String:
 
 		"§BG_Effect":
 			var layers = data.get("Layers", "")
-			var effect = data.get("Effect", "")
+			var effect = data.get("Effects", "")
 			var loop = data.get("Loop", "")
 			var time = data.get("Time", "")
 			var wait = data.get("Wait", "")
@@ -2357,34 +2471,12 @@ func _get_line_display_text(line: Dictionary, index: int) -> String:
 			return "[" + key.trim_prefix("§").to_upper() + "]"
 
 
-#* Drop item after dragging:
-func _on_line_tree_item_dropped(dropped_item: TreeItem, target_item: TreeItem, at_position: int) -> void:
-	var from_index = dropped_item.get_metadata(0)
-	var to_index = target_item.get_metadata(0) if target_item else -1
-
-	#% Determine source:
-	var source = _get_line_source()
-
-	var lines = source[globals.current_conversation][globals.current_block]["Text"]
-
-	#% Move line from_index to to_index:
-	var moved = lines[from_index]
-	lines.remove_at(from_index)
-	if to_index > from_index:
-		to_index -= 1
-	if at_position == Tree.DROP_MODE_INBETWEEN:
-		to_index = clamp(to_index, 0, lines.size())
-	lines.insert(to_index, moved)
-
-	update_line_list()
-
-
 #* Single item selected:
 func _on_line_tree_item_selected() -> void:
 	#% Clear last focus:
 	globals.last_focused_field = null
 	_on_selection_changed()
-	if not _updating_ui:
+	if not _updating_ui and not sort_dialogue:
 		save_undo_step()
 
 
@@ -2392,13 +2484,17 @@ func _on_line_tree_item_selected() -> void:
 func _on_line_tree_multi_selected(_item: TreeItem, _column: int, _selected: bool) -> void:
 	#% Clear last focus:
 	globals.last_focused_field = null
+
 	_on_selection_changed()
-	if _selected and not _updating_ui:
+	if _selected and not _updating_ui and not sort_dialogue:
 		save_undo_step()
 
 
 #* When item in the line tree is selected:
 func _on_selection_changed() -> void:
+	if _applying_undo_step:
+		return
+
 	if _selection_changing:
 		return
 
@@ -2427,8 +2523,33 @@ func _on_selection_changed() -> void:
 	else:
 		globals.current_line = -1
 
-	if globals.current_line == -1 or globals.current_conversation == "" or globals.current_block == "" or sort_dialogue == true:
+	#% Abort if no Conversation or Block selected:
+	if globals.current_line == -1 or globals.current_conversation == "" or globals.current_block == "":
 		_selection_changing = false
+		return
+
+	#% Select Conversation/Block:
+	if sort_dialogue == true:
+		_selection_changing = false
+		globals.current_line = -1
+		var selected_item = line_tree.get_selected()
+		if selected_item != null:
+			var is_block = selected_item.get_parent() != line_tree.get_root()
+			if is_block:
+				var conv_name = selected_item.get_parent().get_text(0)
+				var block_name = selected_item.get_text(0)
+				if globals.dialogue.has(conv_name) and globals.dialogue[conv_name].has(block_name):
+					globals.current_conversation = conv_name
+					globals.current_block = block_name
+					_update_selectors_to_match()
+					save_undo_step()
+			else:
+				var conv_name = selected_item.get_text(0)
+				if globals.dialogue.has(conv_name):
+					globals.current_conversation = conv_name
+					globals.current_block = globals.dialogue[conv_name].keys()[0]
+					_update_selectors_to_match()
+					save_undo_step()
 		return
 
 	#% Set current_line_type:
@@ -2458,10 +2579,32 @@ func _on_selection_changed() -> void:
 
 	_selection_changing = false
 
+#* Update the Conversation/Block drop-downs when selected from the line tree:
+func _update_selectors_to_match() -> void:
+	for i in range(conversation_selector.item_count):
+		if conversation_selector.get_item_text(i) == globals.current_conversation:
+			conversation_selector.select(i)
+			break
+	block_selector.clear()
+	for block_name in globals.dialogue[globals.current_conversation].keys():
+		block_selector.add_item(block_name)
+	for i in range(block_selector.item_count):
+		if block_selector.get_item_text(i) == globals.current_block:
+			block_selector.select(i)
+			break
+
 
 #* Display line data in the edit area when a line is clicked:
 func _show_line_editor() -> void:
 	hide_line_data(false)
+
+	#% Re-sync current_line_type with actual data in case it shifted/changed externally:
+	var sync_source = _get_line_source()
+	if sync_source.has(globals.current_conversation) and sync_source[globals.current_conversation].has(globals.current_block):
+		var lines = sync_source[globals.current_conversation][globals.current_block]["Text"]
+		if globals.current_line >= 0 and globals.current_line < lines.size():
+			if not lines[globals.current_line].has(globals.current_line_type):
+				globals.current_line_type = lines[globals.current_line].keys()[0]
 
 	#% Refresh variant tree if displaying a spoken line or a condition with a spoken line effect:
 	var has_spoken_line = globals.current_line_type == "Spoken Line"
@@ -2490,6 +2633,7 @@ func _show_line_editor() -> void:
 
 	if has_choice_list:
 		refresh_choice_tree()
+		_hide_all_choice_data()
 
 	display_line_data(globals.current_line_type)
 
@@ -2498,6 +2642,10 @@ func hide_line_data(condition_mode: bool):
 	#@ Hide all data fields:
 	for key in line_data_containers:
 		line_data_containers[key].visible = false
+
+	meta_block.visible = false
+	custom_data_block.visible = false
+	devcom_block.visible = false
 
 	#@ Make exemption for condition commands:
 	#% Used when the data fields being hidden are part of a condition effect.
@@ -2533,9 +2681,14 @@ func display_line_data(line_type):
 	var source = _get_line_source()
 	var lines = source[globals.current_conversation][globals.current_block]["Text"]
 	var line = lines[globals.current_line]
+	if not line.has(line_type):
+		return
 	var line_data = line[line_type]
+	meta_block.visible = true
 	meta_field.text = line_data.get("Meta", "")
+	custom_data_block.visible = true
 	custom_data_field.text = line_data.get("CustomData", "")
+	devcom_block.visible = true
 	devcom_field.text = line_data.get("DevComment", "")
 
 	#@ Special rules:
@@ -2546,7 +2699,12 @@ func display_line_data(line_type):
 			var effect_type = line_data.get("Type", "")
 			if effect_type == "Spoken Line" and line_data["Commands"].has("Spoken Line"):
 				_apply_spoken_line_display(line_data["Commands"]["Spoken Line"])
-
+		"§Comment":
+			var color = str_to_var(line_data.get("Color", ""))
+			if color is Color:
+				comment_color_button.color = color
+			else:
+				comment_color_button.color = globals.line_colors["§Comment"]["Text"]
 
 #* Display data for Spoken Line specifically:
 func _apply_spoken_line_display(spoken_data: Dictionary) -> void:
@@ -2763,7 +2921,6 @@ func _insert_preset_lines(block_lines: Array) -> void:
 
 #* Export user presets:
 func export_user_presets() -> void:
-	print(globals.current_user)
 	if globals.current_user != "":
 		var user_presets_path = "user://Users/" + globals.current_user + "/user_presets.txt"
 		var file = FileAccess.open(user_presets_path, FileAccess.WRITE)
@@ -3249,7 +3406,16 @@ func _load_dialogue_from_txt(path: String) -> void:
 	load_dialogue.visible = false
 	shield.visible = false
 
+	globals.undo_stack = []
+	globals.current_undo_step = -1
+	globals.current_line = -1
+	globals.current_line_type = ""
+
+	hide_line_data(false)
 	update_conversation_selector(false)
+
+	save_undo_step()
+
 	print("Loaded dialogue from: ", path)
 
 #endregion
@@ -3308,6 +3474,7 @@ func save_profile() -> void:
 
 	data["choice_timer_setup_visible"] = globals.choice_timer_setup_visible
 	data["choice_timer_timeout_visible"] = globals.choice_timer_timeout_visible
+	data["choice_timer_display_visible"] = globals.choice_timer_display_visible
 	data["choice_timer_tags_visible"] = globals.choice_timer_tags_visible
 	data["choice_timer_custom_visible"] = globals.choice_timer_custom_visible
 
@@ -3328,8 +3495,9 @@ func save_profile() -> void:
 	data["selected_ui_colors"] = globals.selected_ui_colors
 	data["ui_colors"] = globals.ui_colors
 
-	data["conversation_default_name"] = globals.conversation_default_name
+	data["conversation_new_name"] = globals.conversation_new_name
 	data["block_default_name"] = globals.block_default_name
+	data["block_new_name"] = globals.block_new_name
 
 	data["default_text_direction"] = globals.default_text_direction
 
@@ -3366,6 +3534,8 @@ func save_profile() -> void:
 
 	data["languages"] = globals.languages
 	data["variants"] = globals.variants
+	data["disabled_variants"] = globals.disabled_variants
+
 
 	data["preview_bg_color"] = var_to_str(globals.preview_bg_color)
 	data["preview_text_color"] = var_to_str(globals.preview_text_color)
@@ -3421,30 +3591,31 @@ func load_profile() -> void:
 	globals.voice_area_visible = data.get("voice_area_visible", true)
 	globals.disposition_area_visible = data.get("disposition_area_visible", true)
 
-	globals.choice_general_prompt_visible = data.get("choice_general_prompt_visible", true)
-	globals.choice_general_mouse_visible = data.get("choice_general_mouse_visible", true)
-	globals.choice_general_setup_visible = data.get("choice_general_setup_visible", true)
-	globals.choice_general_scenes_visible = data.get("choice_general_scenes_visible", true)
-	globals.choice_general_tags_visible = data.get("choice_general_tags_visible", true)
-	globals.choice_general_custom_visible = data.get("choice_general_custom_visible", true)
+	globals.choice_general_prompt_visible = data.get("choice_general_prompt_visible", false)
+	globals.choice_general_mouse_visible = data.get("choice_general_mouse_visible", false)
+	globals.choice_general_setup_visible = data.get("choice_general_setup_visible", false)
+	globals.choice_general_scenes_visible = data.get("choice_general_scenes_visible", false)
+	globals.choice_general_tags_visible = data.get("choice_general_tags_visible", false)
+	globals.choice_general_custom_visible = data.get("choice_general_custom_visible", false)
 
-	globals.choice_category_prompt_visible = data.get("choice_category_prompt_visible", true)
-	globals.choice_category_mouse_visible = data.get("choice_category_mouse_visible", true)
-	globals.choice_category_setup_visible = data.get("choice_category_setup_visible", true)
-	globals.choice_category_scenes_visible = data.get("choice_category_scenes_visible", true)
-	globals.choice_category_tags_visible = data.get("choice_category_tags_visible", true)
-	globals.choice_category_custom_visible = data.get("choice_category_custom_visible", true)
+	globals.choice_category_prompt_visible = data.get("choice_category_prompt_visible", false)
+	globals.choice_category_mouse_visible = data.get("choice_category_mouse_visible", false)
+	globals.choice_category_setup_visible = data.get("choice_category_setup_visible", false)
+	globals.choice_category_scenes_visible = data.get("choice_category_scenes_visible", false)
+	globals.choice_category_tags_visible = data.get("choice_category_tags_visible", false)
+	globals.choice_category_custom_visible = data.get("choice_category_custom_visible", false)
 
-	globals.choice_item_tooltip_visible = data.get("choice_item_tooltip_visible", true)
-	globals.choice_item_setup_visible = data.get("choice_item_setup_visible", true)
-	globals.choice_item_scene_visible = data.get("choice_item_scene_visible", true)
-	globals.choice_item_tags_visible = data.get("choice_item_tags_visible", true)
-	globals.choice_item_custom_visible = data.get("choice_item_custom_visible", true)
+	globals.choice_item_tooltip_visible = data.get("choice_item_tooltip_visible", false)
+	globals.choice_item_setup_visible = data.get("choice_item_setup_visible", false)
+	globals.choice_item_scene_visible = data.get("choice_item_scene_visible", false)
+	globals.choice_item_tags_visible = data.get("choice_item_tags_visible", false)
+	globals.choice_item_custom_visible = data.get("choice_item_custom_visible", false)
 
-	globals.choice_timer_setup_visible = data.get("choice_timer_setup_visible", true)
-	globals.choice_timer_timeout_visible = data.get("choice_timer_timeout_visible", true)
-	globals.choice_timer_tags_visible = data.get("choice_timer_tags_visible", true)
-	globals.choice_timer_custom_visible = data.get("choice_timer_custom_visible", true)
+	globals.choice_timer_setup_visible = data.get("choice_timer_setup_visible", false)
+	globals.choice_timer_timeout_visible = data.get("choice_timer_timeout_visible", false)
+	globals.choice_timer_display_visible = data.get("choice_timer_display_visible", false)
+	globals.choice_timer_tags_visible = data.get("choice_timer_tags_visible", false)
+	globals.choice_timer_custom_visible = data.get("choice_timer_custom_visible", false)
 
 	globals.video_preview_width = data.get("video_preview_width", true)
 	globals.image_preview_width = data.get("image_preview_width", true)
@@ -3463,8 +3634,9 @@ func load_profile() -> void:
 	globals.selected_ui_colors = data.get("selected_ui_colors", "0")
 	globals.ui_colors = data.get("ui_colors", globals.ui_colors)
 
-	globals.conversation_default_name = data.get("conversation_default_name", "Conversation_1")
+	globals.conversation_new_name = data.get("conversation_new_name", "Conversation_1")
 	globals.block_default_name = data.get("block_default_name", "Block_1")
+	globals.block_new_name = data.get("block_new_name", "Block_")
 
 	globals.default_text_direction = data.get("default_text_direction", "LtR")
 
@@ -3497,10 +3669,16 @@ func load_profile() -> void:
 	globals.project_scripts = data.get("project_scripts", globals.project_scripts)
 	globals.direct_data = data.get("direct_data", globals.direct_data)
 	globals.favorites = data.get("favorites", [])
-	globals.line_colors = data.get("line_colors", globals.line_colors)
+
+	#% Restore line colors:
+	var loaded_colors = data.get("line_colors", {})
+	for key in loaded_colors.keys():
+		globals.line_colors[key] = loaded_colors[key]
 
 	globals.languages = data.get("languages", globals.languages)
 	globals.variants = data.get("variants", globals.variants)
+	print("variants after load: ", globals.variants)
+	globals.disabled_variants = data.get("disabled_variants", globals.disabled_variants)
 
 	globals.preview_bg_color = str_to_var(data.get("preview_bg_color", var_to_str(Color(0, 0, 0, 1))))
 	globals.preview_text_color = str_to_var(data.get("preview_text_color", var_to_str(Color(1, 1, 1, 1))))
@@ -3697,10 +3875,10 @@ func setup_data_filters():
 
 	if globals.choice_category_setup_visible == false:
 		choice_category_setup.visible = false
-		choice_category_setup.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		choice_category_setup.visible = true
-		choice_category_setup.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 	if globals.choice_category_scenes_visible == false:
 		choice_category_self_scene.visible = false
@@ -3713,17 +3891,17 @@ func setup_data_filters():
 
 	if globals.choice_category_tags_visible == false:
 		choice_category_tags.visible = false
-		choice_category_tags.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_tags_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		choice_category_tags.visible = true
-		choice_category_tags.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_tags_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 	if globals.choice_category_custom_visible == false:
 		choice_category_custom.visible = false
-		choice_category_custom.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_custom_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		choice_category_custom.visible = true
-		choice_category_custom.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_custom_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 
 	if globals.choice_item_tooltip_visible == false:
@@ -3775,6 +3953,13 @@ func setup_data_filters():
 	else:
 		choice_timer_timeout.visible = true
 		choice_timer_timeout_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+
+	if globals.choice_timer_display_visible == false:
+		choice_timer_display.visible = false
+		choice_timer_display_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+	else:
+		choice_timer_display.visible = true
+		choice_timer_display_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 	if globals.choice_timer_tags_visible == false:
 		choice_timer_tags.visible = false
@@ -3843,6 +4028,8 @@ func refresh_variant_tree() -> void:
 
 		for variant in variants_sorted:
 			var combined = language + variant
+			if combined in globals.disabled_variants:
+				continue
 			var var_item = variant_tree.create_item(lang_item)
 			var_item.set_metadata(0, {"type": "variant", "language": language, "variant": variant, "combined": combined})
 			var_item.set_text(0, "    " + combined)
@@ -3872,9 +4059,15 @@ func _on_variant_tree_item_selected() -> void:
 	var meta = item.get_metadata(0)
 	if meta["type"] != "variant":
 		return
+
 	globals.current_variant = meta["combined"]
 	var source = _get_line_source()
+	if not source.has(globals.current_conversation) or not source[globals.current_conversation].has(globals.current_block):
+		return
+
 	var lines = source[globals.current_conversation][globals.current_block]["Text"]
+	if globals.current_line < 0 or globals.current_line >= lines.size():
+		return
 	var line = lines[globals.current_line]
 	var line_data = line[globals.current_line_type]
 	if _is_condition_command(globals.current_line_type) and line_data.get("Commands", {}).has("Spoken Line"):
@@ -3883,6 +4076,7 @@ func _on_variant_tree_item_selected() -> void:
 		spoken_text_edit.text = ""
 		spoken_text_preview.text = ""
 		return
+
 	for entry in line_data["Variants"]:
 		if entry.keys()[0] == globals.current_variant:
 			var text = entry[globals.current_variant].get("Text", "")
@@ -3899,7 +4093,9 @@ func _on_variant_tree_item_selected() -> void:
 				text_dir = Control.TEXT_DIRECTION_LTR
 			spoken_text_preview.text_direction = text_dir
 			refresh_counters()
-			save_undo_step()
+			call_deferred("_deferred_update_line_list")
+			if not _suppress_undo_save and not _updating_ui and not _applying_undo_step:
+				save_undo_step()
 			return
 
 	spoken_text_edit.text = ""
@@ -3957,6 +4153,8 @@ func refresh_translation_tree() -> void:
 
 		for variant in variants_sorted:
 			var combined = language + variant
+			if combined in globals.disabled_variants:
+				continue
 			var var_item = translation_tree.create_item(lang_item)
 			var_item.set_metadata(0, {"type": "variant", "language": language, "variant": variant, "combined": combined})
 			var_item.set_text(0, "    " + combined)
@@ -4008,7 +4206,10 @@ func refresh_translation_tree() -> void:
 #* Select a translation variant in the tree:
 func _on_translation_tree_item_selected() -> void:
 	_reset_voice(false, true)
+
+	#% Clear last focus:
 	globals.last_focused_field = null
+
 	var item = translation_tree.get_selected()
 	var meta = item.get_metadata(0)
 	if meta["type"] != "variant":
@@ -4016,7 +4217,14 @@ func _on_translation_tree_item_selected() -> void:
 	globals.current_translation = meta["combined"]
 
 	var source = _get_line_source()
+	if not source.has(globals.current_conversation) or not source[globals.current_conversation].has(globals.current_block):
+		return
+
 	var lines = source[globals.current_conversation][globals.current_block]["Text"]
+	if globals.current_line < 0 or globals.current_line >= lines.size():
+		return
+	if not lines[globals.current_line].has(globals.current_line_type):
+		return
 	var line_data = lines[globals.current_line][globals.current_line_type]
 	if _is_condition_command(globals.current_line_type) and line_data.get("Commands", {}).has("Spoken Line"):
 		line_data = line_data["Commands"]["Spoken Line"]
@@ -4057,7 +4265,9 @@ func _select_tree_item_by_combined(tree: Tree, target: String) -> void:
 		while var_item:
 			var meta = var_item.get_metadata(0)
 			if meta.get("combined", "") == target:
+				_suppress_undo_save = true
 				var_item.select(0)
+				_suppress_undo_save = false
 				tree.scroll_to_item(var_item, true)
 				return
 			var_item = var_item.get_next()
@@ -4304,11 +4514,11 @@ func _on_choice_categories_setup_pressed() -> void:
 	if globals.choice_category_setup_visible == true:
 		globals.choice_category_setup_visible = false
 		choice_category_setup.visible = false
-		choice_category_setup.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_category_setup_visible = true
 		choice_category_setup.visible = true
-		choice_category_setup.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 func _on_choice_categories_scenes_pressed() -> void:
 	#% Clear last focus:
@@ -4318,12 +4528,12 @@ func _on_choice_categories_scenes_pressed() -> void:
 		globals.choice_category_scenes_visible = false
 		choice_category_self_scene.visible = false
 		choice_category_item_scene.visible = false
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_scenes_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_category_scenes_visible = true
 		choice_category_self_scene.visible = true
 		choice_category_item_scene.visible = true
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_scenes_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 func _on_choice_categories_tags_pressed() -> void:
 	#% Clear last focus:
@@ -4331,12 +4541,12 @@ func _on_choice_categories_tags_pressed() -> void:
 
 	if globals.choice_category_tags_visible == true:
 		globals.choice_category_tags_visible = false
-		choice_category_prompt.visible = false
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_tags.visible = false
+		choice_category_tags_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_category_tags_visible = true
-		choice_category_prompt.visible = true
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_tags.visible = true
+		choice_category_tags_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 func _on_choice_categories_custom_pressed() -> void:
 	#% Clear last focus:
@@ -4344,12 +4554,12 @@ func _on_choice_categories_custom_pressed() -> void:
 
 	if globals.choice_category_custom_visible == true:
 		globals.choice_category_custom_visible = false
-		choice_category_prompt.visible = false
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_category_custom.visible = false
+		choice_category_custom_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_category_custom_visible = true
-		choice_category_prompt.visible = true
-		choice_category_prompt.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+		choice_category_custom.visible = true
+		choice_category_custom_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 
 func _on_choice_item_tooltip_pressed() -> void:
@@ -4437,12 +4647,25 @@ func _on_choice_timers_timeout_pressed() -> void:
 
 	if globals.choice_timer_timeout_visible == true:
 		globals.choice_timer_timeout_visible = false
-		choice_timer_setup.visible = false
-		choice_timer_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_timer_timeout.visible = false
+		choice_timer_timeout_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_timer_timeout_visible = true
 		choice_timer_timeout.visible = true
 		choice_timer_timeout_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
+
+func _on_choice_timers_display_pressed() -> void:
+	#% Clear last focus:
+	globals.last_focused_field = null
+
+	if globals.choice_timer_display_visible == true:
+		globals.choice_timer_display_visible = false
+		choice_timer_display.visible = false
+		choice_timer_display_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+	else:
+		globals.choice_timer_display_visible = true
+		choice_timer_display.visible = true
+		choice_timer_display_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Normal"]
 
 func _on_choice_timers_tags_pressed() -> void:
 	#% Clear last focus:
@@ -4450,8 +4673,8 @@ func _on_choice_timers_tags_pressed() -> void:
 
 	if globals.choice_timer_tags_visible == true:
 		globals.choice_timer_tags_visible = false
-		choice_timer_setup.visible = false
-		choice_timer_setup_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
+		choice_timer_tags.visible = false
+		choice_timer_tags_filter.self_modulate = globals.ui_colors[globals.selected_ui_colors]["Disabled"]
 	else:
 		globals.choice_timer_tags_visible = true
 		choice_timer_tags.visible = true
@@ -4482,14 +4705,16 @@ func _on_choice_timers_custom_pressed() -> void:
 func _on_spoken_line_speech_text_changed() -> void:
 	if _applying_undo_step:
 		return
+
 	var caret_line = spoken_text_edit.get_caret_line()
 	var caret_column = spoken_text_edit.get_caret_column()
 	var source = _get_line_source()
-
 	var line = source[globals.current_conversation][globals.current_block]["Text"][globals.current_line]
 	var line_data = line[globals.current_line_type]
+
 	if _is_condition_command(globals.current_line_type) and line_data.has("Commands") and line_data["Commands"].has("Spoken Line"):
 		line_data = line_data["Commands"]["Spoken Line"]
+
 	for entry in line_data["Variants"]:
 		if entry.keys()[0] == globals.current_variant:
 			entry[globals.current_variant]["Text"] = spoken_text_edit.text
@@ -4497,12 +4722,18 @@ func _on_spoken_line_speech_text_changed() -> void:
 
 	#% Update preview:
 	spoken_text_preview.text = spoken_text_edit.text
-
 	var saved_field = globals.last_focused_field
+
 	_suppress_undo_save = true
 	refresh_variant_tree()
 	refresh_translation_tree()
+
+	_updating_ui = true
+	update_line_list()
+	_updating_ui = false
+
 	_suppress_undo_save = false
+
 	globals.last_focused_field = saved_field
 
 	#% Reposition caret:
@@ -4765,6 +4996,13 @@ func _on_spoken_voice_play_button_pressed() -> void:
 	#@ If already playing, toggle pause:
 	if variant_voice_player.stream != null and variant_voice_player.playing:
 		variant_voice_player.stream_paused = not variant_voice_player.stream_paused
+		variant_play_button.text = "⏸" if not variant_voice_player.stream_paused else "⏵"
+		return
+
+	#@ If paused, resume:
+	if variant_voice_player.stream != null and variant_voice_player.stream_paused:
+		variant_voice_player.stream_paused = false
+		variant_play_button.text = "⏸"
 		return
 
 	#@ Find the file path:
@@ -4794,6 +5032,7 @@ func _on_spoken_voice_play_button_pressed() -> void:
 	variant_voice_player.stream = stream
 	variant_voice_player.volume_db = linear_to_db(variant_volume_slider.value)
 	variant_voice_player.play()
+	variant_play_button.text = "⏸"
 
 
 func _on_translation_voice_play_button_pressed() -> void:
@@ -4814,13 +5053,23 @@ func _on_translation_voice_play_button_pressed() -> void:
 	var voice_file = line_data.get("Voice", "")
 	if reference == "" or voice_file == "":
 		return
+
 	#@ Pause variant if playing:
 	if variant_voice_player.playing and not variant_voice_player.stream_paused:
 		variant_voice_player.stream_paused = true
+
 	#@ If already playing, toggle pause:
 	if translation_voice_player.stream != null and translation_voice_player.playing:
 		translation_voice_player.stream_paused = not translation_voice_player.stream_paused
+		translation_play_button.text = "⏸" if not translation_voice_player.stream_paused else "⏵"
 		return
+
+	#@ If paused, resume:
+	if translation_voice_player.stream != null and translation_voice_player.stream_paused:
+		translation_voice_player.stream_paused = false
+		translation_play_button.text = "⏸"
+		return
+
 	#@ Find the file path:
 	if not globals.project_resources["*Voice_Files"].has(reference):
 		return
@@ -4831,6 +5080,7 @@ func _on_translation_voice_play_button_pressed() -> void:
 	if not conv_folder.has(globals.current_block):
 		return
 	var block_folder = conv_folder[globals.current_block]
+
 	#@ Check translation subfolder if not Default:
 	if globals.current_translation != "Default":
 		if not block_folder.has(globals.current_translation):
@@ -4839,6 +5089,7 @@ func _on_translation_voice_play_button_pressed() -> void:
 	if not block_folder.has(voice_file):
 		return
 	var file_path = block_folder[voice_file]
+
 	#@ Load and play:
 	var stream = _load_audio_stream(file_path)
 	if stream == null:
@@ -4846,11 +5097,11 @@ func _on_translation_voice_play_button_pressed() -> void:
 	translation_voice_player.stream = stream
 	translation_voice_player.volume_db = linear_to_db(translation_volume_slider.value)
 	translation_voice_player.play()
+	translation_play_button.text = "⏸"
 
 
 func _on_variant_volume_slider_value_changed(value: float) -> void:
 	variant_voice_player.volume_db = linear_to_db(value)
-
 
 func _on_translation_volume_slider_value_changed(value: float) -> void:
 	translation_voice_player.volume_db = linear_to_db(value)
@@ -4891,12 +5142,14 @@ func _reset_voice(reset_variant: bool, reset_translation: bool) -> void:
 	if reset_variant == true:
 		variant_voice_player.stop()
 		variant_voice_player.stream = null
-		variant_translation_volume_slider.value = 0.0
+		variant_progress_slider.value = 0.0
+		variant_play_button.text = "⏵"
 
 	if reset_translation == true:
 		translation_voice_player.stop()
 		translation_voice_player.stream = null
 		translation_progress_slider.value = 0.0
+		translation_play_button.text = "⏵"
 
 
 func _on_preview_bg_color_color_changed(color: Color) -> void:
@@ -4960,6 +5213,13 @@ func refresh_choice_tree() -> void:
 		timer_item.set_custom_color(0, Color.YELLOW)
 		timer_item.set_metadata(0, {"type": "timer", "name": timer_name})
 
+	#@ Separator (only if both timers and categories exist):
+	if data.get("Timers", []).size() > 0 and data.get("Categories", []).size() > 0:
+		var separator = choice_tree.create_item(root)
+		separator.set_text(0, "─────────────────────")
+		separator.set_selectable(0, false)
+		separator.set_metadata(0, {"type": "separator"})
+
 	#@ Categories and choices:
 	for category_entry in data.get("Categories", []):
 		var category_name = category_entry.keys()[0]
@@ -4992,22 +5252,45 @@ func _on_choice_tree_item_selected() -> void:
 func _on_choice_item_changed() -> void:
 	if globals.selected_choice_item == null:
 		return
-	var meta = globals.selected_choice_item.get_metadata(0)
+
+	#@ Reset all colors:
+	var meta
+	var item = choice_tree.get_root().get_first_child()
+	while item != null:
+		meta = item.get_metadata(0)
+		if meta["type"] == "timer":
+			item.set_custom_color(0, Color.YELLOW)
+		elif meta["type"] == "category":
+			item.set_custom_color(0, Color.CORNFLOWER_BLUE)
+		elif meta["type"] == "choice":
+			item.clear_custom_color(0)
+		var child = item.get_first_child()
+		while child != null:
+			child.clear_custom_color(0)
+			child = child.get_next()
+		item = item.get_next()
+
+	#@ Apply green to selected:
+	meta = globals.selected_choice_item.get_metadata(0)
 	match meta["type"]:
 		"timer":
 			globals.current_choice_category = ""
 			globals.current_choice_item = ""
 			globals.current_choice_timer = meta["name"]
+			globals.selected_choice_item.set_custom_color(0, Color.GREEN)
 			_show_timer_data(meta["name"])
 		"category":
 			globals.current_choice_category = meta["name"]
 			globals.current_choice_item = ""
 			globals.current_choice_timer = ""
+			globals.selected_choice_item.set_custom_color(0, Color.GREEN)
 			_show_category_data(meta["name"])
 		"choice":
 			globals.current_choice_category = meta["category"]
 			globals.current_choice_item = meta["name"]
 			globals.current_choice_timer = ""
+			globals.selected_choice_item.set_custom_color(0, Color.GREEN)
+			globals.selected_choice_item.get_parent().set_custom_color(0, Color.GREEN)
 			_show_choice_data(meta["category"], meta["name"])
 
 
@@ -5030,6 +5313,7 @@ func _show_choice_data(category, _choice):
 	choice_timer_settings.visible = false
 	_show_category_data(category)
 	choice_item_settings.visible = true
+
 
 func _hide_all_choice_data():
 	choice_category_settings.visible = false
@@ -5081,6 +5365,12 @@ func _rename_choice_category(new_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
+	#@ Rename the Main Category:
+	if data["Main"] == globals.current_choice_category:
+		data["Main"] = new_name
+
+	#@ Rename the Category:
 	for i in range(data["Categories"].size()):
 		if data["Categories"][i].keys()[0] == globals.current_choice_category:
 			var category_data = data["Categories"][i][globals.current_choice_category]
@@ -5088,13 +5378,17 @@ func _rename_choice_category(new_name: String) -> void:
 			data["Categories"][i][new_name] = category_data
 			globals.current_choice_category = new_name
 			break
+
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("category", new_name, "")
 
 #* Rename choice:
 func _rename_choice_item(new_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
 	for category_entry in data["Categories"]:
 		if category_entry.keys()[0] == globals.current_choice_category:
 			var choices = category_entry[globals.current_choice_category]["Choices"]
@@ -5106,13 +5400,17 @@ func _rename_choice_item(new_name: String) -> void:
 					globals.current_choice_item = new_name
 					break
 			break
+
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("choice", new_name, globals.current_choice_category)
 
 #* Rename timer:
 func _rename_choice_timer(new_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
 	for i in range(data["Timers"].size()):
 		if data["Timers"][i].keys()[0] == globals.current_choice_timer:
 			var timer_data = data["Timers"][i][globals.current_choice_timer]
@@ -5120,7 +5418,10 @@ func _rename_choice_timer(new_name: String) -> void:
 			data["Timers"][i][new_name] = timer_data
 			globals.current_choice_timer = new_name
 			break
+
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("timer", new_name, "")
 
 
 #* Delete timer:
@@ -5128,13 +5429,19 @@ func _delete_choice_timer(timer_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
+	#@ Remove Timer from the §Choice_List:
 	for i in range(data["Timers"].size()):
 		if data["Timers"][i].keys()[0] == timer_name:
 			data["Timers"].remove_at(i)
 			break
+
+	#@ Clear selection:
 	if globals.current_choice_timer == timer_name:
 		globals.current_choice_timer = ""
 		_hide_all_choice_data()
+
+	save_undo_step()
 	refresh_choice_tree()
 
 
@@ -5143,14 +5450,27 @@ func _delete_choice_category(category_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
+	#@ Remove Category from the §Choice_List:
 	for i in range(data["Categories"].size()):
 		if data["Categories"][i].keys()[0] == category_name:
 			data["Categories"].remove_at(i)
 			break
+
+	#@ Update Main Category:
+	if data["Main"] == category_name:
+		if data["Categories"].size() > 0:
+			data["Main"] = data["Categories"][0].keys()[0]
+		else:
+			data["Main"] = ""
+
+	#@ Clear selection:
 	if globals.current_choice_category == category_name:
 		globals.current_choice_category = ""
 		globals.current_choice_item = ""
 		_hide_all_choice_data()
+
+	save_undo_step()
 	refresh_choice_tree()
 
 
@@ -5159,6 +5479,8 @@ func _delete_choice_item(category_name: String, choice_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
+	#@ Remove Choice from the §Choice_List:
 	for category_entry in data["Categories"]:
 		if category_entry.keys()[0] == category_name:
 			var choices = category_entry[category_name]["Choices"]
@@ -5167,86 +5489,13 @@ func _delete_choice_item(category_name: String, choice_name: String) -> void:
 					choices.remove_at(i)
 					break
 			break
+
+	#@ Clear selection:
 	if globals.current_choice_category == category_name and globals.current_choice_item == choice_name:
 		globals.current_choice_item = ""
 		_show_category_data(category_name)
-	refresh_choice_tree()
 
-
-func _get_drag_data_fw(drag_position: Vector2, _from_node: Node) -> Variant:
-	var item = choice_tree.get_item_at_position(drag_position)
-	if item == null:
-		return null
-	var meta = item.get_metadata(0)
-	if meta["type"] != "choice":
-		return null
-	return {"choice": meta["name"], "category": meta["category"]}
-
-
-func _can_drop_data_fw(drop_position: Vector2, data: Variant, _from_node: Node) -> bool:
-	if not data is Dictionary or not data.has("choice"):
-		return false
-	var target = choice_tree.get_item_at_position(drop_position)
-	if target == null:
-		return false
-	var meta = target.get_metadata(0)
-	return meta["type"] == "choice" or meta["type"] == "category"
-
-
-func _drop_data_fw(drop_position: Vector2, data: Variant, _from_node: Node) -> void:
-	var target = choice_tree.get_item_at_position(drop_position)
-	if target == null:
-		return
-	var target_meta = target.get_metadata(0)
-	var source_choice = data["choice"]
-	var source_category = data["category"]
-	var target_category = target_meta["name"] if target_meta["type"] == "category" else target_meta["category"]
-
-	var line_data = _get_choice_list_data()
-	if line_data.is_empty():
-		return
-
-	#@ Find and remove from source category:
-	var choice_data = null
-	for category_entry in line_data["Categories"]:
-		if category_entry.keys()[0] == source_category:
-			var choices = category_entry[source_category]["Choices"]
-			for i in range(choices.size()):
-				if choices[i].keys()[0] == source_choice:
-					choice_data = choices[i]
-					choices.remove_at(i)
-					break
-			break
-
-	if choice_data == null:
-		return
-
-	#@ Resolve name conflict in target category:
-	var final_name = source_choice
-	for category_entry in line_data["Categories"]:
-		if category_entry.keys()[0] == target_category:
-			var existing_names = []
-			for c in category_entry[target_category]["Choices"]:
-				existing_names.append(c.keys()[0])
-			if existing_names.has(final_name):
-				var suffix = 1
-				while existing_names.has(final_name + "_(" + str(suffix) + ")"):
-					suffix += 1
-				var old_data = choice_data[source_choice]
-				choice_data.erase(source_choice)
-				final_name = source_choice + "_(" + str(suffix) + ")"
-				choice_data[final_name] = old_data
-
-			#@ Insert at target position:
-			var target_index = category_entry[target_category]["Choices"].size()
-			if target_meta["type"] == "choice" and target_meta["category"] == target_category:
-				for i in range(category_entry[target_category]["Choices"].size()):
-					if category_entry[target_category]["Choices"][i].keys()[0] == target_meta["name"]:
-						target_index = i
-						break
-			category_entry[target_category]["Choices"].insert(target_index, choice_data)
-			break
-
+	save_undo_step()
 	refresh_choice_tree()
 
 
@@ -5270,8 +5519,6 @@ func _get_choice_list_data() -> Dictionary:
 	return line["§Choice_List"]
 
 
-
-
 func _on_add_choice_category_pressed() -> void:
 	#% Clear last focus:
 	globals.last_focused_field = null
@@ -5281,6 +5528,11 @@ func _on_add_choice_category_pressed() -> void:
 func _on_add_choice_item_pressed() -> void:
 	#% Clear last focus:
 	globals.last_focused_field = null
+
+	#% Check that a category is selected:
+	if globals.current_choice_category == "":
+		show_warning("[color=yellow]Please select a category to add a choice to.[/color]")
+		return
 
 	prompt_menu.setup("New Choice Item")
 
@@ -5318,17 +5570,25 @@ func _add_choice_timer(timer_name: String) -> void:
 			"Custom": "",
 		}
 	})
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("timer", timer_name, "")
 
 
 func _add_choice_category(category_name: String) -> void:
 	var data = _get_choice_list_data()
 	if data.is_empty():
 		return
+
+	#@ Set Category as Main if it's the first:
+	if data["Categories"].size() == 0:
+		data["Main"] = category_name
+
+	#@ Append Category data to §Choice_List command:
 	data["Categories"].append({
 		category_name: {
 			"Title": "",
-			"Mouse": "Default",
+			"Mouse": "Menu",
 			"Tags": "",
 			"Prompt": "",
 			"Category Scene": "",
@@ -5343,7 +5603,10 @@ func _add_choice_category(category_name: String) -> void:
 			"Choices": [],
 		}
 	})
+
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("category", category_name, "")
 
 
 func _add_choice_item(choice_name: String) -> void:
@@ -5378,7 +5641,30 @@ func _add_choice_item(choice_name: String) -> void:
 				}
 			})
 			break
+	save_undo_step()
 	refresh_choice_tree()
+	_select_choice_tree_item("choice", choice_name, globals.current_choice_category)
+
+
+func _select_choice_tree_item(type: String, item_name: String, category: String) -> void:
+	var it = choice_tree.get_root().get_first_child()
+	while it != null:
+		var meta = it.get_metadata(0)
+		if meta["type"] == type and meta["name"] == item_name:
+			choice_tree.set_selected(it, 0)
+			globals.selected_choice_item = it
+			_on_choice_item_changed()
+			return
+		var child = it.get_first_child()
+		while child != null:
+			var child_meta = child.get_metadata(0)
+			if child_meta["type"] == type and child_meta["name"] == item_name and child_meta.get("category", "") == category:
+				choice_tree.set_selected(child, 0)
+				globals.selected_choice_item = child
+				_on_choice_item_changed()
+				return
+			child = child.get_next()
+		it = it.get_next()
 
 #endregion
 
@@ -5399,6 +5685,11 @@ func _on_comment_color_color_changed(color: Color) -> void:
 	var line_type = line.keys()[0]
 	line[line_type]["Color"] = var_to_str(color)
 	update_line_list()
+
+
+func _on_comment_color_popup_closed() -> void:
+	save_undo_step()
+
 
 #endregion
 
@@ -5449,7 +5740,7 @@ func _on_tools_color_mode_pressed() -> void:
 func _on_tools_color_hex_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var color = tools_color_picker.color
 	var hex = color.to_html(true)
@@ -5499,8 +5790,14 @@ func _on_tools_color_hex_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
@@ -5513,7 +5810,7 @@ func _on_tools_color_hex_copy_pressed() -> void:
 func _on_tools_color_rgb_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var color = tools_color_picker.color
 	var before := ""
@@ -5562,8 +5859,14 @@ func _on_tools_color_rgb_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
@@ -5576,8 +5879,9 @@ func _on_tools_color_rgb_copy_pressed() -> void:
 func _on_substitution_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
+
 	var sym = globals.substitution_symbol
 	var sep = globals.separator_symbol
 	var target = globals.last_focused_field
@@ -5594,7 +5898,11 @@ func _on_substitution_insert_pressed() -> void:
 			else:
 				e.text = txt.substr(0, from) + sym + mid + sep + sym + txt.substr(to)
 			e.set_caret_column(from + sym.length())
+		else:
+			e.text = txt.substr(0, from) + sym + sep + sym + txt.substr(from)
+			e.set_caret_column(from + sym.length())
 		e.grab_focus()
+
 	elif target is TextEdit:
 		var e: TextEdit = target
 		e.begin_complex_operation()
@@ -5612,18 +5920,29 @@ func _on_substitution_insert_pressed() -> void:
 			else:
 				e.insert_text_at_caret(sym + sel_text + sep + sym)
 			e.set_caret_column(e.get_caret_column() - sym.length())
+		else:
+			e.set_caret_line(from_line)
+			e.set_caret_column(from_col)
+			e.insert_text_at_caret(sym + sep + sym)
+			e.set_caret_column(e.get_caret_column() - sym.length())
 		e.end_complex_operation()
 		e.grab_focus()
+
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
 	save_undo_step()
 
 
 func _on_text_var_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var before = globals.text_var_symbol_start
 	var after = globals.text_var_symbol_end
@@ -5662,15 +5981,21 @@ func _on_text_var_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_role_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.role_symbol
 	var target = globals.last_focused_field
@@ -5706,15 +6031,21 @@ func _on_role_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_singleton_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.singleton_symbol
 	var target = globals.last_focused_field
@@ -5750,15 +6081,21 @@ func _on_singleton_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_node_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.node_symbol
 	var target = globals.last_focused_field
@@ -5794,15 +6131,21 @@ func _on_node_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_var_dict_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.vardict_symbol
 	var target = globals.last_focused_field
@@ -5838,15 +6181,21 @@ func _on_var_dict_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_super_singleton_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.super_singleton_symbol
 	var target = globals.last_focused_field
@@ -5882,15 +6231,21 @@ func _on_super_singleton_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_super_node_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.super_node_symbol
 	var target = globals.last_focused_field
@@ -5926,15 +6281,21 @@ func _on_super_node_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_super_var_dict_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = globals.super_vardict_symbol
 	var target = globals.last_focused_field
@@ -5970,14 +6331,20 @@ func _on_super_var_dict_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 func _on_res_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = "res://"
 	var target = globals.last_focused_field
@@ -6013,15 +6380,21 @@ func _on_res_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_user_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = "user://"
 	var target = globals.last_focused_field
@@ -6057,15 +6430,21 @@ func _on_user_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_v_res_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = "v_res://"
 	var target = globals.last_focused_field
@@ -6101,15 +6480,21 @@ func _on_v_res_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 func _on_v_user_insert_pressed() -> void:
 	if globals.last_focused_field == null:
 		return
-	
+
 	_suppress_undo_save = true
 	var sym = "v_user://"
 	var target = globals.last_focused_field
@@ -6145,8 +6530,14 @@ func _on_v_user_insert_pressed() -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
@@ -6307,15 +6698,21 @@ func bbcode_insert(tag: String) -> void:
 		e.end_complex_operation()
 		e.grab_focus()
 	_suppress_undo_save = false
+
 	#% Manually sync to dialogue data:
-	_on_spoken_line_speech_text_changed()
+	var target_root = target.get_parent().get_parent()
+	if globals.current_line_type != "Spoken Line":
+		target_root.data_entry()
+	if globals.last_focused_field == spoken_text_edit:
+		_on_spoken_line_speech_text_changed()
+
 	save_undo_step()
 
 
 #* Update the text of the symbol insert buttons to reflect actual symbols:
 func update_variable_insert_buttons():
 	role_insert_button.text = globals.role_symbol
-	singleton_insert_button = globals.singleton_symbol
+	singleton_insert_button.text = globals.singleton_symbol
 	node_insert_button.text = globals.node_symbol
 	vardict_insert_button.text = globals.vardict_symbol
 	super_singleton_insert_button.text = globals.super_singleton_symbol
@@ -6830,6 +7227,8 @@ func _get_spoken_lines_from_entry(line_entry: Dictionary) -> Array:
 #?###########
 #region
 func save_undo_step() -> void:
+	#print("save_undo_step: suppress=", _suppress_undo_save, " applying=", _applying_undo_step, " stack=", get_stack())
+
 	if _suppress_undo_save or _applying_undo_step:
 		return
 
@@ -6850,6 +7249,7 @@ func save_undo_step() -> void:
 		"profile_inserts": globals.profile_inserts.duplicate(true),
 		"languages": globals.languages.duplicate(true),
 		"variants": globals.variants.duplicate(true),
+		"disabled_variants": globals.disabled_variants.duplicate(),
 		"favorites": globals.favorites.duplicate(true),
 		"selected_lines": selected_lines.duplicate(),
 		"current_conversation": globals.current_conversation,
@@ -6908,10 +7308,8 @@ func redo() -> void:
 
 #* Reload undo step:
 func _apply_undo_step(step: Dictionary) -> void:
-	#@ Make sure none of the undo process saves more undo steps:
 	_applying_undo_step = true
 
-	#@ Reload data:
 	globals.dialogue = step["dialogue"].duplicate(true)
 	globals.user_presets = step["user_presets"].duplicate(true)
 	globals.profile_presets = step["profile_presets"].duplicate(true)
@@ -6919,6 +7317,7 @@ func _apply_undo_step(step: Dictionary) -> void:
 	globals.profile_inserts = step["profile_inserts"].duplicate(true)
 	globals.languages = step["languages"].duplicate(true)
 	globals.variants = step["variants"].duplicate(true)
+	globals.disabled_variants = step["disabled_variants"].duplicate()
 	globals.favorites = step["favorites"].duplicate(true)
 	selected_lines = step["selected_lines"].duplicate()
 	globals.current_conversation = step["current_conversation"]
@@ -6933,6 +7332,21 @@ func _apply_undo_step(step: Dictionary) -> void:
 	globals.current_choice_timer = step["current_choice_timer"]
 	globals.selected_choice_item = step["selected_choice_item"]
 
+	_populate_all_spoken_lines()
+
+	#@ Re-read current_line_type from actual data in case line indices shifted:
+	if globals.current_line >= 0:
+		var source = _get_line_source()
+		if source.has(globals.current_conversation) and source[globals.current_conversation].has(globals.current_block):
+			var lines = source[globals.current_conversation][globals.current_block]["Text"]
+			if globals.current_line < lines.size():
+				globals.current_line_type = lines[globals.current_line].keys()[0]
+
+	#% Cache the restored line state — selector refresh calls below can clobber it:
+	var restored_line: int = globals.current_line
+	var restored_line_type: String = globals.current_line_type
+	var restored_selected_lines: Array = selected_lines.duplicate()
+
 	#@ Export inserts and presets for consistency:
 	export_user_inserts()
 	export_profile_inserts()
@@ -6945,6 +7359,11 @@ func _apply_undo_step(step: Dictionary) -> void:
 	_rebuild_favorites()
 	update_conversation_selector(true)
 	update_line_list()
+
+	#% Restore the cached line state after selector/list refreshes:
+	globals.current_line = restored_line
+	globals.current_line_type = restored_line_type
+	selected_lines = restored_selected_lines.duplicate()
 
 	#@ Clear data fields if no line selected after undo:
 	if globals.current_line >= 0:
@@ -6962,6 +7381,15 @@ func _apply_undo_step(step: Dictionary) -> void:
 				item = item.get_next()
 		if globals.current_line_type != "":
 			_show_line_editor()
+			if globals.current_line_type == "§Comment":
+				var source = _get_line_source()
+				var lines = source[globals.current_conversation][globals.current_block]["Text"]
+				var color_str = lines[globals.current_line]["§Comment"].get("Color", "")
+				var color = str_to_var(color_str)
+				if color is Color:
+					comment_color_button.color = color
+				else:
+					comment_color_button.color = Color.WHITE
 	else:
 		hide_line_data(false)
 
@@ -6976,16 +7404,17 @@ func _apply_undo_step(step: Dictionary) -> void:
 				var line_data = lines[globals.current_line][globals.current_line_type]
 				has_spoken_line = line_data.get("Type", "") == "Spoken Line" and line_data.get("Commands", {}).has("Spoken Line")
 				has_choice_list = line_data.get("Type", "") == "§Choice_List" and line_data.get("Commands", {}).has("§Choice_List")
+
 	if has_spoken_line:
 		refresh_variant_tree()
 		refresh_translation_tree()
 		refresh_counters()
+
 	if has_choice_list:
 		refresh_choice_tree()
 		_reselect_choice_tree_item()
 		_on_choice_item_changed()
 
-	#@ Release the anti-undo step safety:
 	_applying_undo_step = false
 
 
@@ -7016,8 +7445,8 @@ func _reselect_choice_tree_item() -> void:
 					subchild.select(0)
 					globals.selected_choice_item = subchild
 					return
-				subchild = subchild.get_next_sibling()
-		child = child.get_next_sibling()
+				subchild = subchild.get_next()
+		child = child.get_next()
 
 
 #endregion
@@ -7598,6 +8027,43 @@ func _convert_line_1_0_to_1_1(line_entry: Dictionary) -> void:
 			d["All"] = str(int(d["All"]))
 		line_entry["§A_Pause"] = d
 
+	elif line_type in ["§CS_Anim", "§CS_Sprite"]:
+		var d: Dictionary = line_entry[line_type]
+		if d.has("Play"):
+			var play = d["Play"]
+			var loop = d.get("Loop", 0)
+
+			if play == 0 or play == "0" or play == false:
+				d["Loop"] = "0"
+			elif play == 1 or play == "1" or play == true:
+				var loop_int: int
+				if typeof(loop) == TYPE_STRING:
+					loop_int = int(loop.strip_edges())
+				else:
+					loop_int = int(loop)
+				if loop_int <= 0:
+					d["Loop"] = "-1"
+				else:
+					d["Loop"] = str(loop_int)
+
+			d.erase("Play")
+		elif d.has("Loop"):
+			d["Loop"] = str(d["Loop"])
+		line_entry[line_type] = d
+
+	elif line_type in ["§CS_Anim_Stop", "§CS_Sprite_Stop"]:
+		var d: Dictionary = line_entry[line_type]
+		if d.has("Default"):
+			var val = d["Default"]
+			if typeof(val) in [TYPE_INT, TYPE_FLOAT]:
+				if int(val) == 0:
+					d["Default"] = "-1"
+				else:
+					d["Default"] = str(int(val))
+			elif typeof(val) == TYPE_STRING and val.strip_edges() == "0":
+				d["Default"] = "-1"
+		line_entry[line_type] = d
+
 
 #* Parse a file written with to_gdstring() or _dict_to_string() using the Expression evaluator:
 func _parse_gdstring(raw: String) -> Variant:
@@ -7620,7 +8086,6 @@ func _parse_gdstring(raw: String) -> Variant:
 
 #* Helper to write the log file:
 func _write_log(path: String, lines: Array) -> void:
-	print(globals.current_user)
 	var log_dir := "user://Users/".path_join(globals.current_user).path_join(globals.current_profile).path_join("Saves/Converted")
 	DirAccess.make_dir_recursive_absolute(log_dir)
 	var f := FileAccess.open(path, FileAccess.WRITE)

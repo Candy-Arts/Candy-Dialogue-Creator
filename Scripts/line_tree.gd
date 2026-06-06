@@ -2,6 +2,8 @@ extends Tree
 
 @onready var main = get_node("/root/MainUI")
 
+
+
 func _get_drag_data(at_position: Vector2) -> Variant:
 	var item = get_item_at_position(at_position)
 	if item == null:
@@ -16,7 +18,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 		drop_mode_flags = Tree.DROP_MODE_INBETWEEN | Tree.DROP_MODE_ON_ITEM
 		#% Store whether it's a conversation or block:
 		var is_block = item.get_parent() != get_root()
-		return {"sort_mode": true, "text": item.get_text(0), "is_block": is_block}
+		return {"sort_mode": true, "text": item.get_text(0), "is_block": is_block, "conv": item.get_parent().get_text(0) if is_block else ""}
 
 	#% Normal line drag:
 	var indices: Array = []
@@ -70,13 +72,13 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		var target_is_block = target.get_parent() != get_root()
 		var dragged_name: String = data["text"]
 		var is_block: bool = data["is_block"]
-
 		if is_block:
-			_drop_block(dragged_name, target, target_is_block, section)
+			_drop_block(dragged_name, data["conv"], target, target_is_block, section)
 		else:
 			_drop_conversation(dragged_name, target, section)
-
+		globals.current_line = -1
 		drop_mode_flags = 0
+		main.save_undo_step()
 		main.call_deferred("update_line_list")
 		return
 
@@ -84,11 +86,9 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	var target_item = get_item_at_position(at_position)
 	if target_item == null:
 		return
-
 	var indices: Array = data["indices"]
 	var to_index: int = target_item.get_metadata(0)
 	section = get_drop_section_at_position(at_position)
-
 	var source: Dictionary = {}
 	if globals.current_conversation == "USER PRESETS":
 		source = globals.user_presets
@@ -96,32 +96,27 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		source = globals.profile_presets
 	else:
 		source = globals.dialogue
-
 	var lines = source[globals.current_conversation][globals.current_block]["Text"]
-
 	indices.sort()
 	var moved_lines: Array = []
 	for i in indices:
 		moved_lines.append(lines[i])
-
 	for i in range(indices.size() - 1, -1, -1):
 		lines.remove_at(indices[i])
-
 	var removed_before = 0
 	for i in indices:
 		if i < to_index:
 			removed_before += 1
 	to_index -= removed_before
-
 	if section == 1:
 		to_index += 1
-
 	to_index = clamp(to_index, 0, lines.size())
-
 	for i in range(moved_lines.size()):
 		lines.insert(to_index + i, moved_lines[i])
-
+	globals.current_line = to_index
+	globals.current_line_type = lines[to_index].keys()[0]
 	drop_mode_flags = 0
+	main.save_undo_step()
 	get_node("/root/MainUI").call_deferred("update_line_list")
 
 
@@ -160,16 +155,11 @@ func _drop_conversation(conv_name: String, target: TreeItem, section: int) -> vo
 	main.update_conversation_selector(true)
 
 
-func _drop_block(block_name: String, target: TreeItem, target_is_block: bool, section: int) -> void:
+func _drop_block(block_name: String, source_conv: String, target: TreeItem, target_is_block: bool, section: int) -> void:
 	var dialogue = globals.dialogue
 
-	#% Find source conversation:
-	var source_conv := ""
-	for conv in dialogue.keys():
-		if dialogue[conv].has(block_name):
-			source_conv = conv
-			break
-	if source_conv == "":
+	#% Validate source:
+	if source_conv == "" or not dialogue.has(source_conv) or not dialogue[source_conv].has(block_name):
 		return
 
 	#% Determine target conversation and position:

@@ -1,7 +1,7 @@
 extends Node
 
 #° META:
-var dc_version = "1.1.0.a"
+var dc_version = "1.1.0"
 var dialogue_version = "1.1.0"
 
 var editor_state = ""
@@ -18,7 +18,7 @@ var current_save = ""
 
 var current_conversation = "Conversation_1"
 var current_block = "Block_1"
-var current_line = 0
+var current_line = -1
 var current_line_type = "§Comment"
 
 var current_variant = "Default"
@@ -58,36 +58,37 @@ var unsaved_work = false
 #^ UI Element Visibility:
 var meta_visible = true
 var dev_comments_visible = true
-var overrides_area_visible = true
+var overrides_area_visible = false
 var translate_area_visible = false
 var portrait_area_visible = true
 var voice_area_visible = true
 var disposition_area_visible = true
 
-var choice_general_prompt_visible = true
-var choice_general_mouse_visible = true
-var choice_general_setup_visible = true
-var choice_general_scenes_visible = true
-var choice_general_tags_visible = true
-var choice_general_custom_visible = true
+var choice_general_prompt_visible = false
+var choice_general_mouse_visible = false
+var choice_general_setup_visible = false
+var choice_general_scenes_visible = false
+var choice_general_tags_visible = false
+var choice_general_custom_visible = false
 
-var choice_category_prompt_visible = true
-var choice_category_mouse_visible = true
-var choice_category_setup_visible = true
-var choice_category_scenes_visible = true
-var choice_category_tags_visible = true
-var choice_category_custom_visible = true
+var choice_category_prompt_visible = false
+var choice_category_mouse_visible = false
+var choice_category_setup_visible = false
+var choice_category_scenes_visible = false
+var choice_category_tags_visible = false
+var choice_category_custom_visible = false
 
-var choice_item_tooltip_visible = true
-var choice_item_setup_visible = true
-var choice_item_scene_visible = true
-var choice_item_tags_visible = true
-var choice_item_custom_visible = true
+var choice_item_tooltip_visible = false
+var choice_item_setup_visible = false
+var choice_item_scene_visible = false
+var choice_item_tags_visible = false
+var choice_item_custom_visible = false
 
-var choice_timer_setup_visible = true
-var choice_timer_timeout_visible = true
-var choice_timer_tags_visible = true
-var choice_timer_custom_visible = true
+var choice_timer_setup_visible = false
+var choice_timer_timeout_visible = false
+var choice_timer_display_visible = false
+var choice_timer_tags_visible = false
+var choice_timer_custom_visible = false
 
 #^ Media Preview:
 var video_preview_width = 512
@@ -98,6 +99,8 @@ var portrait_preview_width = 128
 var portrait_sprite_fps = 30.0
 var bust_preview_width = 128
 var bust_sprite_fps = 30.0
+var sprite_preview_width = 128
+var sprite_preview_fps = 30.0
 
 #^ Undo:
 var undo_steps_min = 0
@@ -185,10 +188,11 @@ var ui_colors = {
     },
 }
 
-var conversation_default_name = "Conversation_"
-var block_default_name = "Block_"
+var conversation_new_name = "Conversation_"
+var block_default_name = "Block_1"
+var block_new_name = "Block_"
 
-var default_text_direction = "ltr"
+var default_text_direction = "LtR"
 
 var warning_display_time = "0.05"
 
@@ -202,7 +206,7 @@ var auto_save_freq = "60"
 
 
 #^ Symbols:
-var symbol_script_path = "Candy_DE/Scripts/User_Data/Candy_Database.gd"
+var symbol_script_path = "Candy_DE/Scripts/User_Data/Candy_Properties.gd"
 var singleton_symbol = "£"
 var node_symbol = "$"
 var vardict_symbol = "€"
@@ -225,6 +229,7 @@ var default_project_paths = {
 	"*Portraits": "Candy_DE/Media/Characters/Portraits",
 	"*Busts": "Candy_DE/Media/Characters/Busts",
 	"*Voice_Files": "Candy_DE/Media/Characters/Voices",
+	"*Sprites": "Candy_DE/Media/Characters/Sprites",
 
 	"Backgrounds": "Candy_DE/Media/General/Backgrounds",
 	"Images": "Candy_DE/Media/General/Images",
@@ -245,6 +250,7 @@ var custom_project_paths = {
 	"*Portraits": "Candy_DE/Media/Characters/Portraits",
 	"*Busts": "Candy_DE/Media/Characters/Busts",
 	"*Voice_Files": "Candy_DE/Media/Characters/Voices",
+	"*Sprites": "Candy_DE/Media/Characters/Sprites",
 
 	"Backgrounds": "Candy_DE/Media/General/Backgrounds",
 	"Images": "Candy_DE/Media/General/Images",
@@ -275,6 +281,8 @@ var variants = {
 	"": {},
 }
 
+var disabled_variants: Array = []
+
 var preview_bg_color = Color(0, 0, 0, 1)
 var preview_text_color = Color(1, 1, 1, 1)
 var preview_portrait_color = Color(0, 0, 0, 1)
@@ -296,6 +304,7 @@ var project_resources = {
 	"*Portraits": {},
 	"*Busts": {},
 	"*Voice_Files": {},
+	"*Sprites": {},
 	"Backgrounds": {},
 	"Images": {},
 	"Audio": {},
@@ -361,7 +370,7 @@ var user_presets = {
 		"[Category_1] User_Preset_1": {
 			"Text": [
 				{"§Comment": {
-					"Color": "",
+					"Color": "Color(1, 1, 1, 1)",
 					"Comment": "",
 				}},
 			]
@@ -374,7 +383,7 @@ var profile_presets = {
 		"[Category_1] Profile_Preset_1": {
 			"Text": [
 				{"§Comment": {
-					"Color": "",
+					"Color": "Color(1, 1, 1, 1)",
 					"Comment": "",
 				}},
 			]
@@ -387,7 +396,7 @@ var dialogue = {
 		"Block_1": {
 			"Text":[
 				{"§Comment": {
-					"Color": "",
+					"Color": "Color(1, 1, 1, 1)",
 					"Comment": "",
 				}},
 			]
@@ -471,8 +480,9 @@ var line_colors = {
 	"§LM": 				{"Text": Color(0.94, 0.25, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
 
 	#@ INPUT
-	"§Input": 			{"Text": Color(0.33, 0.70, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
 	"§Mouse": 			{"Text": Color(0.33, 0.70, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
+	"§Input": 			{"Text": Color(0.33, 0.70, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
+	"§Player_Advance":	{"Text": Color(0.33, 0.70, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
 
 	#@ CHOICES
 	"§Choice_List":		{"Text": Color(0.33, 0.70, 1.00, 1.00),		"BG": Color(0.00, 0.00, 0.00, 0.50)},
@@ -824,6 +834,8 @@ var line_templates = {
 	"§Wait": {
 		"Time": "",
 	},
+	"§Player_Advance": {
+	},
 	"§Hide": {
 		"Box": "1",
 		"Portrait": "1",
@@ -1053,7 +1065,6 @@ var line_templates = {
 		"Targets": "",
 		"Path 2": "",
 		"Animation": "",
-		"Play": "1",
 		"Loop": "1",
 		"Wait": "0",
 		"Time": "",
@@ -1077,7 +1088,6 @@ var line_templates = {
 		"Path 2": "",
 		"File": "",
 		"Animation": "",
-		"Play": "1",
 		"Loop": "1",
 		"Wait": "0",
 		"Time": "",

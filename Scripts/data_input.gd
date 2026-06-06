@@ -67,7 +67,7 @@ func _ready() -> void:
 	#% Register self in database:
 	if not main.line_data_fields.has(parent_command):
 		main.line_data_fields[parent_command] = {}
-	main.line_data_fields[parent_command][line_key] = self
+	main.line_data_fields[parent_command][line_key + "_" + str(input_logic)] = self
 
 	#% Set label text:
 	label.text = label_text
@@ -117,6 +117,9 @@ func _is_condition_command(command: String) -> bool:
 
 #* Update data in the dialogue (or presets) based on input_logic:
 func data_entry():
+	if line_key == "Title":
+		print("data_entry: line_key=Title text=", text_field.text, " line=", globals.current_line)
+
 	#@ Identify the source:
 	var source = main._get_line_source()
 	if not source.has(globals.current_conversation):
@@ -425,6 +428,9 @@ func data_entry():
 
 #* Load and display data from the line:
 func data_load():
+	if line_key == "Title":
+		print("data_load: line_key=Title line=", globals.current_line, " value=", text_field.text, " focused=", text_field.has_focus())
+
 	#@ Identify the source:
 	var source = main._get_line_source()
 	if not source.has(globals.current_conversation):
@@ -471,8 +477,6 @@ func data_load():
 					return
 
 		InputLogic.CONDITION_EFFECT:
-			print("CONDITION_EFFECT data_load called, text: ", line[line_type][line_key])
-			print("line_data_fields has §Call: ", main.line_data_fields.has("§Call"))
 			#% Update text field:
 			text_field.text = line[line_type].get(line_key, "")
 
@@ -650,7 +654,6 @@ func _add_dropdown_item(item_label: String, meta: Variant) -> void:
 
 #* Populate drop-down lists:
 func populate_dropdown() -> void:
-	main.invisishield.visible = true
 	var vbox = main.dropdown_list.get_node("ScrollContainer/VBoxContainer")
 	for child in vbox.get_children():
 		child.queue_free()
@@ -666,11 +669,23 @@ func populate_dropdown() -> void:
 		"BoolToggle":
 			_build_dropdown([["True", "true"], ["False", "false"], ["Toggle", "toggle"]])
 
+		"SpokenLineOverride":
+			_build_dropdown([["Forbid", "-1"], ["Default", "0"], ["Force", "1"]])
+
+		"PauseLinesMedia":
+			_build_dropdown([["Spoken Lines", "0"], ["All Lines", "1"]])
+
+		"ShowHide":
+			_build_dropdown([["Ignore", "0"], ["Hide", "1"]])
+
+		"ShowHideMedia":
+			_build_dropdown([["Hide", "-1"], ["Ignore", "0"], ["Show", "1"]])
+
 		"Loop":
 			_build_dropdown([["Infinite", "-1"], ["Disable", "0"]])
 
 		"StopFrame":
-			_build_dropdown([["First frame", "1"], ["Last frame", "0"]])
+			_build_dropdown([["Last Frame", "-1"], ["Current frame", "0"]])
 
 		"SpeechDirection":
 			_build_dropdown([["Left to Right", "LtR"], ["Right to Left", "RtL"]])
@@ -692,6 +707,9 @@ func populate_dropdown() -> void:
 				["+Y", "+Y"],
 				["-Y", "-Y"],
 			])
+
+		"BasicOperators":
+			_build_dropdown([["=", "="], ["+", "+"], ["-", "-"], ["*", "*"], ["/", "/"]])
 
 		"Operators":
 			var operator_categories = {
@@ -741,6 +759,41 @@ func populate_dropdown() -> void:
 
 		"MouseMode":
 			_build_dropdown([
+				["Visible", "Visible"],
+				["Captured", "Captured"],
+				["Hidden", "Hidden"],
+				["Confined", "Confined"],
+				["Confined_Hidden", "Confined_Hidden"],
+			])
+
+		"MouseModeCommand":
+			_build_dropdown([
+				["Visible", "Visible"],
+				["Captured", "Captured"],
+				["Hidden", "Hidden"],
+				["Confined", "Confined"],
+				["Confined_Hidden", "Confined_Hidden"],
+				["Dialogue_Start", "Dialogue_Start"],
+				["Dialogue_End", "Dialogue_End"],
+				["Choice", "Choice"],
+			])
+
+		"MouseModeDefaultNone":
+			_build_dropdown([
+				["None", ""],
+				["Default", "Default"],
+				["Visible", "Visible"],
+				["Captured", "Captured"],
+				["Hidden", "Hidden"],
+				["Confined", "Confined"],
+				["Confined_Hidden", "Confined_Hidden"],
+			])
+
+		"MouseModeMenuDefaultNone":
+			_build_dropdown([
+				["Menu", "Menu"],
+				["None", ""],
+				["Default", "Default"],
 				["Visible", "Visible"],
 				["Captured", "Captured"],
 				["Hidden", "Hidden"],
@@ -949,6 +1002,52 @@ func populate_dropdown() -> void:
 			else:
 				_build_dropdown(items, submenu_groups, false, false, false, false, false, true)
 
+		"VNBustAnimation":
+			var source = main._get_line_source()
+			if not source.has(globals.current_conversation) or \
+			not source[globals.current_conversation].has(globals.current_block):
+				_build_dropdown([["No files available.", null]])
+				return
+			var lines = source[globals.current_conversation][globals.current_block]["Text"]
+			if globals.current_line < 0 or globals.current_line >= lines.size():
+				_build_dropdown([["No files available.", null]])
+				return
+			var line = lines[globals.current_line]
+			var line_data = line[globals.current_line_type]
+			if _is_condition_command(globals.current_line_type) and line_data.has("Commands") and line_data["Commands"].has(parent_command):
+				line_data = line_data["Commands"][parent_command]
+			var reference = line_data.get("Reference", "")
+			var file = line_data.get("File", "")
+			if reference == "" or file == "":
+				_build_dropdown([["No files available.", null]])
+				return
+			if not globals.project_resources["*Busts"].has(reference):
+				_build_dropdown([["No match to Speaker Reference", null]])
+				return
+
+			var char_folder = globals.project_resources["*Busts"][reference]
+			if not char_folder.has("Sprite_Frames") or not char_folder["Sprite_Frames"].has(file):
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var resource_path = char_folder["Sprite_Frames"][file]
+			if not FileAccess.file_exists(resource_path):
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var sprite_frames_res = ResourceLoader.load(resource_path)
+			if sprite_frames_res == null or not sprite_frames_res is SpriteFrames:
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var items = []
+			for anim_name in sprite_frames_res.get_animation_names():
+				items.append([anim_name, anim_name])
+
+			if items.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown(items)
 
 		"VoiceFiles":
 			var source = main._get_line_source()
@@ -1109,6 +1208,65 @@ func populate_dropdown() -> void:
 			else:
 				_build_dropdown(items, [], false, true)
 
+		"CSSprites":
+			var source = main._get_line_source()
+			if not source.has(globals.current_conversation) or \
+			not source[globals.current_conversation].has(globals.current_block):
+				_build_dropdown([["No files available.", null]])
+				return
+			var lines = source[globals.current_conversation][globals.current_block]["Text"]
+			if globals.current_line < 0 or globals.current_line >= lines.size():
+				_build_dropdown([["No files available.", null]])
+				return
+			var line = lines[globals.current_line]
+			var line_data = line[globals.current_line_type]
+			if _is_condition_command(globals.current_line_type) and line_data.has("Commands") and line_data["Commands"].has(parent_command):
+				line_data = line_data["Commands"][parent_command]
+			var targets_raw = line_data.get("Targets", "")
+			if targets_raw == "":
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var actors = []
+			for t in targets_raw.split(","):
+				var actor = t.strip_edges()
+				if actor != "":
+					actors.append(actor)
+
+			if actors.is_empty():
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var submenu_groups = []
+			for actor in actors:
+				if not globals.project_resources["*Sprites"].has(actor):
+					continue
+				var actor_folder = globals.project_resources["*Sprites"][actor]
+				var sprite_items = []
+				var sprite_frames_items = []
+				var frame_paths = []
+				for filename in actor_folder.keys():
+					var file_path = actor_folder[filename]
+					if not file_path is Dictionary:
+						frame_paths.append(file_path)
+				for filename in actor_folder.keys():
+					var file_path = actor_folder[filename]
+					if filename == "Sprite_Frames" and file_path is Dictionary:
+						for sf_name in file_path.keys():
+							if not file_path[sf_name] is Dictionary:
+								sprite_frames_items.append([sf_name, sf_name])
+					elif not file_path is Dictionary:
+						sprite_items.append([filename, filename, file_path, frame_paths])
+				if not sprite_items.is_empty():
+					submenu_groups.append([actor + ": Sprites", sprite_items, true])
+				if not sprite_frames_items.is_empty():
+					submenu_groups.append([actor + ": Sprite Frames", sprite_frames_items])
+
+			if submenu_groups.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown([], submenu_groups)
+
 		"Backgrounds":
 			var source = main._get_line_source()
 			if not source.has(globals.current_conversation) or \
@@ -1245,29 +1403,121 @@ func populate_dropdown() -> void:
 				submenu_groups.append([scene_name, sub_items])
 			_build_dropdown([], submenu_groups)
 
-		"InputScenes":
+		"BGAnimationLibraries":
+			var anim_libs = globals.project_resources["Backgrounds"].get("Animation_Libraries", {})
+			if anim_libs.is_empty():
+				_build_dropdown([["No files available.", null]])
+				return
 			var items = []
-			for scene_name in globals.project_resources["Player_Input_Scenes"].keys():
-				items.append([scene_name, scene_name])
-			_build_dropdown(items)
+			for filename in anim_libs.keys():
+				if not anim_libs[filename] is Dictionary:
+					items.append([filename, filename])
+			if items.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown(items)
 
-		"ChoiceMenusScenes":
+		"VNAnimationLibraries":
+			var anim_libs = globals.project_resources["*Busts"].get("Animation_Libraries", {})
+			if anim_libs.is_empty():
+				_build_dropdown([["No files available.", null]])
+				return
 			var items = []
-			for scene_name in globals.project_resources["Choice_Menu_Scenes"].keys():
-				items.append([scene_name, scene_name])
-			_build_dropdown(items)
+			for filename in anim_libs.keys():
+				if not anim_libs[filename] is Dictionary:
+					items.append([filename, filename])
+			if items.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown(items)
 
-		"ChoiceCategoriesScenes":
-			var items = []
-			for scene_name in globals.project_resources["Choice_Category_Scenes"].keys():
-				items.append([scene_name, scene_name])
-			_build_dropdown(items)
+		"BGEffects":
+			var source = main._get_line_source()
+			if not source.has(globals.current_conversation) or \
+			not source[globals.current_conversation].has(globals.current_block):
+				_build_dropdown([["No files available.", null]])
+				return
+			var lines = source[globals.current_conversation][globals.current_block]["Text"]
+			if globals.current_line < 0 or globals.current_line >= lines.size():
+				_build_dropdown([["No files available.", null]])
+				return
+			var line = lines[globals.current_line]
+			var line_data = line[globals.current_line_type]
+			if _is_condition_command(globals.current_line_type) and line_data.has("Commands") and line_data["Commands"].has(parent_command):
+				line_data = line_data["Commands"][parent_command]
+			var library_file = line_data.get("Library", "")
+			if library_file == "":
+				_build_dropdown([["No files available.", null]])
+				return
 
-		"ChoiceButtonsScenes":
+			#% Find library file in the general Animation_Libraries folder:
+			var anim_libs = globals.project_resources["Backgrounds"].get("Animation_Libraries", {})
+			if not anim_libs.has(library_file):
+				_build_dropdown([["No files available.", null]])
+				return
+			var library_path = anim_libs[library_file]
+			if not FileAccess.file_exists(library_path):
+				_build_dropdown([["No files available.", null]])
+				return
+
+			#% Load animation names from the library resource:
+			var library_res = ResourceLoader.load(library_path)
+			if library_res == null:
+				_build_dropdown([["No files available.", null]])
+				return
+
 			var items = []
-			for scene_name in globals.project_resources["Choice_Button_Scenes"].keys():
-				items.append([scene_name, scene_name])
-			_build_dropdown(items)
+			for anim_name in library_res.get_animation_list():
+				items.append([anim_name, anim_name])
+
+			if items.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown(items)
+
+		"VNEffects":
+			var source = main._get_line_source()
+			if not source.has(globals.current_conversation) or \
+			not source[globals.current_conversation].has(globals.current_block):
+				_build_dropdown([["No files available.", null]])
+				return
+			var lines = source[globals.current_conversation][globals.current_block]["Text"]
+			if globals.current_line < 0 or globals.current_line >= lines.size():
+				_build_dropdown([["No files available.", null]])
+				return
+			var line = lines[globals.current_line]
+			var line_data = line[globals.current_line_type]
+			if _is_condition_command(globals.current_line_type) and line_data.has("Commands") and line_data["Commands"].has(parent_command):
+				line_data = line_data["Commands"][parent_command]
+			var library_file = line_data.get("Library", "")
+			if library_file == "":
+				_build_dropdown([["No files available.", null]])
+				return
+
+			#% Find library file in the general Animation_Libraries folder:
+			var anim_libs = globals.project_resources["*Busts"].get("Animation_Libraries", {})
+			if not anim_libs.has(library_file):
+				_build_dropdown([["No files available.", null]])
+				return
+			var library_path = anim_libs[library_file]
+			if not FileAccess.file_exists(library_path):
+				_build_dropdown([["No files available.", null]])
+				return
+
+			#% Load animation names from the library resource:
+			var library_res = ResourceLoader.load(library_path)
+			if library_res == null:
+				_build_dropdown([["No files available.", null]])
+				return
+
+			var items = []
+			for anim_name in library_res.get_animation_list():
+				items.append([anim_name, anim_name])
+
+			if items.is_empty():
+				_build_dropdown([["No files available.", null]])
+			else:
+				_build_dropdown(items)
 
 		"ConditionEffects":
 			var command_categories = {
@@ -1294,17 +1544,53 @@ func populate_dropdown() -> void:
 				submenu_groups.append([category, sub_items])
 			_build_dropdown([["Spoken Line", "Spoken Line"]], submenu_groups)
 
+		"InputScenes":
+			var items = []
+			for scene_name in globals.project_resources["Player_Input_Scenes"].keys():
+				items.append([scene_name, scene_name])
+			_build_dropdown(items)
+
+		"ChoiceCategories":
+			var items = []
+			var line_data = main._get_choice_list_data()
+			if not line_data.is_empty():
+				for category_entry in line_data.get("Categories", []):
+					var category_name = category_entry.keys()[0]
+					items.append([category_name, category_name])
+			if items.is_empty():
+				_build_dropdown([["No categories available.", null]])
+			else:
+				_build_dropdown(items)
+
+		"ChoiceMenuScenes":
+			var items = []
+			for scene_name in globals.project_resources["Choice_Menu_Scenes"].keys():
+				items.append([scene_name, scene_name])
+			_build_dropdown(items)
+
+		"ChoiceCategoryScenes":
+			var items = []
+			for scene_name in globals.project_resources["Choice_Category_Scenes"].keys():
+				items.append([scene_name, scene_name])
+			_build_dropdown(items)
+
+		"ChoiceButtonScenes":
+			var items = []
+			for scene_name in globals.project_resources["Choice_Button_Scenes"].keys():
+				items.append([scene_name, scene_name])
+			_build_dropdown(items)
+
 		"ChoiceStatusMenuMode":
-			_build_dropdown([["Last", "Last"], ["All", "All"], ["Tags", "Tags"]])
+			_build_dropdown([["Last Created", "Last"], ["All", "All"], ["Tags", "Tags"]])
 
 		"ChoiceStatusCategoryMode":
-			_build_dropdown([["Last", "Last"], ["All", "All"], ["Tags", "Tags"]])
+			_build_dropdown([["Last Selected", "Last"], ["All", "All"], ["Tags", "Tags"]])
 
 		"ChoiceStatusChoiceMode":
-			_build_dropdown([["Last", "Last"], ["All", "All"], ["Tags", "Tags"]])
+			_build_dropdown([["Last Selected", "Last"], ["All", "All"], ["Tags", "Tags"]])
 
 		"ChoiceStatusTimerMode":
-			_build_dropdown([["Last", "Last"], ["All", "All"], ["Tags", "Tags"]])
+			_build_dropdown([["Last Timeout", "Last"], ["All", "All"], ["Tags", "Tags"]])
 
 		"ChoiceStatusEnable":
 			_build_dropdown([["-", "-"], ["Enable", "Enable"], ["Disable", "Disable"], ["Toggle", "Toggle"]])
@@ -1314,6 +1600,30 @@ func populate_dropdown() -> void:
 
 		"ChoiceStatusShow":
 			_build_dropdown([["-", "-"], ["Show", "Show"], ["Hide", "Hide"], ["Toggle", "Toggle"]])
+
+		"ChoiceTransitionType":
+			_build_dropdown([["Continue", "Continue"], ["Bridge", "Bridge"], ["Jump", "Jump"], ["Return", "Return"], ["End", "End"], ["Close", "Close"]])
+
+		"ChoiceTimerAuto":
+			_build_dropdown([["Start", "Start"], ["Hold", "Hold"]])
+
+		"TimerChoiceSelect":
+			var data = main._get_choice_list_data()
+			if data.is_empty():
+				_build_dropdown([["No categories available.", null]])
+			else:
+				var submenu_groups = []
+				for category_entry in data.get("Categories", []):
+					var category_name = category_entry.keys()[0]
+					var sub_items = []
+					for choice_entry in category_entry[category_name].get("Choices", []):
+						var choice_name = choice_entry.keys()[0]
+						sub_items.append([choice_name, category_name + ", " + choice_name])
+					submenu_groups.append([category_name, sub_items])
+				if submenu_groups.is_empty():
+					_build_dropdown([["No categories available.", null]])
+				else:
+					_build_dropdown([], submenu_groups)
 
 		"TimerStatus":
 			_build_dropdown([["-", "-"], ["Start/Resume", "Start/Resume"], ["Pause", "Pause"], ["Stop", "Stop"]])
@@ -1335,7 +1645,9 @@ func _build_dropdown(items: Array, submenu_groups: Array = [], audio_preview: bo
 	for group in submenu_groups:
 		var group_label = group[0]
 		var group_items = group[1]
+		var group_image_preview = group[2] if group.size() > 2 else false
 		var btn = Button.new()
+		btn.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.text = group_label + " ▶"
@@ -1346,7 +1658,7 @@ func _build_dropdown(items: Array, submenu_groups: Array = [], audio_preview: bo
 			main.video_preview_popup.hide()
 			globals.sprite_preview_cancelled = true
 			main.sprite_preview_popup.hide()
-			_build_dropdown_2(group_items)
+			_build_dropdown_2(group_items, group_image_preview)
 			_show_dropdown_2(btn))
 		btn.mouse_exited.connect(func():
 			_hide_dropdown_2_delayed())
@@ -1361,6 +1673,7 @@ func _build_dropdown(items: Array, submenu_groups: Array = [], audio_preview: bo
 		var item_label = item[0]
 		var value = item[1]
 		var btn = Button.new()
+		btn.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.text = item_label
@@ -1713,7 +2026,7 @@ func _build_dropdown(items: Array, submenu_groups: Array = [], audio_preview: bo
 
 
 #* Build secondary dropdown:
-func _build_dropdown_2(items: Array) -> void:
+func _build_dropdown_2(items: Array, image_preview: bool = false) -> void:
 	_cancel_hide_dropdown_2()
 	var vbox = main.dropdown_list_2.get_node("ScrollContainer/VBoxContainer")
 	for child in vbox.get_children():
@@ -1722,12 +2035,49 @@ func _build_dropdown_2(items: Array) -> void:
 		var item_label = item[0]
 		var value = item[1]
 		var btn = Button.new()
+		btn.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.text = item_label
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		btn.mouse_entered.connect(func():
-			_cancel_hide_dropdown_2())
+		if image_preview and item.size() > 2:
+			var image_path = item[2]
+			var frame_paths = item[3] if item.size() > 3 else [image_path]
+			btn.mouse_entered.connect(func():
+				_cancel_hide_dropdown_2()
+				globals.sprite_preview_cancelled = true
+				main.sprite_preview_popup.hide()
+				var sprite_regex = RegEx.new()
+				sprite_regex.compile("_(\\d+)x(\\d+)(?:-(\\d+))?(?=\\.[^.]+$)")
+				var sprite_match = sprite_regex.search(image_path.get_file())
+				if sprite_match and FileAccess.file_exists(image_path):
+					var cols = sprite_match.get_string(1).to_int()
+					var rows = sprite_match.get_string(2).to_int()
+					var img = Image.new()
+					if img.load(image_path) == OK:
+						var tex = ImageTexture.create_from_image(img)
+						main.sprite_preview_player.texture = tex
+						main.sprite_preview_player.hframes = cols
+						main.sprite_preview_player.vframes = rows
+						main.sprite_preview_player.frame = 0
+						var frame_width = float(img.get_width()) / cols
+						var frame_height = float(img.get_height()) / rows
+						var preview_width = globals.sprite_preview_width
+						var scale_factor = float(preview_width) / frame_width
+						main.sprite_preview_player.scale = Vector2(scale_factor, scale_factor)
+						var preview_height = int(frame_height * scale_factor)
+						main.sprite_preview_popup.size = Vector2i(preview_width, preview_height)
+						main.sprite_preview_popup.position = Vector2i(
+							main.dropdown_list_2.position.x + main.dropdown_list_2.size.x,
+							main.dropdown_list_2.position.y)
+						main.sprite_preview_popup.popup()
+						_animate_cs_sprite_preview(frame_paths, preview_width))
+			btn.mouse_exited.connect(func():
+				globals.sprite_preview_cancelled = true
+				main.sprite_preview_popup.call_deferred("hide"))
+		else:
+			btn.mouse_entered.connect(func():
+				_cancel_hide_dropdown_2())
 		btn.pressed.connect(func():
 			_on_dropdown_item_selected(value)
 			main.dropdown_list.hide()
@@ -1740,6 +2090,9 @@ func _show_dropdown() -> void:
 	var vbox = main.dropdown_list.get_node("ScrollContainer/VBoxContainer")
 	await main.get_tree().process_frame
 
+	if vbox.get_child_count() == 0:
+		return
+
 	var item_count = vbox.get_child_count()
 	var item_height = 0.0
 	var item_width = 0.0
@@ -1749,8 +2102,8 @@ func _show_dropdown() -> void:
 		item_width = max(item_width, child.get_combined_minimum_size().x + 8)
 
 	var visible_items = min(item_count, 15)
-	var popup_height = item_height * visible_items
-	var popup_width = item_width
+	var popup_height = 4 + (item_height * visible_items)
+	var popup_width = 12 + item_width
 
 	var scroll = main.dropdown_list.get_node("ScrollContainer")
 	scroll.custom_minimum_size.y = popup_height
@@ -1763,6 +2116,7 @@ func _show_dropdown() -> void:
 	else:
 		main.dropdown_list.position = Vector2i(int(field_pos.x), int(field_pos.y + text_field.size.y))
 
+	main.invisishield.visible = true
 	main.dropdown_list.popup()
 
 
@@ -1781,8 +2135,8 @@ func _show_dropdown_2(trigger_btn: Button) -> void:
 		item_width = max(item_width, child.get_combined_minimum_size().x + 8)
 
 	var visible_items = min(item_count, 15)
-	var popup_height = item_height * visible_items
-	var popup_width = item_width + 16
+	var popup_height = 4 + (item_height * visible_items)
+	var popup_width = 12 + item_width + 16
 
 	var scroll = main.dropdown_list_2.get_node("ScrollContainer")
 	scroll.custom_minimum_size.y = popup_height
@@ -1849,3 +2203,38 @@ func _animate_sprite_preview(total_frames: int) -> void:
 			main.sprite_preview_popup.hide()
 			if not globals.sprite_preview_cancelled:
 				main.sprite_preview_popup.popup()
+
+
+func _animate_cs_sprite_preview(frame_paths: Array, preview_width: int) -> void:
+	globals.sprite_preview_cancelled = false
+	while not globals.sprite_preview_cancelled:
+		for path in frame_paths:
+			if globals.sprite_preview_cancelled:
+				return
+			var sprite_regex = RegEx.new()
+			sprite_regex.compile("_(\\d+)x(\\d+)(?:-(\\d+))?(?=\\.[^.]+$)")
+			var sprite_match = sprite_regex.search(path.get_file())
+			if sprite_match and FileAccess.file_exists(path):
+				var cols = sprite_match.get_string(1).to_int()
+				var rows = sprite_match.get_string(2).to_int()
+				var missing = sprite_match.get_string(3).to_int() if sprite_match.get_string(3) != "" else 0
+				var total_frames = cols * rows - missing
+				var img = Image.new()
+				if img.load(path) == OK:
+					var tex = ImageTexture.create_from_image(img)
+					main.sprite_preview_player.texture = tex
+					main.sprite_preview_player.hframes = cols
+					main.sprite_preview_player.vframes = rows
+					var frame_width = float(img.get_width()) / cols
+					var frame_height = float(img.get_height()) / rows
+					var scale_factor = float(preview_width) / frame_width
+					main.sprite_preview_player.scale = Vector2(scale_factor, scale_factor)
+					var preview_height = int(frame_height * scale_factor)
+					main.sprite_preview_popup.size = Vector2i(preview_width, preview_height)
+					for i in range(total_frames):
+						if globals.sprite_preview_cancelled:
+							return
+						main.sprite_preview_player.frame = i
+						await main.get_tree().create_timer(1.0 / globals.sprite_preview_fps).timeout
+			else:
+				await main.get_tree().create_timer(1.0 / globals.sprite_preview_fps).timeout

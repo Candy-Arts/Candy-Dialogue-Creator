@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://ptmeoa0pkgf3"]
+
+[ext_resource type="Script" uid="uid://doed5hpj2v8xe" path="res://Scripts/insert_creator.gd" id="1_tr7io"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_326oq"]
+bg_color = Color(0, 0, 0, 0.60784316)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb4hl"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 32.0
+bg_color = Color(0, 0.4099307, 0.70747656, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="InsertCreator" type="PanelContainer" unique_id=1837653134]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_326oq")
+script = ExtResource("1_tr7io")
+
+[node name="Menu" type="PanelContainer" parent="." unique_id=1133625362]
+custom_minimum_size = Vector2(768, 256)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb4hl")
+
+[node name="VBox" type="VBoxContainer" parent="Menu" unique_id=1223822415]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox" unique_id=2017498422]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Create Insert"
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="Menu/VBox" unique_id=1182189486]
+layout_mode = 2
+text = "Name:"
+
+[node name="InsertName" type="LineEdit" parent="Menu/VBox" unique_id=1915160380]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="Menu/VBox" unique_id=418790417]
+layout_mode = 2
+text = "Insert Type:"
+
+[node name="OptionButton" type="OptionButton" parent="Menu/VBox" unique_id=323514406]
+layout_mode = 2
+size_flags_horizontal = 0
+item_count = 2
+popup/item_0/text = "Profile Insert"
+popup/item_0/id = 0
+popup/item_1/text = "User Insert"
+popup/item_1/id = 1
+
+[node name="CategoryLabel" type="Label" parent="Menu/VBox" unique_id=561453590]
+layout_mode = 2
+text = "Category:"
+
+[node name="Category" type="LineEdit" parent="Menu/VBox" unique_id=391475235]
+layout_mode = 2
+
+[node name="BeforeLabel" type="Label" parent="Menu/VBox" unique_id=1574527714]
+layout_mode = 2
+text = "Before:"
+
+[node name="BeforeString" type="LineEdit" parent="Menu/VBox" unique_id=336049620]
+layout_mode = 2
+
+[node name="AfterLabel" type="Label" parent="Menu/VBox" unique_id=345439942]
+layout_mode = 2
+text = "After:"
+
+[node name="AfterString" type="LineEdit" parent="Menu/VBox" unique_id=1522664949]
+layout_mode = 2
+
+[node name="Message" type="RichTextLabel" parent="Menu/VBox" unique_id=128809805]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="Buttons" type="HBoxContainer" parent="Menu/VBox" unique_id=1144892303]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 256
+alignment = 1
+
+[node name="Cancel" type="Button" parent="Menu/VBox/Buttons" unique_id=213300956]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Cancel"
+
+[node name="Create" type="Button" parent="Menu/VBox/Buttons" unique_id=497313554]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Create"
+
+[connection signal="pressed" from="Menu/VBox/Buttons/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Menu/VBox/Buttons/Create" to="." method="_on_create_pressed"]

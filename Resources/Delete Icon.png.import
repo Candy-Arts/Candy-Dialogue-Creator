@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2cwniglotwpj"
-path="res://.godot/imported/Progress Icon.png-b099a3feb099f4c2a5c0d7ac9cf254c9.ctex"
+uid="uid://dnrmf6ty7mkjd"
+path="res://.godot/imported/Delete Icon.png-760d37a9f15b713d34fd22f7589c6980.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Progress Icon.png"
-dest_files=["res://.godot/imported/Progress Icon.png-b099a3feb099f4c2a5c0d7ac9cf254c9.ctex"]
+source_file="res://Resources/Delete Icon.png"
+dest_files=["res://.godot/imported/Delete Icon.png-760d37a9f15b713d34fd22f7589c6980.ctex"]
 
 [params]
 

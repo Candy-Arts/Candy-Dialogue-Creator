@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://csl5w0ap1nefv"]
+
+[ext_resource type="Script" uid="uid://c5o72j5ayvgw7" path="res://Scripts/about_menu.gd" id="1_h0641"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_326oq"]
+bg_color = Color(0, 0, 0, 0.60784316)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb4hl"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0, 0.4099307, 0.70747656, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="AboutMenu" type="PanelContainer" unique_id=1837653134]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_326oq")
+script = ExtResource("1_h0641")
+
+[node name="Menu" type="PanelContainer" parent="." unique_id=1133625362]
+custom_minimum_size = Vector2(512, 512)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb4hl")
+
+[node name="VBox" type="VBoxContainer" parent="Menu" unique_id=1223822415]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Menu/VBox" unique_id=1577404251]
+layout_mode = 2
+bbcode_enabled = true
+text = "Candy Dialogue Creator
+Originally created by Candy Arts.
+
+Candy Dialogue Creator is a standalone application for creating dialogues compatible with Candy Dialogue Engine by Candy Arts.
+
+Candy Dialogue Creator is published under the MIT License and is free to use, distribute and modify, for any purposes, including commercial projects.
+
+Dialogues created with Candy Dialogue Creator are not considered modifications or derivative works, and are not subject to the MIT License or any Candy Arts proprietary licenses.
+
+[font_size=12]Candy Dialogue Creator v1.0.9 Official Release
+Created by CANDY ARTS
+www.candy-arts.com
+Copyright © 2026 Candy Arts[/font_size]"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Close" type="Button" parent="Menu/VBox" unique_id=1049050340]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close"
+
+[connection signal="pressed" from="Menu/VBox/Close" to="." method="_on_close_pressed"]

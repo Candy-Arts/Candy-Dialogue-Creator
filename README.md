@@ -1,104 +1,156 @@
-![Candy Arts Logo](Screenshots/Logo.png)
+![Candy Arts Logo](Logo.png)
 
-> [!NOTE]
-> Big news: Candy DC 1.1 is being worked on and will release soon! It will bring many improvements.
-> Please see our [discussion post](https://github.com/Candy-Arts/Candy-Arts/discussions/10) and share your thoughts, ideas or requests.
-
-> [!TIP]
-> We've just opened our [Youtube channel](https://www.youtube.com/@CandyArtsStudio/playlists) and released several tutorial videos that will explain how to use Candy Dialogue Engine and Candy Dialogue Creator!
-> Please look at the playlists, to watch videos in the right order.
->
-> The PDF guides (provided with downloads of Candy DE and Candy DC, in the Documents/Guides folder) are simpler and faster, but videos can be helpful for users who prefer more visual explanations.
-
-> [!TIP]
-> For compiled executables of Candy Dialogue Creator, see the [Releases](https://github.com/Candy-Arts/Candy-Dialogue-Creator/releases).
 
 # Candy Dialogue Creator
 **Candy Dialogue Creator by [Candy Arts](https://candy-arts.com) is the free, standalone companion application to [Candy Dialogue Engine](https://github.com/Candy-Arts/Candy-Dialogue-Engine).**
 
-![Writer-Example.png](Screenshots/Writer_Example.png)
+![UI_Preview.png](UI_Preview.png)
 
-## Make dialogue writing a breeze
+## Technical Specs
+Available formats:
+- Compiled executables
+- Raw Godot project
+
+Operating System:
+- Linux
+- Windows
+- MacOS (untested and unsigned)
+- Android (requires editing and compiling)
+
+Godot:
+- The compiled version is a standalone software and does not depend on Godot.
+- The raw project format requires Godot 4.5 and above, due to the use of FoldableContainer nodes.
+
+Hardware:
+- The interface is designed for a resolution of 1920x1080. Visual quality may degrade on lower resolutions.
+
+## Features
+### Writing Efficiency
 Candy Dialogue Creator provides a graphical user interface (GUI) to create, edit and translate dialogues with minimal typing and no special syntax.
 
-It's capable of reading your Godot project folders, enabling you to fill data into dialogue lines by selecting from drop-down lists. This also allows you to preview image, audio or video files on mouse hover, so that you can quickly check that you're selecting the correct portraits, voice files, background images, musics, or cutscene videos.
+- Easy dialogue structure navigation:
+    - Select Conversation → Select Block → Add/edit Lines.
+- Minimal typing:
+    - Minimal special syntax (limited to special cases).
+    - Add lines in one click.
+    - Fill data into labeled fields, with tooltips, to configure Lines.
+    - Type data or select options from drop-down lists.
+- Synchronize with Godot project files and data:
+    - Drop-down lists are auto-populated from variables and resource files in your Godot project.
+    - Instant preview of image/audio/video files with mouse hover.
+- Line List:
+    - Always visible on screen for quick navigation and context-awarness.
+    - Displays all lines in the selected Block.
+    - Lines display relevant data.
+    - Custom color-coding for Lines, for better readability.
+- Cut/Copy/Paste/Duplicate Lines, even across Blocks and Conversations.
+- Drag-and-drop Line/Block/Conversation re-ordering.
+- Custom Line Presets:
+    - Create Presets of one or more Lines, with custom data.
+    - Insert Presets in one click.
+- Add frequently used command Lines or Presets to your favorites list.
+- One-click text Inserts:
+    - Native UI buttons to insert BBCode tags and color codes.
+    - Create custom Inserts for frequently used characters, words or text strings.
+    - BBCode tags and custom Inserts automatically wrap around selected text.
 
-It also offers various other features: an ergonomic Writer UI for writing and translating spoken lines, the ability to create line presets with pre-filled data, buttons for BBCode tags, and custom inserts to add text strings in one click.
+### Spoken Lines
+Character speech is of course the central part of game dialogues, so Spoken Lines get a lot of special features.
 
-You can export dialogues to your project folder for testing in just one click, select which parts of dialogues you want to import or export, merge dialogues, update older dialogue files, or append missing data.
+- On-screen speaker portrait for better context awareness.
+- Voice playback, with play/pause, progress slider and volume control.
+- Live preview of spoken text, with BBCode formatting.
+- Character and word count.
+- Configurable character limit count: ensure text doesn't exceed dialogue UI size.
+- Hide unused/irrelevant data fields to reduce UI clutter.
 
-![Main UI Screenshot](Screenshots/Candy_DC_Example.png)
+### Translation & Variants
+Translation features aren't an afterthought and are given serious consideration.
 
-## Teamwork
-A number of features make Candy Dialogue Creator great for teams: unique settings profiles for each person and project, various options for merging dialogues or updating dialogues, and in-line annotations and comments. The fact that it works outside of the Godot editor makes it suitable for non-programmers, and ensures that writers or translators don't touch the project files directly.
+- Create languages and variants separately: Candy Dialogue Creator automatically forms all possible combinations.
+- Specify a default text direction for each language.
+- Option to provide each Line a specific text direction, for special cases.
+- Easily write translations/variants to spoken Lines:
+    - Select a ''working' language/variant in one click.
+    - Select a 'template' language/variant in one click.
+    - Template is displayed above the working language/variant for reference.
+    - Template is displayed with both formatted and unformatted BBCode.
+- Character and word count for templates + character and word difference vs. working language/variant.
+- The language/variant selection list is color-coded to show which ones don't have text yet for the current Line.
+- Separate voice playback controls for both the working and the template language/variant.
+- The Line List always displays the spoken text in the selected working language/variant:
+    - Quickly review all text for the selected language/variant.
+    - See at a glance which lines lack text.
+    - More convenient for context-awareness while writing.
 
-## Use Options
+### Export/Import
+- Export dialogues directly to your project in a few clicks.
+- Dialogues are exported as .txt files for easy compatibility and editing with third-party software.
+- Re-import dialogues for further editing.
+- Various options for final exports or import:
+    - Merge into existing dialogue.
+    - Update existing dialogue.
+    - Merge/Update full Conversations or Blocks only.
+    - Exclude specific Conversations/Blocks from export/import
+- Two-click export for testing:
+    - Click "Test" in the UI.
+    - ALT+TAB to Godot.
+    - Click 'Run'.
+
+### Teamwork
+A number of features make Candy Dialogue Creator great for teams, where simultaneous work and separation-of-concerns are essential:
+- User and project profiles, with per-user and per-project settings.
+- The 'Dialogue → Conversations → Blocks' structure + the ability to merge or update dialogue files enables splitting work between multiple people.
+- Insert brief comments between Lines, give Lines a custom title/reference, or write longer comments inside of Lines to guide colleagues.
+- The standalone design prevents unnecessary project access by writers and translators.
+- Candy Dialogue Creator reads but doesn't edit project files (except for exported dialogues).
+- Access to original project files not required: use a copy or 'dummy' project folder, with only the necessary data and resource files.
+
+## Usage
 Candy Dialogue Creator can be used in three different ways:
-- **[Recommended]** For best performance, download and launch the compiled executable for your operating system.
-- **[Optional]** To modify Candy Dialogue Creator as you see fit, download the source code as a raw Godot project, edit it, then compile.
-- **[Advanced]** Or integrate the scripts, scenes and other resource files into your game to access the Candy Dialogue Creator at runtime, so you or your players can create and edit dialogues live in-game!
 
-## Setup
-### Compiled Executable (Recommended - For normal use)
-1. Download the executable for your operating system.
-2. Unpack the downloaded compressed file to any location you want on your computer.
-3. Read the Instructions.pdf file inside the folder.
-4. Launch the executable.
-5. It takes several seconds to load. You'll land on the profile menu. Create a new profile (give it a name that references the project it's for).
-6. Click the profile in the list, then click the 'Select' button.
-7. You'll arrive at the Main UI screen, where you can start adding lines to create a dialogue. But first, read the 'Basic Setup' guide in the Documentation folder to learn how to configure your profile.
-- Read the 'Basic Dialogue' guide in the Documentation folder to learn how to create a basic dialogue.
-- The rest of the documentation will explain the remaining features.
-- Don't forget to download [Candy Dialogue Engine](https://github.com/Candy-Arts/Candy-Dialogue-Engine) and integrate it to your project, otherwise dialogues won't work.
+**[Recommended] Direct Executable:** Candy Dialogue Creator is provided as an executable file, which you can just download and run.
+- This is the default intended use.
+- Available for Linux, Windows, MacOS.
+- MacOS is untested and unsigned: we don't have access to an Apple computer.
+    - You will get a safety warning when launching.
+    - It should work as well as the other versions, unless there are MacOS-specific things in Godot we're not aware of.
+    - If you encounter Mac-specific bugs, please report them so we can fix them.
 
-### Raw Project (Optional - For modifying the code)
-1. Download the source code.
-2. Unpack the downloaded compressed file to any location you want on your computer.
-3. Open Godot and import the Candy_Dialogue_Creator folder as a project.
-4. Open it, edit it as you want, run it from the Godot editor, or compile it.
+**[Optional] Raw Godot Project:** The raw project files are available for download, so you can open Candy Dialogue Creator in Godot like any of your own projects.
+- Useful for checking the code if you have security concerns.
+- Make custom modifications and compile your own version.
 
-### Integration (Advanced - For adding Candy Dialogue Creator inside your game)
-> [!Warning]
-> This requires good understanding of the Candy Dialogue Creator code. A special version of Candy Dialogue Engine, designed for easy integration into your projects, will release in the future.
+**[Advanced] Integrated:** The raw project files can be integrated into your game, so that players or devs can access the Candy Dialogue Creator while your game runs.
+- This is an advanced, unintended option.
+- Can be useful for debugging and modding.
+- Instructions not provided at this time (coming soon).
+- Not very difficult, but experience with Godot is recommended.
+- Updating when new versions are released may require some extra work.
 
-1. Download the source code.
-2. Unpack the downloaded compressed file to any location you want on your computer.
-3. In the Resources folder, delete the .import files.
-4. In the Scripts folder, delete all the .uid files
-5. Copy the Resources, Scenes and Scripts folders to your project root folder. **Do not modify this folder structure yet.**
-6. Open your project in Godot. Let Godot import the files in those three folders.
-7. If you see warnings or error messages about UID: at the top of the Godot Editor: 'Project' → 'Tools' → 'Upgrade Project Files...'
-8. You can now move the files in the Resources, Scenes and Scripts folders anywhere you want in your project files through the Godot editor's FileSystem panel.
-9. Add User_Variables.gd as an autoload, with the prefix 'candy_dc'.
+> [!Note]
+> We plan to look into offering a compiled Android version in the future. Unfortunately, at this time, we do not have access to an Android tablet.
+> You can try compiling your own Android version from the raw project. If you do so, you may need to make some edits to add compatibility with touch screens.
 
-You'll need to adapt the code to fit your project: read data from variables instead of .gd scripts or resources folders, don't display the profile menu at launch, etc. This depends on your project and what you want the Candy Dialogue Creator to be used for.
+## Instructions
+> [!WARNING]
+> Dialogue and save files made in version 1.0 must be converted to version 1.1!
+> See [this document](Dialogue_Conversion_Instructions.doc) for instructions.
 
-**A ready-made 'Integrated' edition of Candy Dialogue Creator is in the works and will be released very soon.**
-It will feature several modifications for in-project integration, saving you the trouble of making them yourself.
+Please see the following documents for instructions on using Candy Dialogue Creator:
+- [Setup](Setup_Instructions.doc)
 
-**When integrating Candy Dialogue Creator directly into your project, note that the UI is designed for resolutions of 1920x1080. If your project's resolution is smaller or has different proportions, you will need to adapt the UI.**
-
-## Compatibility
-Candy Dialogue Creator works in Godot 4.5 and above. Earlier versions are incompatible without modification due to lacking the FoldableContainer node class.
-
-Compiled executables are provided for Linux, Windows and MacOS, but you can compile for other systems supported by Godot. Note that the MacOS executable we provide is unsigned.
-
-The interface is designed for a resolution of 1920x1080. Visual quality may degrade on lower resolutions. Devices with small screens (e.g. smartphones or small tablets) are not recommended.
-
-## Project files access
+## Final Notes
+### Project files
 Access to your Godot project files is not required, but some convenience features will be unavailable.
 
 If direct access to the actual project files isn't possible, you can provide access to a copy of the project: Candy Dialogue Creator won't be able to export dialogues to your actual project directly, but all other features will work.
 
-## Bugs and issues
+### Bugs and issues
 Bugs should be reported here on Github.
 
 We really don't expect security issues considering the nature of Candy Dialogue Creator, but if you find any, please [report them directly to us](https://candy-arts.com/index.php/contact/) (don't report them publicly: someone could exploit them).
 
-## Feedback
+### Feedback
 We're looking forward to [user feedback](https://github.com/Candy-Arts/Candy-Arts/discussions/categories/candy-dc-features) to help us improve Candy Dialogue Creator!
-
-All comments and suggestions are welcome, but we are currently considering a significant UI redesign to improve readability and ergonomy.
-
-If you have any preferences or needs in this regard, please don't hesitate to share them with us.
 

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://crn0qxps7emjr"]
+
+[ext_resource type="Script" uid="uid://bn2dw06db45hi" path="res://Scripts/add_command.gd" id="1_j1wff"]
+
+[node name="AddCommand" type="Button" unique_id=1408873471]
+custom_minimum_size = Vector2(64, 32)
+offset_right = 37.0
+offset_bottom = 31.0
+script = ExtResource("1_j1wff")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

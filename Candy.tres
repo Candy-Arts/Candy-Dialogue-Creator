@@ -1,0 +1,46 @@
+[gd_resource type="Theme" format=3 uid="uid://cljmkwasi8wgc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4od71"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.29411766)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrbh"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0, 0, 0.49019608)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yffaf"]
+draw_center = false
+
+[resource]
+AreaPanel/base_type = &"PanelContainer"
+AreaPanel/styles/panel = SubResource("StyleBoxFlat_4od71")
+FilterButton/base_type = &"Button"
+FilterButton/font_sizes/font_size = 12
+FilterButton/styles/normal = SubResource("StyleBoxFlat_scrbh")
+HSplitContainer/constants/separation = 8
+HSplitContainer/icons/grabber = null
+HSplitContainer/icons/touch_dragger = null
+HSplitContainer/styles/split_bar_background = null
+Label/colors/font_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
+Label/colors/font_outline_color = Color(0, 0, 0, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 1)
+Label/constants/line_spacing = 0
+Label/constants/outline_size = 0
+Label/constants/shadow_offset_x = 0
+Label/constants/shadow_offset_y = 0
+Label/constants/shadow_outline_size = 0
+Label/font_sizes/font_size = 14
+Label/fonts/font = null
+Label/styles/focus = null
+Label/styles/normal = null
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_yffaf")

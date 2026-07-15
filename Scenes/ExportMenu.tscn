@@ -1,0 +1,200 @@
+[gd_scene format=3 uid="uid://dic6emcln5mh6"]
+
+[ext_resource type="Script" uid="uid://dkp034vlr724g" path="res://Scripts/export_menu.gd" id="1_xfak4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_326oq"]
+bg_color = Color(0, 0, 0, 0.60784316)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb4hl"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0, 0.4099307, 0.70747656, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="ExportMenu" type="PanelContainer" unique_id=1837653134]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_326oq")
+script = ExtResource("1_xfak4")
+
+[node name="Menu" type="PanelContainer" parent="." unique_id=1133625362]
+custom_minimum_size = Vector2(640, 640)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb4hl")
+
+[node name="VBox" type="VBoxContainer" parent="Menu" unique_id=1223822415]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox" unique_id=1707042225]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Export Dialogue"
+horizontal_alignment = 1
+
+[node name="File" type="HBoxContainer" parent="Menu/VBox" unique_id=444342552]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menu/VBox/File" unique_id=551978850]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "File:"
+
+[node name="Path" type="HBoxContainer" parent="Menu/VBox/File" unique_id=1936130231]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="File" type="LineEdit" parent="Menu/VBox/File/Path" unique_id=1645451310]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileBrowser" type="Button" parent="Menu/VBox/File/Path" unique_id=847027266]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "..."
+
+[node name="HSeparator" type="HSeparator" parent="Menu/VBox" unique_id=551775115]
+layout_mode = 2
+
+[node name="Options" type="HBoxContainer" parent="Menu/VBox" unique_id=1272782627]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Controls" type="VBoxContainer" parent="Menu/VBox/Options" unique_id=1895323520]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Menu/VBox/Options/Controls" unique_id=1809205338]
+layout_mode = 2
+text = "Mode:"
+
+[node name="Mode1" type="OptionButton" parent="Menu/VBox/Options/Controls" unique_id=1355105014]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "Overwrite"
+popup/item_0/id = 0
+popup/item_1/text = "Add"
+popup/item_1/id = 1
+popup/item_2/text = "Update"
+popup/item_2/id = 2
+popup/item_3/text = "Add & Update"
+popup/item_3/id = 3
+
+[node name="Mode2" type="OptionButton" parent="Menu/VBox/Options/Controls" unique_id=1798965285]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "All"
+popup/item_0/id = 0
+popup/item_1/text = "Conversations"
+popup/item_1/id = 1
+popup/item_2/text = "Blocks"
+popup/item_2/id = 2
+
+[node name="HSeparator" type="HSeparator" parent="Menu/VBox/Options/Controls" unique_id=756422085]
+layout_mode = 2
+
+[node name="MarkAll" type="Button" parent="Menu/VBox/Options/Controls" unique_id=1823232590]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mark All"
+
+[node name="UnmarkAll" type="Button" parent="Menu/VBox/Options/Controls" unique_id=1995275559]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Unmark All"
+
+[node name="HSeparator2" type="HSeparator" parent="Menu/VBox/Options/Controls" unique_id=606785834]
+layout_mode = 2
+
+[node name="MarkConv" type="Button" parent="Menu/VBox/Options/Controls" unique_id=471488629]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mark Conv."
+
+[node name="UnmarkConv" type="Button" parent="Menu/VBox/Options/Controls" unique_id=1988595288]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Unmark Conv."
+
+[node name="HSeparator3" type="HSeparator" parent="Menu/VBox/Options/Controls" unique_id=2111620571]
+layout_mode = 2
+
+[node name="MarkBlocks" type="Button" parent="Menu/VBox/Options/Controls" unique_id=1718830056]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mark Blocks"
+
+[node name="UnmarkBlocks" type="Button" parent="Menu/VBox/Options/Controls" unique_id=1240679183]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Unmark Blocks"
+
+[node name="VSeparator" type="VSeparator" parent="Menu/VBox/Options" unique_id=1838259848]
+layout_mode = 2
+
+[node name="Tree" type="Tree" parent="Menu/VBox/Options" unique_id=139159003]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/v_separation = 2
+theme_override_constants/item_margin = 16
+theme_override_constants/icon_h_separation = 4
+theme_override_font_sizes/font_size = 14
+columns = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Menu/VBox" unique_id=487340174]
+layout_mode = 2
+
+[node name="Error" type="RichTextLabel" parent="Menu/VBox" unique_id=805477964]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.8156863, 0.83137256, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+
+[node name="Buttons" type="HBoxContainer" parent="Menu/VBox" unique_id=1313340865]
+layout_mode = 2
+theme_override_constants/separation = 128
+alignment = 1
+
+[node name="Cancel" type="Button" parent="Menu/VBox/Buttons" unique_id=1049050340]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close"
+
+[node name="Export" type="Button" parent="Menu/VBox/Buttons" unique_id=1369712518]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Export"
+
+[connection signal="pressed" from="Menu/VBox/File/Path/FileBrowser" to="." method="_on_file_browser_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/MarkAll" to="." method="_on_mark_all_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/UnmarkAll" to="." method="_on_unmark_all_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/MarkConv" to="." method="_on_mark_conv_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/UnmarkConv" to="." method="_on_unmark_conv_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/MarkBlocks" to="." method="_on_mark_blocks_pressed"]
+[connection signal="pressed" from="Menu/VBox/Options/Controls/UnmarkBlocks" to="." method="_on_unmark_blocks_pressed"]
+[connection signal="pressed" from="Menu/VBox/Buttons/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Menu/VBox/Buttons/Export" to="." method="_on_export_pressed"]

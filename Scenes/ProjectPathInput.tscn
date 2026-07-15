@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://baqkgfpgdg8wf"]
+
+[ext_resource type="Script" uid="uid://dg2k40xoryeye" path="res://Scripts/project_path_input.gd" id="1_tloi4"]
+
+[node name="Path" type="HBoxContainer" unique_id=1211740785]
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+script = ExtResource("1_tloi4")
+
+[node name="HBox" type="HBoxContainer" parent="." unique_id=149798855]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="HBox" unique_id=1057049878]
+custom_minimum_size = Vector2(192, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Folder Path:"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="HBox" unique_id=451208029]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileBrowser" type="Button" parent="HBox" unique_id=1719912500]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "..."
+
+[node name="OpenFolder" type="Button" parent="." unique_id=879354180]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Open the folder"
+text = "⇱"
+
+[node name="ResetPath" type="Button" parent="." unique_id=1094527479]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Reset to default"
+text = "⟲"
+
+[connection signal="focus_exited" from="HBox/LineEdit" to="." method="_on_line_edit_focus_exited"]
+[connection signal="text_changed" from="HBox/LineEdit" to="." method="_on_path_changed"]
+[connection signal="pressed" from="HBox/FileBrowser" to="." method="_on_file_browser_pressed"]
+[connection signal="pressed" from="OpenFolder" to="." method="_on_open_pressed"]
+[connection signal="pressed" from="ResetPath" to="." method="reset_path_text"]

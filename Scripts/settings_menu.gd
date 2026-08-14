@@ -182,7 +182,7 @@ func _on_close_pressed() -> void:
 	globals.substitution_symbol = substitution_symbol_field.text
 	globals.separator_symbol = separator_symbol_field.text
 
-	#% Update symbol inserts buttons:
+	#@ Update symbol inserts buttons:
 	main.update_variable_insert_buttons()
 
 	#@ Scan project resources:
@@ -359,6 +359,7 @@ func _delete_language(language: String) -> void:
 		return
 
 	globals.languages.erase(language)
+
 	#@ Remove from dialogue and presets:
 	for source in [globals.dialogue, globals.user_presets, globals.profile_presets]:
 		for conv in source.values():
@@ -390,6 +391,7 @@ func _delete_variant(variant: String) -> void:
 		return
 
 	globals.variants.erase(variant)
+	
 	#@ Remove from all languages:
 	for language in globals.languages:
 		globals.languages[language]["Variants"].erase(variant)

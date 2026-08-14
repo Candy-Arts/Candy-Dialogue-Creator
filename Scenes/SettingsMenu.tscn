@@ -74,11 +74,12 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 tab_1/title = "Project Paths"
 tab_2/title = "Project Data"
 
 [node name="Preferences" type="ScrollContainer" parent="Menu/VBox/Tabs" unique_id=809051829]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
 metadata/_tab_index = 0
@@ -514,7 +515,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="ProjectPaths" type="PanelContainer" parent="Menu/VBox/Tabs" unique_id=117082172]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_svoao")
 metadata/_tab_index = 1

@@ -1,10 +1,11 @@
 ![Candy Arts Logo](Logo.png)
 
+[Official Site](https://candy-arts.com) | [Discord](https://discord.gg/CZ9RZxzmNf) | [Youtube](https://www.youtube.com/@CandyArtsStudio/playlists) | [Documentation](https://github.com/Candy-Arts/Extras/tree/Main/Candy%20Dialogue%20Engine/Guides) | [Godot Asset Store](https://store.godotengine.org/publisher/candy-arts/) | [Gumroad](https://candyarts.gumroad.com/)
 
 # Candy Dialogue Creator
 **Candy Dialogue Creator by [Candy Arts](https://candy-arts.com) is the free, standalone companion application to [Candy Dialogue Engine](https://github.com/Candy-Arts/Candy-Dialogue-Engine).**
 
-![UI_Preview.png](UI_Preview.png)
+![UI_Preview.png](https://candy-arts.com/wp-content/uploads/2026/08/Store-Screenshot-A.webp)
 
 ## Technical Specs
 Available formats:

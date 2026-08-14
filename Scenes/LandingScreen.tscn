@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://brkuych7x436w"]
 
-[ext_resource type="Texture2D" uid="uid://b2s2c63mgr7io" path="res://Resources/Candy Arts Logo.png" id="1_ti3ws"]
+[ext_resource type="Texture2D" uid="uid://b6ktijk8rg6tl" path="res://Resources/Candy Arts BG.png" id="1_5ypii"]
 [ext_resource type="Script" uid="uid://bc5msts8mnpqm" path="res://Scripts/landing_screen.gd" id="2_7xyja"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7xyja"]
-texture = ExtResource("1_ti3ws")
+texture = ExtResource("1_5ypii")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hw2xl"]
 content_margin_left = 4.0

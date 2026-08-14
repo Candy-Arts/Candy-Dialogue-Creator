@@ -1,7 +1,7 @@
 extends Node
 
 #° META:
-var dc_version = "1.1.0"
+var dc_version = "1.1.1"
 var dialogue_version = "1.1.0"
 
 var editor_state = ""
@@ -200,8 +200,8 @@ var spoken_text_limit = "250"
 var limit_margin = "50"
 
 var default_save_mode = 0
-var quick_saves_max = "5"
-var auto_saves_max = "5"
+var quick_saves_max = "20"
+var auto_saves_max = "20"
 var auto_save_freq = "60"
 
 
@@ -291,8 +291,6 @@ var shortcut_keys = {
 	"Quick_Save": KEY_F4,
 	"Quick_Load": KEY_F5,
 }
-
-
 
 #endregion
 

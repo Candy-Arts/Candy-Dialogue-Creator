@@ -8095,7 +8095,6 @@ func _write_log(path: String, lines: Array) -> void:
 	f.store_string("\n".join(lines))
 	f.close()
 
-
 #endregion
 
 #* Clear focus when command tab clicked:

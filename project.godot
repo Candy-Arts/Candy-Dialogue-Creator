@@ -8,34 +8,51 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
-config/name="Candy Dialogue Creator"
-config/version="1.1.1"
-run/main_scene="uid://d4bqma7cmnvjx"
-config/features=PackedStringArray("4.6", "Forward Plus")
-boot_splash/image="uid://b2s2c63mgr7io"
-config/icon="uid://buxofphwia4in"
+config/name="Candy Dialogue Creator 1.2"
+config/version="1.2.0"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="uid://o3ui54tu70m2"
 
 [autoload]
 
-globals="*uid://bkyqfiicj2g58"
+CandyLocale="*res://Core/locale.gd"
+CandyPanels="*res://Core/panel_registry.gd"
+CandyLayout="*res://Core/layout_manager.gd"
+CandyProfiles="*uid://k7fhllesbc0u"
+CandySchemas="*uid://c8xikx5kl6ea1"
+CandyDialogue="*uid://bhcseo48jcqvq"
+CandyWidgets="*uid://ce3rk7bx5ratw"
+CandyDropdowns="*uid://d4i8itylov7s"
+CandyFilters="*uid://cspwpcvo7qd50"
+CandyLineLayouts="*uid://8xwy0ag5mw5o"
+CandyInserts="*uid://cv78no61ednv7"
+CandyPresets="*uid://ctbrif1c3yerr"
+CandySaves="*uid://c1beosybmpca1"
+CandyResources="*uid://coprj7fjddnyv"
+CandyChecks="*res://Core/field_checks.gd"
+CandyTheme="*res://Core/theme_manager.gd"
+CandyShortcuts="*res://Core/shortcuts.gd"
+CandyDocs="*res://Core/docs.gd"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/mode=2
+window/subwindows/embed_subwindows=false
+window/per_pixel_transparency/allowed=true
 
-[gui]
+[internationalization]
 
-theme/custom="uid://cljmkwasi8wgc"
-
-[physics]
-
-3d/physics_engine="Jolt Physics"
+locale/include_text_server_data=true
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_etc2_astc=true

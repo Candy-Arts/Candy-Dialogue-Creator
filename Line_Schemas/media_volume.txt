@@ -1,0 +1,47 @@
+{
+	"type": "Media_Volume",
+	"title": "Media Volume",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players/Volume}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_type": "media_player", "entry_dropdown": { "provider": "media_players", "types": ["audio", "video"] }, "entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).", "tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Volume", "checks": [{"check": "volume"}], "label": "Volume", "widget": "line_edit", "default": "0", "types": ["audio", "video"], "tooltip": "The player's new volume, in dB.", "values": ["N: Set it to N dB.", "+=N / -=N: Change it by N dB.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Normal", "value": "0" },
+						{ "label": "Silent", "value": "-80" },
+						{ "label": "Louder by 6 dB", "value": "+=6" },
+						{ "label": "Quieter by 6 dB", "value": "-=6" }
+					]}
+				},
+				{
+					"id": "Time", "checks": [{"check": "fade_time"}], "label": "Time", "widget": "line_edit", "default": "0", "types": ["audio", "video"], "tooltip": "How long the fade takes.", "values": ["Seconds", "0: Instant.", "!Seconds: Fade, and hold the dialogue until it's done.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Instant", "value": "0" },
+						{ "label": "Fade over 2 seconds", "value": "2" },
+						{ "label": "Fade over 2 seconds and wait", "value": "!2" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

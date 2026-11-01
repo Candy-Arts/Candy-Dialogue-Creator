@@ -1,0 +1,26 @@
+{
+	"type": "Export",
+	"title": "Export",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Data}",
+	"short": ["{Data}"],
+	"fields": [
+		{ "id": "Data", "checks": [{"check": "required"}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": ","}, {"field": "Format", "in": ["dialogue", ".dialogue"]}]}, "text": "dialogue needs exactly one variable."}], "label": "Data", "widget": "line_edit", "default": "", "tooltip": "The variables to save, each under its own name.", "values": ["Comma-separated variable paths", "{expression}Expression: Gives the list."] },
+		{
+			"id": "Format", "checks": [{"check": "one_of", "values": ["json", "txt", "csv", "cfg", "ini", "bin", "b64", "base64", "tres", "res", "dialogue"], "trim_prefix": ".", "text": "Not a format."}], "label": "Format", "widget": "line_edit", "default": "json", "tooltip": "The file's format.", "values": ["json", "txt", "csv", "cfg / ini", "bin", "b64 / base64", "tres / res", "dialogue: A dialogue file. Data must be one dictionary.", "{expression}Expression"],
+			"dropdown": { "provider": "file_formats" }
+		},
+		{ "id": "File", "checks": [{"check": "file_name_chars"}, {"check": "when", "severity": "warning", "rule": {"not_empty": false}, "text": "No file name."}], "label": "File", "widget": "line_edit", "default": "Export", "tooltip": "The file's name, without extension.", "values": ["File name", "{expression}Expression"] },
+		{ "id": "Path", "label": "Path", "widget": "line_edit", "default": "", "tooltip": "The folder to write to. It's created if missing.", "values": ["Folder path", "Empty: candy_de.export_folder.", "{expression}Expression"] },
+		{
+			"id": "Method", "checks": [{"check": "one_of", "values": ["Overwrite", "Skip", "Duplicate", "Timestamp"], "case_sensitive": true, "case_text": true, "text": "Not a method."}], "label": "Method", "widget": "line_edit", "default": "Overwrite", "tooltip": "What to do when the file exists.", "values": ["Overwrite: Replace it.", "Skip: Write nothing.", "Duplicate: Write File(1).", "Timestamp: Write File_<date-time>.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Overwrite", "value": "Overwrite" },
+				{ "label": "Skip", "value": "Skip" },
+				{ "label": "Duplicate", "value": "Duplicate", "tooltip": "Saves as File(1), File(2)..." },
+				{ "label": "Timestamp", "value": "Timestamp", "tooltip": "Saves as File_<date-time>." }
+			]}
+		}
+	]
+}

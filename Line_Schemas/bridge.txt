@@ -1,0 +1,22 @@
+{
+	"type": "Bridge",
+	"title": "Bridge",
+	"category": "Transitions",
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.8, 0.5, 0, 0.5) },
+	"summary": "{Conversation|...} > {Block|...} > {Line|0}",
+	"short": ["{Conversation|...} > {Block|...} > {Line|0}"],
+	"fields": [
+		{
+			"id": "Conversation", "checks": [{"check": "transition", "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+			"dropdown": { "provider": "conversations" }
+		},
+		{
+			"id": "Block", "checks": [{"check": "transition", "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+			"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+		},
+		{
+			"id": "Line", "checks": [{"check": "transition", "part": "line", "conversation_field": "Conversation", "block_field": "Block", "self": true}], "label": "Line", "widget": "line_edit", "default": "0", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+			"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+		}
+	]
+}

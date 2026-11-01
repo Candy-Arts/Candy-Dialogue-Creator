@@ -1,0 +1,24 @@
+{
+	"type": "Mouse",
+	"title": "Mouse",
+	"category": "Input",
+	"colors": { "Text": Color(0.33, 0.7, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Mouse_Mode}",
+	"short": ["{Mouse_Mode}"],
+	"fields": [
+		{
+			"id": "Mouse_Mode", "checks": [{"check": "when", "severity": "error", "rule": {"equals": "locked"}, "text": "No Locked here: write captured."}, {"check": "one_of", "values": ["visible", "hidden", "captured", "confined", "confined_hidden", "dialogue_start", "dialogue_end", "choice", "locked"], "text": "Not a mouse mode."}], "label": "Mouse Mode", "widget": "line_edit", "default": "", "tooltip": "The mouse mode from now on.", "values": ["visible: Shown and free.", "hidden: Hidden, but free.", "captured: Hidden, and locked to the window.", "confined: Shown, and kept in the window.", "confined_Hidden: Hidden, and kept in the window.", "dialogue_start: The engine's start mode.", "dialogue_end: The engine's end mode.", "choice: The engine's choice mode.", "Empty: Unchanged.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Visible", "value": "visible" },
+				{ "label": "Hidden", "value": "hidden" },
+				{ "label": "Captured", "value": "captured" },
+				{ "label": "Confined", "value": "confined" },
+				{ "label": "Confined and hidden", "value": "confined_hidden" },
+				{ "separator": true },
+				{ "label": "Engine's dialogue start mode", "value": "dialogue_start" },
+				{ "label": "Engine's dialogue end mode", "value": "dialogue_end" },
+				{ "label": "Engine's choice mode", "value": "choice" }
+			]}
+		}
+	]
+}

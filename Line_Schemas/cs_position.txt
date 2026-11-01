@@ -1,0 +1,53 @@
+{
+	"type": "CS_Position",
+	"title": "CS Position",
+	"category": "Cutscene",
+	"summary": "{Markers}",
+	"short": ["{Markers/Nodes}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Markers", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Markers", "widget": "map", "entry_label": "marker", "entry_prefix": "Marker", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The markers to move nodes onto, each with the nodes it takes.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Nodes", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Nodes", "widget": "map", "entry_label": "node", "entry_prefix": "Node", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes to move onto this marker, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+					"fields": [
+						{
+							"id": "Rotate", "checks": [{"check": "on_off"}], "label": "Rotate", "widget": "line_edit", "default": "1", "tooltip": "Whether the node also takes the marker's rotation.", "values": ["1: Copy the rotation.", "0: Keep its own.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Copy rotation", "value": "1" },
+								{ "label": "Keep rotation", "value": "0" }
+							]}
+						},
+						{
+							"id": "Progression", "checks": [{"check": "one_of", "values": ["Time", "Speed"], "text": "Not 'Time' or 'Speed'."}], "label": "Progression", "widget": "line_edit", "default": "Time", "tooltip": "Whether the node gets there within a set time, or at a set speed. A new change replaces the one still running, and it goes on while the dialogue is suspended, and after it ends.", "values": ["Time: Within Time.", "Speed: At Speed.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Within a time", "value": "Time" },
+								{ "label": "At a speed", "value": "Speed" }
+							]}
+						},
+						{ "id": "Time", "checks": [{"check": "fade_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "How long the move takes.", "values": ["Seconds", "0: Instant.", "!Seconds: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "field": "Progression", "not_equals": "Speed" } },
+						{ "id": "Speed", "checks": [{"check": "fade_speed"}], "label": "Speed", "widget": "line_edit", "default": "0", "tooltip": "How fast the node moves. Turning with the move, a node already on the marker turns at once.", "values": ["Distance per second: pixels in 2D, meters in 3D.", "0: Instant.", "!Speed: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "field": "Progression", "equals": "Speed" } },
+						{
+							"id": "Turn_Progression", "checks": [{"check": "one_of", "values": ["Move", "Time", "Speed"], "text": "Not 'Move', 'Time' or 'Speed'."}], "label": "Turn Progression", "widget": "line_edit", "default": "Move", "tooltip": "How the node turns to the marker's rotation: with the move, within a set time, or at a set speed. The move and the turn start together.", "values": ["Move: Over the move's time, and waited for when the move is.", "Time: Within Turn Time.", "Speed: At Turn Speed.", "{expression}Expression"], "visible_when": { "field": "Rotate", "not_equals": "0" },
+							"dropdown": { "items": [
+								{ "label": "With the move", "value": "Move" },
+								{ "label": "Within a time", "value": "Time" },
+								{ "label": "At a speed", "value": "Speed" }
+							]}
+						},
+						{ "id": "Turn_Time", "checks": [{"check": "fade_time"}], "label": "Turn Time", "widget": "line_edit", "default": "0", "tooltip": "How long the turn takes.", "values": ["Seconds", "0: Instant.", "!Seconds: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "all": [{ "field": "Rotate", "not_equals": "0" }, { "field": "Turn_Progression", "equals": "Time" }] } },
+						{ "id": "Turn_Speed", "checks": [{"check": "fade_speed"}], "label": "Turn Speed", "widget": "line_edit", "default": "0", "tooltip": "How fast the node turns, the short way round.", "values": ["Degrees per second", "0: Instant.", "!Speed: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "all": [{ "field": "Rotate", "not_equals": "0" }, { "field": "Turn_Progression", "equals": "Speed" }] } }
+					]
+				}
+			]
+		}
+	]
+}

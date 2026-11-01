@@ -1,0 +1,20 @@
+{
+	"type": "Call",
+	"title": "Call",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Function}",
+	"short": ["{Variable} = {Function}()", "{Function}()"],
+	"fields": [
+		{ "id": "Function", "checks": [{"check": "named", "kind": "method"}], "label": "Function", "widget": "line_edit", "default": "", "tooltip": "The method to call, written without {expression}.", "values": ["Object path.method", "Engine method name", "{expression}Expression: Gives the method's path."] },
+		{ "id": "Arguments", "checks": [{"check": "arguments"}], "label": "Arguments", "widget": "line_edit", "default": "", "tooltip": "The arguments passed.", "values": ["{expression}Array: Spread as arguments.", "Value: The only argument.", "Empty: No arguments."] },
+		{ "id": "Variable", "checks": [{"check": "write_target"}], "label": "Variable", "widget": "line_edit", "default": "", "tooltip": "Where to store the returned value. Optional.", "values": ["Variable path", "{vardict}Variable", "Empty: Don't store it.", "{expression}Expression: Gives the variable's path."] },
+		{
+			"id": "Await", "checks": [{"check": "one_of", "values": ["1", "0", "true", "false"], "text": "Not 1 or 0."}], "label": "Await", "widget": "line_edit", "default": "1", "tooltip": "Whether the dialogue waits for the method to finish.", "values": ["1: Wait.", "0: Don't wait.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Wait for it", "value": "1" },
+				{ "label": "Don't wait", "value": "0" }
+			]}
+		}
+	]
+}

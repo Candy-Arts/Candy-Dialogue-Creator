@@ -1,0 +1,63 @@
+{
+	"type": "UI_Z",
+	"title": "UI Z",
+	"category": "UI",
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.3, 0.3, 0.3, 1) },
+	"summary": "{Nodes}",
+	"short": ["{Nodes/Z_Index}"],
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Nodes", "entry_checks": [{"check": "entry_name"}, {"check": "in_list", "dropdown": "entry_dropdown", "skip_paths": true, "text": "No media player or UI element ‹name› in the project."}], "label": "Nodes", "widget": "map", "entry_label": "node", "entry_prefix": "Node", "tooltip": "The nodes to move in z-order, in the order listed.", "values": ["Media player name", "UI element key", "Node path", "{expression}Expression"],
+			"entry_dropdown": { "items": [
+				{ "label": "UI Elements", "items": [
+					{ "label": "Dialogue box", "value": "dialogue_box_path" },
+					{ "label": "Subtitles", "value": "subtitles_path" },
+					{ "label": "Chat", "value": "chat_path" },
+					{ "label": "Barks", "value": "barks_path" },
+					{ "label": "Choices", "value": "choices_path" },
+					{ "label": "Input", "value": "input_node_path" },
+					{ "label": "History", "value": "history_display_path" },
+					{ "label": "Backgrounds", "value": "backgrounds_path" },
+					{ "label": "Busts", "value": "busts_path" }
+				]},
+				{ "label": "Media Players", "provider": "media_players", "types": ["video", "image"] }
+			]},
+			"fields": [
+				{
+					"id": "Z_Index", "checks": [{"check": "z_index", "reference": "Relative To"}], "label": "Z Index", "widget": "line_edit", "default": "Reset", "tooltip": "The node's new z index.", "values": ["Reset: Back to its default z index.", "N: Exactly N.", "+N / -N: Relative To's z index plus or minus N.", "Empty: Unchanged.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Reset", "value": "Reset" },
+						{ "label": "In front of Relative To", "value": "+1" },
+						{ "label": "Behind Relative To", "value": "-1" },
+						{ "label": "Leave it", "value": "" }
+					]}
+				},
+				{
+					"id": "Relative_To", "checks": [{"check": "when", "severity": "error", "rule": {"not_empty": false}, "text": "+N and -N need a node to count from."}, {"check": "in_list", "skip_paths": true, "text": "No media player or UI element ‹name› in the project."}], "label": "Relative To", "widget": "line_edit", "default": "", "tooltip": "The node +N and -N count from. Name the node itself to move it from where it is.", "values": ["Media player name", "UI element key", "Node path", "{expression}Expression"], "visible_when": { "field": "Z_Index", "begins_with": ["+", "-"] },
+					"dropdown": { "items": [
+						{ "label": "None", "value": "" },
+						{ "label": "UI Elements", "items": [
+							{ "label": "Dialogue box", "value": "dialogue_box_path" },
+							{ "label": "Subtitles", "value": "subtitles_path" },
+							{ "label": "Chat", "value": "chat_path" },
+							{ "label": "Barks", "value": "barks_path" },
+							{ "label": "Choices", "value": "choices_path" },
+							{ "label": "Input", "value": "input_node_path" },
+							{ "label": "History", "value": "history_display_path" },
+							{ "label": "Backgrounds", "value": "backgrounds_path" },
+							{ "label": "Busts", "value": "busts_path" }
+						]},
+						{ "label": "Media Players", "provider": "media_players", "types": ["video", "image"] }
+					]}
+				}
+			]
+		}
+	]
+}

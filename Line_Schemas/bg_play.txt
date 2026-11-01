@@ -1,0 +1,73 @@
+{
+	"type": "BG_Play",
+	"title": "BG Play",
+	"category": "Backgrounds",
+	"summary": "{Layers}",
+	"short": ["{Layers/File}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.59, 0.59, 0, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Layers", "entry_checks": [{"check": "entry_name", "kind": "layer"}], "label": "Layers", "widget": "map", "entry_label": "layer", "entry_prefix": "Layer", "entry_dropdown": { "provider": "scene_nodes", "nodes": "BG_Layer_Nodes" }, "tooltip": "The background layers this command acts on, each with its own settings.", "values": ["Layer name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "File", "checks": [{"check": "media_file"}], "label": "File", "widget": "line_edit", "default": "", "tooltip": "The file to show, from the layer's background folder.", "values": ["File name", "Name_CxR.png: A sprite sheet of C x R frames.", "Folder: A frame animation.", "res:// or user:// path", "Empty: Default.", "{expression}Expression"],
+					"dropdown": { "provider": "display_files", "folder": "Backgrounds", "preview": "backgrounds" }
+				},
+				{
+					"id": "Animation", "checks": [{"check": "in_list", "text": "No animation ‹name› in ‹File›."}], "label": "Animation", "widget": "line_edit", "default": "", "tooltip": "For AnimatedSprite layers: the animation of the SpriteFrames to play.", "values": ["Animation name", "Empty: The one named like File, else the first with frames.", "{expression}Expression"],
+					"dropdown": { "provider": "sprite_frame_animations", "file_field": "File", "folder": "Backgrounds", "preview": "backgrounds" }
+				},
+				{
+					"id": "Loops", "checks": [{"check": "loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) the layer plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame, until a Resume command. With a Duration, play for it instead.", "-1: Loop forever, whatever the Duration.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Once", "value": "1" },
+						{ "label": "Forever", "value": "-1" },
+						{ "label": "Hold the first frame", "value": "0" }
+					]}
+				},
+				{ "id": "Duration", "checks": [{"check": "duration"}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "How long the layer keeps playing after its loops, so it can stop partway through one. With Loops 0, it plays for the Duration alone.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "Empty or 0: No Duration: Loops alone decides.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } },
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame", "clear": false, "remove": "BG_Remove"}], "label": "Stop Frame", "widget": "line_edit", "default": "0", "tooltip": "The frame the layer stops on, once it has played its Loops and Duration. It stays on screen.", "values": ["0: Stop on the frame it ends on.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] },
+					"dropdown": { "items": [
+						{ "label": "Frame it ends on", "value": "0" },
+						{ "label": "Last frame", "value": "-1" },
+						{ "label": "First frame", "value": "1" }
+					]}
+				},
+				{
+					"id": "Wait_Loops", "checks": [{"check": "wait_loops", "loop_field": "Loops", "duration_field": "Duration"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] },
+					"dropdown": { "items": [
+						{ "label": "Don't wait", "value": "0" },
+						{ "label": "Until one loop ends", "value": "1" }
+					]}
+				},
+				{ "id": "Wait_Time", "checks": [{"check": "wait_time"}], "label": "Wait Time", "widget": "line_edit", "default": "", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "0: No extra wait.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] } },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The playback frame rate of frame folders, sprite sheets and SpriteFrames without a speed. f= values count with it too.", "values": ["Frames per second", "Empty: The default frame rate.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the background scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the scene decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

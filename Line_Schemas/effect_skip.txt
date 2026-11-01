@@ -1,0 +1,48 @@
+{
+	"type": "Effect_Skip",
+	"title": "Effect Skip",
+	"category": "Effects",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0, 0.5, 0.5, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_dropdown": { "provider": "project_data", "kind": "Effect_Players" }, "tooltip": "The effect players (AnimationPlayers) this command acts on, each with its own settings.", "values": ["Effect player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Time", "checks": [{"check": "skip_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "Where playback jumps to, within the current loop.", "values": ["Seconds / MM:SS.xx: Go to that position.", "+N / -N: Move forward or back, in seconds.", "f=N: Go to that frame.", "f+N / f-N: Move forward or back by N frames.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "To the start", "value": "0" },
+						{ "label": "Forward 5 seconds", "value": "+5" },
+						{ "label": "Back 5 seconds", "value": "-5" }
+					]}
+				},
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Time", "begins_with": ["f=", "f+", "f-"] },
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

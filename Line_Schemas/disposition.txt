@@ -1,0 +1,18 @@
+{
+	"type": "Disposition",
+	"title": "Disposition",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Reference} {Disposition}",
+	"short": ["{Reference}: {Disposition}", "{Reference}"],
+	"fields": [
+		{
+			"id": "Reference", "checks": [{"check": "actor"}, {"check": "when", "severity": "warning", "rule": {"not_empty": false}, "text": "No actor to change."}], "label": "Actor", "widget": "line_edit", "default": "", "tooltip": "The actor whose dispositions change.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"dropdown": { "provider": "actors" }
+		},
+		{
+			"id": "Disposition", "checks": [{"check": "disposition"}, {"check": "when", "severity": "notice", "rule": {"not_empty": true}, "text": "Replaces all of the actor's dispositions."}, {"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "Removes all of the actor's dispositions."}], "label": "Disposition", "widget": "line_edit", "default": "", "tooltip": "The actor's new dispositions, replacing all of them.", "values": ["Comma-separated dispositions", "{expression}Expression"],
+			"dropdown": { "provider": "project_data", "kind": "Dispositions", "pick": "append" }
+		}
+	]
+}

@@ -1,0 +1,45 @@
+{
+	"type": "VN_Remove",
+	"title": "VN Remove",
+	"category": "Visual Novel",
+	"summary": "{Actors}",
+	"short": ["{Actors}"],
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Actors", "entry_checks": [{"check": "entry_name"}, {"check": "actor"}], "label": "Actors", "widget": "map", "entry_label": "actor", "entry_prefix": "Actor", "entry_dropdown": { "provider": "actors" }, "tooltip": "The actors this command acts on, each with its own settings.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "JML_Order", "checks": [{"check": "jml_order"}], "label": "JML Order", "widget": "line_edit", "default": "0", "tooltip": "The group the actor appears, moves or leaves with. Lower groups go first.", "values": ["Group number", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "First group", "value": "0" },
+						{ "label": "Second group", "value": "1" },
+						{ "label": "Third group", "value": "2" }
+					]}
+				},
+				{
+					"id": "Leave_Effect", "checks": [{"check": "jml_effect"}], "label": "Leave Effect", "widget": "line_edit", "default": "null", "tooltip": "The Leave effect: an animation of the bust's JML player.", "values": ["Animation name", "Empty: No effect.", "null: No override.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "The actor's own", "value": "null" },
+						{ "label": "None", "value": "" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the bust scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the scene decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

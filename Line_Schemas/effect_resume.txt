@@ -1,0 +1,39 @@
+{
+	"type": "Effect_Resume",
+	"title": "Effect Resume",
+	"category": "Effects",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0, 0.5, 0.5, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_dropdown": { "provider": "project_data", "kind": "Effect_Players" }, "tooltip": "The effect players (AnimationPlayers) this command acts on, each with its own settings.", "values": ["Effect player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Pause_Loop_Resume", "checks": [{"check": "pause_loop_resume"}], "label": "Pause Loop Resume", "widget": "line_edit", "default": "null", "tooltip": "How playback resumes after a pause loop, over the Effect_Pause's.", "values": ["Return: Now, from the pause point.", "Continue: Now, from where the loop is.", "Finish_Return: At the loop's end, from the pause point.", "Finish_Continue: At the loop's end, carrying on from there.", "null: As the Effect_Pause says.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Now, from the pause point", "value": "Return" },
+						{ "label": "Now, from where the loop is", "value": "Continue" },
+						{ "label": "At the loop's end, from the pause point", "value": "Finish_Return" },
+						{ "label": "At the loop's end, carrying on", "value": "Finish_Continue" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

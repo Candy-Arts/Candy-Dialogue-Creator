@@ -1,0 +1,52 @@
+{
+	"type": "UI_Clear",
+	"title": "UI Clear",
+	"category": "UI",
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.3, 0.3, 0.3, 1) },
+	"fields": [
+		{
+			"id": "Box", "checks": [{"check": "on_off"}], "label": "Box", "widget": "line_edit", "default": "1", "tooltip": "Whether the dialogue box's text and speaker name are cleared.", "values": ["1: Clear them.", "0: Keep them.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		},
+		{
+			"id": "Bubbles", "checks": [{"check": "one_of", "values": ["0", "1", "2"], "text": "Not 0, 1 or 2."}], "label": "Bubbles", "widget": "line_edit", "default": "1", "tooltip": "Whether actor and VN speech bubbles are cleared.", "values": ["1: Clear the bubbles this engine wrote in last.", "2: Clear every bubble, even those other engines wrote in last.", "0: Keep them.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Clear all engines' bubbles", "value": "2" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		},
+		{
+			"id": "Subtitles", "checks": [{"check": "on_off"}], "label": "Subtitles", "widget": "line_edit", "default": "1", "tooltip": "Whether the subtitles are cleared.", "values": ["1: Clear them.", "0: Keep them.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		},
+		{
+			"id": "Portraits", "checks": [{"check": "on_off"}], "label": "Portraits", "widget": "line_edit", "default": "1", "tooltip": "Whether the dialogue box's portrait is cleared.", "values": ["1: Clear it.", "0: Keep it.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		},
+		{
+			"id": "Backgrounds", "checks": [{"check": "on_off"}], "label": "Backgrounds", "widget": "line_edit", "default": "1", "tooltip": "Whether every background layer is cleared, if the background scene accepts it.", "values": ["1: Clear them.", "0: Keep them.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		},
+		{
+			"id": "Busts", "checks": [{"check": "one_of", "values": ["0", "1", "2"], "text": "Not 0, 1 or 2."}, {"check": "when", "severity": "notice", "rule": {"all": [{"equals": "0"}, {"field": "Box", "equals": "0"}, {"field": "Bubbles", "equals": "0"}, {"field": "Subtitles", "equals": "0"}, {"field": "Portraits", "equals": "0"}, {"field": "Backgrounds", "equals": "0"}]}, "text": "Only barks are cleared: they always are."}], "label": "Busts", "widget": "line_edit", "default": "1", "tooltip": "Whether the busts are cleared, if the bust scene accepts it.", "values": ["1: Clear every bust at once.", "2: Play each actor's Leave effect first, one after another.", "0: Keep them.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Clear", "value": "1" },
+				{ "label": "Clear with leave effects", "value": "2" },
+				{ "label": "Keep", "value": "0" }
+			]}
+		}
+	]
+}

@@ -1,0 +1,57 @@
+{
+	"type": "BG_Effect_Skip",
+	"title": "BG Effect Skip",
+	"category": "Backgrounds",
+	"summary": "{Layers}",
+	"short": ["{Layers/Effects}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.59, 0.59, 0, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Layers", "entry_checks": [{"check": "entry_name", "kind": "layer"}], "label": "Layers", "widget": "map", "entry_label": "layer", "entry_prefix": "Layer", "entry_dropdown": { "provider": "scene_nodes", "nodes": "BG_Layer_Nodes" }, "tooltip": "The background layers this command acts on, each with its own settings.", "values": ["Layer name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Effects", "entry_checks": [{"check": "entry_name"}], "label": "Effects", "widget": "map", "entry_label": "effect", "entry_prefix": "Effect", "entry_dropdown": { "provider": "effect_animations", "library_field": "Library", "folder": "Backgrounds" }, "tooltip": "The effects this command acts on, each named after the animation it plays.", "values": ["Animation name"],
+					"fields": [
+						{
+							"id": "Time", "checks": [{"check": "skip_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "Where playback jumps to, within the current loop.", "values": ["Seconds / MM:SS.xx: Go to that position.", "+N / -N: Move forward or back, in seconds.", "f=N: Go to that frame.", "f+N / f-N: Move forward or back by N frames.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "To the start", "value": "0" },
+								{ "label": "Forward 5 seconds", "value": "+5" },
+								{ "label": "Back 5 seconds", "value": "-5" }
+							]}
+						},
+						{
+							"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Time", "begins_with": ["f=", "f+", "f-"] },
+							"dropdown": { "items": [
+								{ "label": "From the FPS chain", "value": "" },
+								{ "label": "12", "value": "12" },
+								{ "label": "24", "value": "24" },
+								{ "label": "30", "value": "30" },
+								{ "label": "60", "value": "60" }
+							]}
+						},
+						{
+							"id": "Library", "checks": [{"check": "effect_library"}], "label": "Library", "widget": "line_edit", "default": "", "tooltip": "Only needed to tell apart two effects of the same name on one layer.", "values": ["Library name", "Empty: The layer's effect of that name.", "{expression}Expression"],
+							"dropdown": { "provider": "effect_libraries", "folder": "Backgrounds" }
+						},
+						{
+							"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the background scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Let the scene decide", "value": "" },
+								{ "label": "Take hold", "value": "1" },
+								{ "label": "Never take hold", "value": "-1" }
+							]}
+						}
+					]
+				}
+			]
+		}
+	]
+}

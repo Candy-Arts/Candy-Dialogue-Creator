@@ -1,0 +1,22 @@
+{
+	"type": "VN_Scene",
+	"title": "VN Scene",
+	"category": "Visual Novel",
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Scene}",
+	"short": ["{Scene}"],
+	"fields": [
+		{
+			"id": "Scene", "checks": [{"check": "scene_file"}], "label": "Scene", "widget": "line_edit", "default": "", "tooltip": "The bust scene to switch to, from the bust scenes folder. Its actors go with the old one. Empty removes the current one.", "values": ["Scene name", "res:// or user:// path", "Empty: Remove the current scene and its actors.", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "VN_Scenes" }
+		},
+		{
+			"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the bust scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Let the scene decide", "value": "" },
+				{ "label": "Take hold", "value": "1" },
+				{ "label": "Never take hold", "value": "-1" }
+			]}
+		}
+	]
+}

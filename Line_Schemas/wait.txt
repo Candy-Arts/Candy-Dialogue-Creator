@@ -1,0 +1,11 @@
+{
+	"type": "Wait",
+	"title": "Wait",
+	"category": "UI",
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.3, 0.3, 0.3, 1) },
+	"summary": "{Wait_Time}",
+	"short": ["{Wait_Time}"],
+	"fields": [
+		{ "id": "Wait_Time", "checks": [{"check": "wait_time", "frames": false}, {"check": "when", "severity": "error", "rule": {"begins_with": "f="}, "text": "Wait can't count frames."}, {"check": "when", "severity": "warning", "rule": {"any": [{"not_empty": false}, {"equals": "0"}]}, "text": "Waits for nothing."}], "label": "Wait Time", "widget": "line_edit", "default": "0", "tooltip": "How long the dialogue waits. The player can skip it.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "{expression}Expression"] }
+	]
+}

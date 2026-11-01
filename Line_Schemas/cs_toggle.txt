@@ -1,0 +1,25 @@
+{
+	"type": "CS_Toggle",
+	"title": "CS Toggle",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes whose candy_toggle() is called, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{ "id": "Method", "label": "Method", "widget": "line_edit", "default": "", "tooltip": "Handed to the target's candy_toggle() as its method, as it is.", "values": ["Any value", "{expression}Expression"] },
+				{ "id": "Properties", "label": "Properties", "widget": "line_edit", "default": "", "tooltip": "Handed to the target's candy_toggle() as its properties, as it is.", "values": ["Any value", "{expression}Expression"] },
+				{ "id": "Value", "label": "Value", "widget": "line_edit", "default": "", "tooltip": "Handed to the target's candy_toggle() as its value, as it is.", "values": ["Any value", "{expression}Expression"] }
+			]
+		}
+	]
+}

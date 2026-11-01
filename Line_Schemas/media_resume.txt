@@ -1,0 +1,56 @@
+{
+	"type": "Media_Resume",
+	"title": "Media Resume",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_type": "media_player", "entry_dropdown": { "provider": "media_players" }, "entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).", "tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Box", "checks": [{"check": "z_index", "reference": "the player"}], "label": "Box", "widget": "line_edit", "default": "", "types": ["video", "image"], "tooltip": "Moves the dialogue UI in z-order, next to this player.", "values": ["Empty: Leave the z-order alone.", "Reset: Back to the default z-order.", "N: Exactly z index N.", "+N / -N: The player's z index plus or minus N.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Leave alone", "value": "" },
+						{ "label": "Reset", "value": "Reset" },
+						{ "label": "In front of the player", "value": "+1" },
+						{ "label": "Behind the player", "value": "-1" }
+					]}
+				},
+				{
+					"id": "Pause_Loop_Resume", "checks": [{"check": "pause_loop_resume"}], "label": "Pause Loop Resume", "widget": "line_edit", "default": "null", "tooltip": "How playback resumes after a pause loop, over the Media_Pause's.", "values": ["Return: Now, from the pause point.", "Continue: Now, from where the loop is.", "Finish_Return: At the loop's end, from the pause point.", "Finish_Continue: At the loop's end, carrying on from there.", "null: As the Media_Pause says.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Now, from the pause point", "value": "Return" },
+						{ "label": "Now, from where the loop is", "value": "Continue" },
+						{ "label": "At the loop's end, from the pause point", "value": "Finish_Return" },
+						{ "label": "At the loop's end, carrying on", "value": "Finish_Continue" }
+					]}
+				},
+				{
+					"id": "Resume_Volume_Time", "checks": [{"check": "fade_time"}], "label": "Resume Volume Time", "widget": "line_edit", "default": "null", "types": ["audio", "video"], "tooltip": "How long the volume takes to come back after a pause loop, over the Media_Pause's.", "values": ["Seconds", "0: Instant.", "!Seconds: Fade, and hold the dialogue until it's done.", "null: As the Media_Pause says.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Instant", "value": "0" },
+						{ "label": "Fade over 1 second", "value": "1" },
+						{ "label": "Fade over 1 second and wait", "value": "!1" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

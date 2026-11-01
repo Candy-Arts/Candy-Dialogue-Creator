@@ -1,0 +1,12 @@
+{
+	"type": "Custom",
+	"title": "Custom",
+	"category": "Misc",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Command}",
+	"short": ["{Command}"],
+	"fields": [
+		{ "id": "Command", "checks": [{"check": "required"}, {"check": "custom_event"}], "label": "Command", "widget": "line_edit", "default": "", "tooltip": "The custom command to run: a script in the engine's Custom_Events folder.", "values": ["Script name", "{expression}Expression"] },
+		{ "id": "Data", "label": "Data", "widget": "line_edit", "default": "", "tooltip": "Data handed to that script.", "values": ["Any value", "{expression}Expression"] }
+	]
+}

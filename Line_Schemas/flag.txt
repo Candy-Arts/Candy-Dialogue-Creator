@@ -1,0 +1,19 @@
+{
+	"type": "Flag",
+	"title": "Flag",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Flag} {Operator} {Expression}",
+	"short": ["{Flag} {Operator} {Expression}", "{Flag} {Operator}"],
+	"fields": [
+		{
+			"id": "Flag", "checks": [{"check": "when", "severity": "warning", "rule": {"not_empty": false}, "text": "No flag: this line does nothing."}, {"check": "in_list", "text": "No flag ‹name› in the project's data."}], "label": "Flag", "widget": "line_edit", "default": "", "tooltip": "The flag to write: a key of candy_de.flags.", "values": ["Flag name", "Empty: Do nothing.", "{expression}Expression"],
+			"dropdown": { "provider": "project_data", "kind": "Flags" }
+		},
+		{
+			"id": "Operator", "checks": [{"check": "operator"}], "label": "Operator", "widget": "line_edit", "default": "=", "tooltip": "How Expression changes the flag. Most operators work on the current value when Expression is empty.", "values": ["=: Replace the value with Expression.", "Other operators: Listed in the dropdown.", "{expression}Expression"],
+			"dropdown": { "provider": "operators" }
+		},
+		{ "id": "Expression", "checks": [{"check": "when", "severity": "notice", "rule": {"all": [{"is_number": true}, {"field": "Operator", "equals": "="}]}, "text": "Stored as the text \"‹value›\". Write {expression}‹value› to store the number."}, {"check": "when", "severity": "notice", "rule": {"all": [{"in": ["true", "false"]}, {"field": "Operator", "equals": "="}]}, "text": "Stored as the text \"‹value›\". Write {expression}‹value› to store the boolean."}, {"check": "when", "severity": "error", "rule": {"all": [{"not_empty": false}, {"field": "Operator", "equals": "="}]}, "text": "Required with =."}], "label": "Expression", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "The value the operator uses.", "values": ["Value", "Empty: No value (not with =).", "{expression}Expression"] }
+	]
+}

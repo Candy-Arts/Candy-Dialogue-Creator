@@ -1,0 +1,17 @@
+{
+	"type": "Write_Speed",
+	"title": "Write Speed",
+	"category": "Text Events",
+	"category_tooltip": "Commands that only work inside a text event, run while a spoken line is written: add them in the Text Event Editor. They don't work as standalone commands in a dialogue, so don't display buttons for them.",
+	"colors": { "Text": Color(1, 0.85, 0.45, 1), "BG": Color(0.22, 0.16, 0.02, 1) },
+	"summary": "{Writing_Speed}",
+	"short": ["{Writing_Speed}"],
+	"fields": [
+		{
+			"id": "Writing_Speed", "checks": [{"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Writes up to the next text event at once."}], "label": "Writing Speed", "widget": "line_edit", "default": "null", "tooltip": "The writing speed of the rest of the line being written. The speed and slow keys still override it while held.", "values": ["Characters per second", "0: Up to the next text event at once.", "Reset: The line's own speed.", "null: No change.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "The line's own speed", "value": "Reset" }
+			]}
+		}
+	]
+}

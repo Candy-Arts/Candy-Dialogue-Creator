@@ -1,0 +1,12 @@
+{
+	"type": "Emit",
+	"title": "Emit",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Signal}",
+	"short": ["{Signal}"],
+	"fields": [
+		{ "id": "Signal", "checks": [{"check": "named", "kind": "signal"}], "label": "Signal", "widget": "line_edit", "default": "", "tooltip": "The signal to emit, written without {expression}.", "values": ["Object path.signal", "Engine signal name", "{expression}Expression: Gives the signal's path."] },
+		{ "id": "Arguments", "checks": [{"check": "arguments"}], "label": "Arguments", "widget": "line_edit", "default": "", "tooltip": "The arguments passed.", "values": ["{expression}Array: Spread as arguments.", "Value: The only argument.", "Empty: No arguments."] }
+	]
+}

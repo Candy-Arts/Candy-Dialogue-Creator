@@ -1,0 +1,12 @@
+{
+	"type": "Await",
+	"title": "Await",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Signal}",
+	"short": ["{Signal}"],
+	"fields": [
+		{ "id": "Signal", "checks": [{"check": "named", "kind": "signal"}], "label": "Signal", "widget": "line_edit", "default": "", "tooltip": "The signal to wait for, written without {expression}.", "values": ["Object path.signal", "Engine signal name", "{expression}Expression: Gives the signal's path."] },
+		{ "id": "Variable", "checks": [{"check": "write_target"}], "label": "Variable", "widget": "line_edit", "default": "", "tooltip": "Where to store the signal's arguments. Optional.", "values": ["Variable path", "{vardict}Variable", "Empty: Don't store them.", "{expression}Expression: Gives the variable's path."] }
+	]
+}

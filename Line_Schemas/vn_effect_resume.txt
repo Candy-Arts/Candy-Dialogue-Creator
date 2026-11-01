@@ -1,0 +1,48 @@
+{
+	"type": "VN_Effect_Resume",
+	"title": "VN Effect Resume",
+	"category": "Visual Novel",
+	"summary": "{Actors}",
+	"short": ["{Actors/Effects}"],
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Actors", "entry_checks": [{"check": "entry_name"}, {"check": "actor"}], "label": "Actors", "widget": "map", "entry_label": "actor", "entry_prefix": "Actor", "entry_dropdown": { "provider": "actors" }, "tooltip": "The actors this command acts on, each with its own settings.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Effects", "entry_checks": [{"check": "entry_name"}], "label": "Effects", "widget": "map", "entry_label": "effect", "entry_prefix": "Effect", "entry_dropdown": { "provider": "effect_animations", "library_field": "Library", "folder": "*Busts" }, "tooltip": "The effects this command acts on, each named after the animation it plays.", "values": ["Animation name"],
+					"fields": [
+						{
+							"id": "Library", "checks": [{"check": "effect_library"}], "label": "Library", "widget": "line_edit", "default": "", "tooltip": "Only needed to tell apart two effects of the same name on one actor.", "values": ["Library name", "Empty: The actor's effect of that name.", "{expression}Expression"],
+							"dropdown": { "provider": "effect_libraries", "folder": "*Busts" }
+						},
+						{
+							"id": "Pause_Loop_Resume", "checks": [{"check": "pause_loop_resume"}], "label": "Pause Loop Resume", "widget": "line_edit", "default": "null", "tooltip": "How playback resumes after a pause loop, over the VN_Effect_Pause's.", "values": ["Return: Now, from the pause point.", "Continue: Now, from where the loop is.", "Finish_Return: At the loop's end, from the pause point.", "Finish_Continue: At the loop's end, carrying on from there.", "null: As the VN_Effect_Pause says.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Now, from the pause point", "value": "Return" },
+								{ "label": "Now, from where the loop is", "value": "Continue" },
+								{ "label": "At the loop's end, from the pause point", "value": "Finish_Return" },
+								{ "label": "At the loop's end, carrying on", "value": "Finish_Continue" }
+							]}
+						},
+						{
+							"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the bust scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Let the scene decide", "value": "" },
+								{ "label": "Take hold", "value": "1" },
+								{ "label": "Never take hold", "value": "-1" }
+							]}
+						}
+					]
+				}
+			]
+		}
+	]
+}

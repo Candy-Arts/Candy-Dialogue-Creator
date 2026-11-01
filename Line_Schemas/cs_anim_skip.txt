@@ -1,0 +1,48 @@
+{
+	"type": "CS_Anim_Skip",
+	"title": "CS Anim Skip",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes this command acts on, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Node", "label": "Node", "widget": "line_edit", "default": "", "tooltip": "The node inside the target to drive.", "values": ["Internal node key", "Node path", "Empty: The target itself, or its AnimationPlayer or AnimationTree child.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Find it automatically", "value": "" },
+						{ "label": "AnimationPlayer", "value": "AnimationPlayer" },
+						{ "label": "AnimationTree", "value": "AnimationTree" }
+					]}
+				},
+				{
+					"id": "Time", "checks": [{"check": "skip_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "Where playback jumps to, within the current loop.", "values": ["Seconds / MM:SS.xx: Go to that position.", "+N / -N: Move forward or back, in seconds.", "f=N: Go to that frame.", "f+N / f-N: Move forward or back by N frames.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "To the start", "value": "0" },
+						{ "label": "Forward 5 seconds", "value": "+5" },
+						{ "label": "Back 5 seconds", "value": "-5" }
+					]}
+				},
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Time", "begins_with": ["f=", "f+", "f-"] },
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				}
+			]
+		}
+	]
+}

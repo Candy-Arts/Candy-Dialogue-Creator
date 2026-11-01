@@ -1,0 +1,232 @@
+[gd_scene format=3 uid="uid://deoevh2qwy0vj"]
+
+[ext_resource type="Script" uid="uid://x65yyylmjx0h" path="res://UI/landing_screen.gd" id="1_landing"]
+[ext_resource type="Texture2D" uid="uid://mhfdgiqu4g7a" path="res://Resources/Candy Arts BG.svg" id="1_sv43s"]
+[ext_resource type="Script" uid="uid://c2xdrddm7jfvm" path="res://UI/news_card.gd" id="2_news"]
+[ext_resource type="Script" uid="uid://b2yxj3i5f5yie" path="res://UI/window_buttons.gd" id="3_window"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uf44u"]
+texture = ExtResource("1_sv43s")
+
+[node name="LandingScreen" type="PanelContainer" unique_id=799554323]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_uf44u")
+script = ExtResource("1_landing")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=999254472]
+layout_mode = 2
+
+[node name="TopBar" type="MarginContainer" parent="VBox" unique_id=692773387]
+layout_mode = 2
+theme_type_variation = &"CandyPanelMargin"
+
+[node name="HBox" type="HBoxContainer" parent="VBox/TopBar" unique_id=561481305]
+layout_mode = 2
+
+[node name="AppTitle" type="Label" parent="VBox/TopBar/HBox" unique_id=528304313]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CandyAppTitle"
+text = "Candy Dialogue Creator"
+
+[node name="WindowButtons" type="HBoxContainer" parent="VBox/TopBar/HBox" unique_id=252229024]
+layout_mode = 2
+script = ExtResource("3_window")
+
+[node name="Body" type="MarginContainer" parent="VBox" unique_id=1839372289]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/Body" unique_id=1757616742]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Column" type="VBoxContainer" parent="VBox/Body/Scroll" unique_id=1521480746]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Center" type="CenterContainer" parent="VBox/Body/Scroll/Column" unique_id=1134613298]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Card" type="PanelContainer" parent="VBox/Body/Scroll/Column/Center" unique_id=764873855]
+custom_minimum_size = Vector2(760, 540)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="VBox/Body/Scroll/Column/Center/Card" unique_id=422303064]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Content" type="VBoxContainer" parent="VBox/Body/Scroll/Column/Center/Card/Margin" unique_id=2050376252]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Heading" type="Label" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=1197991260]
+layout_mode = 2
+theme_type_variation = &"CandyCardTitle"
+text = "Profile"
+
+[node name="UserRow" type="HBoxContainer" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=124245474]
+layout_mode = 2
+
+[node name="UserLabel" type="Label" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/UserRow" unique_id=1585904466]
+layout_mode = 2
+text = "User"
+
+[node name="UserSelect" type="OptionButton" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/UserRow" unique_id=122090077]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NewUser" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/UserRow" unique_id=962278631]
+layout_mode = 2
+text = "New"
+
+[node name="RenameUser" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/UserRow" unique_id=346599999]
+layout_mode = 2
+text = "Rename"
+
+[node name="DeleteUser" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/UserRow" unique_id=216221914]
+layout_mode = 2
+text = "Delete"
+
+[node name="Separator" type="HSeparator" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=183342593]
+layout_mode = 2
+
+[node name="ProfileLabel" type="Label" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=1804641600]
+layout_mode = 2
+text = "Project profiles"
+
+[node name="ProfileTree" type="Tree" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=1604756928]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="ProfileRow" type="HBoxContainer" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=1680451412]
+layout_mode = 2
+
+[node name="OpenProfile" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/ProfileRow" unique_id=1198989568]
+layout_mode = 2
+disabled = true
+text = "Select Profile"
+
+[node name="Spacer" type="Control" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/ProfileRow" unique_id=374738537]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="NewProfile" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/ProfileRow" unique_id=1856176788]
+layout_mode = 2
+text = "New Profile"
+
+[node name="RenameProfile" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/ProfileRow" unique_id=1365708630]
+layout_mode = 2
+disabled = true
+text = "Rename"
+
+[node name="DeleteProfile" type="Button" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content/ProfileRow" unique_id=162454313]
+layout_mode = 2
+disabled = true
+text = "Delete"
+
+[node name="Status" type="Label" parent="VBox/Body/Scroll/Column/Center/Card/Margin/Content" unique_id=1043522556]
+layout_mode = 2
+text = " "
+
+[node name="NewsCard" type="PanelContainer" parent="VBox/Body/Scroll/Column" unique_id=292999305]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("2_news")
+
+[node name="Margin" type="MarginContainer" parent="VBox/Body/Scroll/Column/NewsCard" unique_id=1814219271]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Content" type="VBoxContainer" parent="VBox/Body/Scroll/Column/NewsCard/Margin" unique_id=629969000]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleRow" type="HBoxContainer" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content" unique_id=437568628]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=293379242]
+layout_mode = 2
+theme_type_variation = &"CandyCardTitle"
+text = "News"
+
+[node name="NewItem" type="TextureRect" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=300987152]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 4
+stretch_mode = 3
+
+[node name="TitleSpacer" type="Control" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=1931135773]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="RefreshAtStartup" type="CheckBox" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=602821508]
+layout_direction = 3
+layout_mode = 2
+tooltip_text = "Check for news every time Candy Dialogue Creator starts."
+text = "Auto"
+
+[node name="Refresh" type="Button" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=670168611]
+layout_mode = 2
+tooltip_text = "Check for news now."
+text = "Refresh"
+
+[node name="Help" type="Button" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/TitleRow" unique_id=1402565731]
+layout_mode = 2
+tooltip_text = "Candy Dialogue Creator downloads news from the official GitHub repository.
+No data is collected by Candy Arts."
+focus_mode = 0
+text = "?"
+
+[node name="Text" type="RichTextLabel" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content" unique_id=551566245]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+focus_mode = 2
+theme_type_variation = &"CandyNews"
+bbcode_enabled = true
+selection_enabled = true
+
+[node name="NavRow" type="HBoxContainer" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content" unique_id=2037214199]
+layout_mode = 2
+
+[node name="Previous" type="Button" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/NavRow" unique_id=1591307247]
+layout_mode = 2
+disabled = true
+text = "Previous"
+
+[node name="NavSpacer" type="Control" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/NavRow" unique_id=1363665236]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="UnreadAhead" type="TextureRect" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/NavRow" unique_id=26433128]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 4
+stretch_mode = 3
+
+[node name="Next" type="Button" parent="VBox/Body/Scroll/Column/NewsCard/Margin/Content/NavRow" unique_id=1493293544]
+layout_mode = 2
+disabled = true
+text = "Next"

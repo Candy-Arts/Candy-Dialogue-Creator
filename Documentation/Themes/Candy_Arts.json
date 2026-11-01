@@ -1,0 +1,28 @@
+{
+	"title": "Candy Arts",
+	"description": "The green default look of Candy Dialogue Creator.",
+	"style": {
+		"background_color": "#ffffff",
+		"text_color": "#0f2a23",
+		"link_color": "#6b3fd6",
+		"code_color": "#b5480f"
+	},
+	"theme": {
+		"toolbar_color": "#4ad4a0",
+		"sidebar_color": "#b9f5dc",
+		"field_color": "#f5fffa",
+		"button_color": "#8ed1fc",
+		"hover_color": "#b3e1fd",
+		"pressed_color": "#f4b7ff",
+		"accent_color": "#f78cff",
+		"second_page_color": "#a77bf3",
+		"text_color": "#0f2a23",
+		"border_color": "#1f4d40",
+		"border_width": "2",
+		"corner_radius": "8",
+		"list_color": "#c4e6fe",
+		"icon_color": "#153a30",
+		"list_icon_color": "#4ad4a0",
+		"arrow_color": "#000000"
+	}
+}

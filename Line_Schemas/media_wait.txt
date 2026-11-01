@@ -1,0 +1,49 @@
+{
+	"type": "Media_Wait",
+	"title": "Media Wait",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_type": "media_player", "entry_dropdown": { "provider": "media_players" }, "entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).", "tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Wait_Loops", "checks": [{"check": "wait_loops"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Don't wait", "value": "0" },
+						{ "label": "Until one loop ends", "value": "1" }
+					]}
+				},
+				{ "id": "Wait_Time", "checks": [{"check": "wait_time"}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": "f="}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}], "label": "Wait Time", "widget": "line_edit", "default": "0", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames (video and image players).", "0: No extra wait.", "{expression}Expression"] },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Wait_Time", "contains": "f=" }, "types": ["video"],
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "Box", "checks": [{"check": "z_index", "reference": "the player"}], "label": "Box", "widget": "line_edit", "default": "", "types": ["video", "image"], "tooltip": "Moves the dialogue UI in z-order, next to this player, once every wait is over.", "values": ["Empty: Leave the z-order alone.", "Reset: Back to the default z-order.", "N: Exactly z index N.", "+N / -N: The player's z index plus or minus N.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Leave alone", "value": "" },
+						{ "label": "Reset", "value": "Reset" },
+						{ "label": "In front of the player", "value": "+1" },
+						{ "label": "Behind the player", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

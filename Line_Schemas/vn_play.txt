@@ -1,0 +1,92 @@
+{
+	"type": "VN_Play",
+	"title": "VN Play",
+	"category": "Visual Novel",
+	"summary": "{Actors}",
+	"short": ["{Actors/File}", "{Actors/Bust}"],
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Actors", "entry_checks": [{"check": "entry_name"}, {"check": "actor"}], "label": "Actors", "widget": "map", "entry_label": "actor", "entry_prefix": "Actor", "entry_dropdown": { "provider": "actors" }, "tooltip": "The actors this command acts on, each with its own settings.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Bust", "checks": [{"check": "bust"}, {"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "Keeps the actor's current bust. An actor not on a bust yet needs one."}], "label": "Bust", "widget": "line_edit", "default": "", "tooltip": "The bust the actor goes on. Required for an actor not on a bust yet.", "values": ["Bust node name", "Empty: The actor's current bust.", "{expression}Expression"],
+					"dropdown": { "provider": "scene_nodes", "nodes": "VN_Bust_Nodes" }
+				},
+				{
+					"id": "File", "checks": [{"check": "media_file"}], "label": "File", "widget": "line_edit", "default": "", "tooltip": "The file to show, from the actor's busts folder.", "values": ["File name", "Name_CxR.png: A sprite sheet of C x R frames.", "Folder: A frame animation.", "res:// or user:// path", "Empty: Default.", "{expression}Expression"],
+					"dropdown": { "provider": "display_files", "folder": "*Busts", "preview": "busts" }
+				},
+				{
+					"id": "Animation", "checks": [{"check": "in_list", "text": "No animation ‹name› in ‹File›."}], "label": "Animation", "widget": "line_edit", "default": "", "tooltip": "For AnimatedSprite busts: the animation of the SpriteFrames to play.", "values": ["Animation name", "Empty: The one named like File, else the first with frames.", "{expression}Expression"],
+					"dropdown": { "provider": "sprite_frame_animations", "file_field": "File", "folder": "*Busts", "preview": "busts" }
+				},
+				{
+					"id": "Loops", "checks": [{"check": "loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) the bust plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame, until a Resume command. With a Duration, play for it instead.", "-1: Loop forever, whatever the Duration.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Once", "value": "1" },
+						{ "label": "Forever", "value": "-1" },
+						{ "label": "Hold the first frame", "value": "0" }
+					]}
+				},
+				{ "id": "Duration", "checks": [{"check": "duration"}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "How long the bust keeps playing after its loops, so it can stop partway through one. With Loops 0, it plays for the Duration alone.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "Empty or 0: No Duration: Loops alone decides.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } },
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame", "clear": false, "remove": "VN_Remove"}], "label": "Stop Frame", "widget": "line_edit", "default": "0", "tooltip": "The frame the bust stops on, once it has played its Loops and Duration. It stays on screen.", "values": ["0: Stop on the frame it ends on.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] },
+					"dropdown": { "items": [
+						{ "label": "Frame it ends on", "value": "0" },
+						{ "label": "Last frame", "value": "-1" },
+						{ "label": "First frame", "value": "1" }
+					]}
+				},
+				{
+					"id": "Wait_Loops", "checks": [{"check": "wait_loops", "loop_field": "Loops", "duration_field": "Duration"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] },
+					"dropdown": { "items": [
+						{ "label": "Don't wait", "value": "0" },
+						{ "label": "Until one loop ends", "value": "1" }
+					]}
+				},
+				{ "id": "Wait_Time", "checks": [{"check": "wait_time"}], "label": "Wait Time", "widget": "line_edit", "default": "", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "0: No extra wait.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] } },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The playback frame rate of frame folders, sprite sheets and SpriteFrames without a speed. f= values count with it too.", "values": ["Frames per second", "Empty: The default frame rate.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "JML_Order", "checks": [{"check": "jml_order"}], "label": "JML Order", "widget": "line_edit", "default": "0", "tooltip": "The group the actor appears, moves or leaves with. Lower groups go first.", "values": ["Group number", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "First group", "value": "0" },
+						{ "label": "Second group", "value": "1" },
+						{ "label": "Third group", "value": "2" }
+					]}
+				},
+				{
+					"id": "Join_Effect", "checks": [{"check": "jml_effect"}], "label": "Join Effect", "widget": "line_edit", "default": "null", "tooltip": "The Join effect: an animation of the bust's JML player.", "values": ["Animation name", "Empty: No effect.", "null: No override.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "The actor's own", "value": "null" },
+						{ "label": "None", "value": "" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the bust scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the scene decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,74 @@
+{
+	"type": "Choice_Status",
+	"title": "Choice Status",
+	"category": "Choices",
+	"short": ["{Choice_Tags}", "{Category_Tags}", "{Menu_Tags}"],
+	"colors": { "Text": Color(0.33, 0.7, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"fields": [
+		{
+			"id": "Menu_Mode", "checks": [{"check": "one_of", "values": ["Last", "Tags", "All"], "text": "Not a mode."}], "label": "Menu Mode", "widget": "line_edit", "default": "Last", "tooltip": "Which open menus to change.", "values": ["Last: The deepest open menu.", "Tags: Menus with a tag in Menu Tags.", "All: Every open menu.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Last", "value": "Last" },
+				{ "label": "Tags", "value": "Tags" },
+				{ "label": "All", "value": "All" }
+			]}
+		},
+		{
+			"id": "Menu_Tags", "checks": [{"check": "tags", "used": "menu"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "Menu_Mode", "equals": "Tags"}]}, "text": "No tags: no menu matches."}], "label": "Menu Tags", "widget": "line_edit", "default": "", "tooltip": "The tags of the menus to change.", "values": ["Comma-separated tags", "{expression}Expression"], "visible_when": { "field": "Menu_Mode", "equals": "Tags" },
+			"dropdown": { "provider": "choice_tags", "level": "menu", "pick": "append" }
+		},
+		{
+			"id": "Category_Mode", "checks": [{"check": "one_of", "values": ["Last", "Tags", "All"], "text": "Not a mode."}], "label": "Category Mode", "widget": "line_edit", "default": "Last", "tooltip": "Which categories to change.", "values": ["Last: The category of the menu's last picked choice.", "Tags: Categories with a tag in Category Tags.", "All: Every category without a tag in Category Tags.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Last", "value": "Last" },
+				{ "label": "Tags", "value": "Tags" },
+				{ "label": "All", "value": "All" }
+			]}
+		},
+		{
+			"id": "Category_Tags", "checks": [{"check": "tags", "used": "category"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "Category_Mode", "equals": "Tags"}]}, "text": "No tags: no category matches."}, {"check": "when", "severity": "notice", "rule": {"all": [{"not_empty": true}, {"field": "Category_Mode", "equals": "All"}]}, "text": "Categories with these tags are left out."}], "label": "Category Tags", "widget": "line_edit", "default": "", "tooltip": "Tags of the categories Tags includes, or All leaves out.", "values": ["Comma-separated tags", "{expression}Expression"], "visible_when": { "field": "Category_Mode", "in": ["Tags", "All"] },
+			"dropdown": { "provider": "choice_tags", "level": "category", "pick": "append" }
+		},
+		{
+			"id": "Choice_Mode", "checks": [{"check": "one_of", "values": ["Last", "Tags", "All"], "text": "Not a mode."}], "label": "Choice Mode", "widget": "line_edit", "default": "Last", "tooltip": "Which choices to change.", "values": ["Last: The menu's last picked choice.", "Tags: Choices with a tag in Choice Tags.", "All: Every choice without a tag in Choice Tags.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Last", "value": "Last" },
+				{ "label": "Tags", "value": "Tags" },
+				{ "label": "All", "value": "All" }
+			]}
+		},
+		{
+			"id": "Choice_Tags", "checks": [{"check": "tags", "used": "choice"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "Choice_Mode", "equals": "Tags"}]}, "text": "No tags: no choice matches."}, {"check": "when", "severity": "notice", "rule": {"all": [{"not_empty": true}, {"field": "Choice_Mode", "equals": "All"}]}, "text": "Choices with these tags are left out."}], "label": "Choice Tags", "widget": "line_edit", "default": "", "tooltip": "Tags of the choices Tags includes, or All leaves out.", "values": ["Comma-separated tags", "{expression}Expression"], "visible_when": { "field": "Choice_Mode", "in": ["Tags", "All"] },
+			"dropdown": { "provider": "choice_tags", "level": "choice", "pick": "append" }
+		},
+		{
+			"id": "Enable", "checks": [{"check": "one_of", "values": ["-", "Enable", "Disable", "Toggle"], "allow_empty": false, "text": "Not a value."}, {"check": "when", "severity": "warning", "rule": {"all": [{"equals": "-"}, {"field": "Activate", "equals": "-"}, {"field": "Show", "equals": "-"}, {"field": "Label", "not_empty": false}, {"field": "Tooltip", "not_empty": false}]}, "text": "This line changes nothing."}], "label": "Enable", "widget": "line_edit", "default": "-", "tooltip": "Whether the choices have a button.", "values": ["-: Unchanged.", "Enable: Spawn the button, after the choice's Setup.", "Disable: Delete the button.", "Toggle: Switch between the two.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Unchanged", "value": "-" },
+				{ "label": "Enable", "value": "Enable" },
+				{ "label": "Disable", "value": "Disable" },
+				{ "label": "Toggle", "value": "Toggle" }
+			]}
+		},
+		{
+			"id": "Activate", "checks": [{"check": "one_of", "values": ["-", "Activate", "Deactivate", "Toggle"], "allow_empty": false, "text": "Not a value."}], "label": "Activate", "widget": "line_edit", "default": "-", "tooltip": "Whether the buttons can be picked.", "values": ["-: Unchanged.", "Activate: Can be picked.", "Deactivate: Shown, but can't be picked.", "Toggle: Switch between the two.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Unchanged", "value": "-" },
+				{ "label": "Activate", "value": "Activate" },
+				{ "label": "Deactivate", "value": "Deactivate" },
+				{ "label": "Toggle", "value": "Toggle" }
+			]}
+		},
+		{
+			"id": "Show", "checks": [{"check": "one_of", "values": ["-", "Show", "Hide", "Toggle"], "allow_empty": false, "text": "Not a value."}], "label": "Show", "widget": "line_edit", "default": "-", "tooltip": "Whether the buttons are shown.", "values": ["-: Unchanged.", "Show: Shown.", "Hide: Hidden.", "Toggle: Switch between the two.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Unchanged", "value": "-" },
+				{ "label": "Show", "value": "Show" },
+				{ "label": "Hide", "value": "Hide" },
+				{ "label": "Toggle", "value": "Toggle" }
+			]}
+		},
+		{ "id": "Label", "label": "Label", "widget": "line_edit", "default": "", "tooltip": "The buttons' new text.", "values": ["Text", "Empty: Unchanged.", "{expression}Expression"] },
+		{ "id": "Tooltip", "label": "Tooltip", "widget": "line_edit", "default": "", "tooltip": "The buttons' new tooltip.", "values": ["Text", "Empty: Unchanged.", "{expression}Expression"] }
+	]
+}

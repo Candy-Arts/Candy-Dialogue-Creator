@@ -1,0 +1,29 @@
+{
+	"type": "Dialogue_Mode",
+	"title": "Dialogue Mode",
+	"category": "Engine",
+	"colors": { "Text": Color(1, 0.75, 0.4, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Mode}",
+	"short": ["{Mode}"],
+	"fields": [
+		{
+			"id": "Mode", "checks": [{"check": "dialogue_mode", "reset": true}], "label": "Mode", "widget": "line_edit", "default": "null", "tooltip": "The engine's dialogue mode, from the next line.", "values": ["Box", "Subtitles", "Chat", "Bubbles", "Barks", "Voice", "A mode of your own: a script in Candy_DE/Scripts/Dialogue_Modes.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "dialogue_modes", "exclude": ["VN_Bubbles"], "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Bubbles_Exempt_Mode", "checks": [{"check": "dialogue_mode", "reset": true}, {"check": "when", "severity": "warning", "rule": {"equals": "Bubbles"}, "text": "A speaker with no bubble can't use Bubbles either."}], "label": "Bubbles Exempt Mode", "widget": "line_edit", "default": "null", "tooltip": "The engine's mode for speakers with no speech bubble.", "values": ["Box", "Subtitles", "Chat", "Bubbles", "Barks", "Voice", "A mode of your own: a script in Candy_DE/Scripts/Dialogue_Modes.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "dialogue_modes", "exclude": ["VN_Bubbles"], "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Revert", "checks": [{"check": "setting_on_off"}], "label": "Revert", "widget": "line_edit", "default": "null", "tooltip": "Whether this change is undone when the dialogue ends.", "values": ["1: Undo it.", "0: Keep it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Undo when the dialogue ends", "value": "1" },
+				{ "label": "Keep after the dialogue", "value": "0" }
+			]}
+		}
+	]
+}

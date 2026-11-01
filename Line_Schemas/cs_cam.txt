@@ -1,0 +1,22 @@
+{
+	"type": "CS_Cam",
+	"title": "CS Cam",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "checks": [{"check": "count", "max": 1, "text": "Only the last camera listed stays current."}], "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "camera", "entry_prefix": "Camera", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The cameras to make current. The last one listed wins.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+			]
+		}
+	]
+}

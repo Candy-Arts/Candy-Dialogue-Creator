@@ -1,0 +1,17 @@
+{
+	"type": "Return",
+	"title": "Return",
+	"category": "Transitions",
+	"colors": { "Text": Color(0.8, 0.5, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Levels}",
+	"short": ["{Levels}"],
+	"fields": [
+		{
+			"id": "Levels", "checks": [{"check": "number", "whole": true}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Unwinds all the way to the main block."}, {"check": "when", "severity": "notice", "rule": {"less_than": 0}, "text": "Ends the dialogue if unwinding goes past the main block."}], "label": "Levels", "widget": "line_edit", "default": "1", "tooltip": "How many bridged blocks to unwind.", "values": ["1+: Unwind this many, stopping at the main block.", "-N: Unwind this many, and end the dialogue past the main block.", "0: Unwind to the main block.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "One level", "value": "1" },
+				{ "label": "To the main block", "value": "0" }
+			]}
+		}
+	]
+}

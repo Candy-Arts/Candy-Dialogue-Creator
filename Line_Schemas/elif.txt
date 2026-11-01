@@ -1,0 +1,28 @@
+{
+	"type": "Elif",
+	"title": "Elif",
+	"category": "Conditions",
+	"colors": { "Text": Color(0.87, 0.62, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Condition} {Type}",
+	"short": ["{Description}", "{Condition}: {Commands}", "{Condition}"],
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 1, "size_mode": 1, "fixed_size": 0,
+			"first": { "panel": "fields", "config": { "fields": [], "scroll": false } },
+			"second": { "panel": "command_editor", "config": { "map": "Commands" } }
+		}}
+	]},
+	"fields": [
+		{ "id": "Condition", "checks": [{"check": "condition"}, {"check": "if_chain"}], "label": "Condition", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "The test that decides whether Commands run, when nothing earlier in the If chain ran.", "values": ["{expression}Expression"] },
+		{
+			"id": "Type", "label": "Type", "widget": "line_edit", "default": "", "command_map": "Commands",
+			"tooltip": "The command to run.", "values": ["Command name"],
+			"dropdown": { "provider": "command_types", "exclude_categories": ["Conditions"], "exclude": ["Comment", "LM"] }
+		},
+		{ "id": "Description", "label": "Description", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "What this condition checks and what happens when it's true, in plain words. Shown in the Navigator's Short mode. Candy DE doesn't read it.", "values": ["Text"] },
+		{
+			"id": "Commands", "checks": [{"check": "count", "min": 1, "text": "Nothing runs when the condition is true."}], "label": "Commands", "widget": "map", "entries": "commands", "entry_label": "command", "entry_prefix": "Command", "in_forms": false,
+			"tooltip": "The command run when Condition is true and nothing earlier in the chain ran, edited below. To run several, put them in a block and Bridge to it."
+		}
+	]
+}

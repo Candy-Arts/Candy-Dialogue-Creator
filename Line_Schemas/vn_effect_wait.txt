@@ -1,0 +1,49 @@
+{
+	"type": "VN_Effect_Wait",
+	"title": "VN Effect Wait",
+	"category": "Visual Novel",
+	"summary": "{Actors}",
+	"short": ["{Actors/Effects}"],
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Actors", "entry_checks": [{"check": "entry_name"}, {"check": "actor"}], "label": "Actors", "widget": "map", "entry_label": "actor", "entry_prefix": "Actor", "entry_dropdown": { "provider": "actors" }, "tooltip": "The actors this command acts on, each with its own settings.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Effects", "entry_checks": [{"check": "entry_name"}], "label": "Effects", "widget": "map", "entry_label": "effect", "entry_prefix": "Effect", "entry_dropdown": { "provider": "effect_animations", "library_field": "Library", "folder": "*Busts" }, "tooltip": "The effects this command acts on, each named after the animation it plays.", "values": ["Animation name"],
+					"fields": [
+						{
+							"id": "Wait_Loops", "checks": [{"check": "wait_loops"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Don't wait", "value": "0" },
+								{ "label": "Until one loop ends", "value": "1" }
+							]}
+						},
+						{ "id": "Wait_Time", "checks": [{"check": "wait_time"}], "label": "Wait Time", "widget": "line_edit", "default": "", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "0: No extra wait.", "{expression}Expression"] },
+						{
+							"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Wait_Time", "contains": "f=" },
+							"dropdown": { "items": [
+								{ "label": "From the FPS chain", "value": "" },
+								{ "label": "12", "value": "12" },
+								{ "label": "24", "value": "24" },
+								{ "label": "30", "value": "30" },
+								{ "label": "60", "value": "60" }
+							]}
+						},
+						{
+							"id": "Library", "checks": [{"check": "effect_library"}], "label": "Library", "widget": "line_edit", "default": "", "tooltip": "Only needed to tell apart two effects of the same name on one actor.", "values": ["Library name", "Empty: The actor's effect of that name.", "{expression}Expression"],
+							"dropdown": { "provider": "effect_libraries", "folder": "*Busts" }
+						}
+					]
+				}
+			]
+		}
+	]
+}

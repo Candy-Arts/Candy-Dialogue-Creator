@@ -1,0 +1,16 @@
+{
+	"type": "Name",
+	"title": "Name",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Reference} {Name}",
+	"short": ["{Reference} = {Name}", "{Reference}"],
+	"fields": [
+		{
+			"id": "Reference", "checks": [{"check": "actor"}, {"check": "when", "severity": "warning", "rule": {"not_empty": false}, "text": "No actor to rename."}], "label": "Actor", "widget": "line_edit", "default": "", "tooltip": "The actor to rename.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"dropdown": { "provider": "actors" }
+		},
+		{ "id": "Name", "checks": [{"check": "when", "severity": "warning", "rule": {"not_empty": false}, "text": "Sets ‹Actor_Key› to empty text.", "defaults": {"Actor_Key": "DisplayName"}}], "label": "Name", "widget": "line_edit", "default": "", "tooltip": "The new name.", "values": ["Text", "{expression}Expression"] },
+		{ "id": "Actor_Key", "label": "Actor Key", "widget": "line_edit", "default": "DisplayName", "tooltip": "The field of the actor's entry to write.", "values": ["Actor entry key", "Empty: DisplayName.", "{expression}Expression"] }
+	]
+}

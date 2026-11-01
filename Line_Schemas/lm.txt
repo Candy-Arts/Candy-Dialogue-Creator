@@ -1,0 +1,11 @@
+{
+	"type": "LM",
+	"title": "Line Marker",
+	"category": "Transitions",
+	"colors": { "Text": Color(0.94, 0.25, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Reference}",
+	"short": ["{Reference}"],
+	"fields": [
+		{ "id": "Reference", "checks": [{"check": "required"}, {"check": "lm_reference"}], "label": "Reference", "widget": "line_edit", "default": "", "tooltip": "The name transitions find this line by.", "values": ["Text"] }
+	]
+}

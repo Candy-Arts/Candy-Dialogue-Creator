@@ -1,0 +1,18 @@
+{
+	"type": "Role",
+	"title": "Role",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Role} {Reference}",
+	"short": ["{Role} = {Reference}", "{Role}"],
+	"fields": [
+		{
+			"id": "Role", "checks": [{"check": "required"}, {"check": "in_list", "role": true, "text": "No role ‹name› in the project's roles."}], "label": "Role", "widget": "line_edit", "default": "", "tooltip": "The role to assign an actor to.", "values": ["Role name", "{role}Role name", "{expression}Expression"],
+			"dropdown": { "provider": "project_data", "kind": "Roles" }
+		},
+		{
+			"id": "Reference", "checks": [{"check": "actor"}, {"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "Clears the role: no actor plays it."}], "label": "Actor", "widget": "line_edit", "default": "", "tooltip": "The actor to assign to the role.", "values": ["Actor reference", "{role}Role reference: That role's actor.", "Empty: Clear the role.", "{expression}Expression"],
+			"dropdown": { "provider": "actors" }
+		}
+	]
+}

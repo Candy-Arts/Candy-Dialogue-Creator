@@ -1,0 +1,46 @@
+{
+	"type": "CS_Anim_Stop",
+	"title": "CS Anim Stop",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes this command acts on, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Node", "label": "Node", "widget": "line_edit", "default": "", "tooltip": "The node inside the target to drive.", "values": ["Internal node key", "Node path", "Empty: The target itself, or its AnimationPlayer or AnimationTree child.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Find it automatically", "value": "" },
+						{ "label": "AnimationPlayer", "value": "AnimationPlayer" },
+						{ "label": "AnimationTree", "value": "AnimationTree" }
+					]}
+				},
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame"}], "label": "Stop Frame", "widget": "line_edit", "default": "0", "tooltip": "Where the animation stops. An AnimationTree goes to its Idle state on -1, and is deactivated otherwise.", "values": ["Clear: Play the RESET animation, if there is one, then stop.", "0: Stop on the current frame.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"],
+					"dropdown": { "items": [{ "label": "Clear", "value": "Clear" }, { "label": "Current frame", "value": "0" }, { "label": "Last frame", "value": "-1" }, { "label": "First frame", "value": "1" }] }
+				},
+				{ "id": "Loops", "checks": [{"check": "stop_loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "", "tooltip": "Stop once the animation has played this many loops, counted from its start.", "values": ["Empty: Stop at once, unless Duration is set.", "0+: Number of loops.", "{expression}Expression"] },
+				{ "id": "Duration", "checks": [{"check": "duration"}, {"check": "when", "severity": "notice", "rule": {"all": [{"not_in": ["", "0"]}, {"not": {"begins_with": ["-"]}}, {"field": "Loops", "equals": ""}]}, "text": "Counted from the start of the playback."}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "Stop once the animation has played this long past its Loops, counted from its start.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "Empty or 0: Stop after the Loops, or at once with no Loops.", "{expression}Expression"] },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "field": "Duration", "contains": "f=" },
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"type": "CS_Visible",
+	"title": "CS Visible",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets/Visibility}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes to show or hide, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Visibility", "checks": [{"check": "one_of", "allow_empty": false, "text": "Not a visibility.", "values": ["true", "1", "on", "show", "unhidden", "visible", "false", "0", "off", "hide", "hidden", "invisible", "toggle", "swap", "switch"]}, {"check": "when", "severity": "notice", "rule": {"in": ["true", "1", "on", "unhidden", "visible"]}, "text": "Same as show."}, {"check": "when", "severity": "notice", "rule": {"in": ["false", "0", "off", "hidden", "invisible"]}, "text": "Same as hide."}, {"check": "when", "severity": "notice", "rule": {"in": ["swap", "switch"]}, "text": "Same as toggle."}], "label": "Visibility", "widget": "line_edit", "default": "", "tooltip": "Whether the node is shown.", "values": ["show: Show it.", "hide: Hide it.", "toggle: Switch.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Show", "value": "show" },
+						{ "label": "Hide", "value": "hide" },
+						{ "label": "Toggle", "value": "toggle" }
+					]}
+				}
+			]
+		}
+	]
+}

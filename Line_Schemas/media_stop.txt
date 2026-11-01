@@ -1,0 +1,51 @@
+{
+	"type": "Media_Stop",
+	"title": "Media Stop",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_type": "media_player", "entry_dropdown": { "provider": "media_players" }, "entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).", "tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame"}, {"check": "when", "severity": "notice", "rule": {"all": [{"is_number": true}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frame to show: it stops, keeping the file loaded."}], "label": "Stop Frame", "widget": "line_edit", "default": "Clear", "tooltip": "Where each player stops. Audio has no frame: any number just stops it.", "values": ["Clear: Unload the file, and hide video and images.", "0: Stop on the current frame.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Clear", "value": "Clear" },
+						{ "label": "Current frame", "value": "0" },
+						{ "label": "Last frame", "value": "-1" },
+						{ "label": "First frame", "value": "1" }
+					]}
+				},
+				{ "id": "Loops", "checks": [{"check": "stop_loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "", "tooltip": "Stop once the media has played this many loops, counted from its start.", "values": ["Empty: Stop at once, unless Duration is set.", "0+: Number of loops.", "{expression}Expression"] },
+				{ "id": "Duration", "checks": [{"check": "duration"}, {"check": "when", "severity": "notice", "rule": {"all": [{"not_in": ["", "0"]}, {"not": {"begins_with": ["-"]}}, {"field": "Loops", "equals": ""}]}, "text": "Counted from the start of the playback."}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": "f="}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "Stop once the media has played this long past its Loops, counted from its start.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames (video and image players).", "Empty or 0: Stop after the Loops, or at once with no Loops.", "{expression}Expression"] },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate a Stop Frame number and f= values count with, instead of the video's own.", "values": ["Frames per second", "Empty: The video's own frame rate.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Stop_Frame", "greater_than": 0 }, { "field": "Duration", "contains": "f=" } ] }, "types": ["video"],
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

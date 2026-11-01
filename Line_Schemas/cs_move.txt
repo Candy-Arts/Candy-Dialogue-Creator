@@ -1,0 +1,24 @@
+{
+	"type": "CS_Move",
+	"title": "CS Move",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes to move, each by a movement script of your own.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{ "id": "Movement", "checks": [{"check": "required"}, {"check": "move_event"}], "label": "Movement", "widget": "line_edit", "default": "", "tooltip": "The movement that moves the target: a script in the engine's Move_Events folder.", "values": ["Script name", "{expression}Expression"] },
+				{ "id": "Data", "label": "Data", "widget": "line_edit", "default": "", "tooltip": "Data handed to that script.", "values": ["Any value", "{expression}Expression"] }
+			]
+		}
+	]
+}

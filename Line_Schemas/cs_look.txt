@@ -1,0 +1,54 @@
+{
+	"type": "CS_Look",
+	"title": "CS Look",
+	"category": "Cutscene",
+	"summary": "{Markers}",
+	"short": ["{Markers/Nodes}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Markers", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Markers", "widget": "map", "entry_label": "marker", "entry_prefix": "Marker", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The markers to turn nodes towards, each with the nodes that face it.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Nodes", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Nodes", "widget": "map", "entry_label": "node", "entry_prefix": "Node", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes to turn towards this marker, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+					"fields": [
+						{
+							"id": "Axis", "checks": [{"check": "one_of", "values": ["-z", "+z", "z", "+x", "x", "-x", "+y", "y", "-y"], "text": "Not an axis."}, {"check": "when", "severity": "notice", "rule": {"in": ["z", "+z", "-z"]}, "text": "3D only: a 2D node uses +x."}], "label": "Axis", "widget": "line_edit", "default": "", "tooltip": "The node's axis that points at the marker. 2D nodes use x and y only.", "values": ["-z / +z", "+x / -x", "+y / -y", "Empty: -z in 3D, +x in 2D.", "{expression}Expression"],
+							"dropdown": { "items": [
+								"-z",
+								"+z",
+								"+x",
+								"-x",
+								"+y",
+								"-y"
+							]}
+						},
+						{
+							"id": "Ignore_Y", "checks": [{"check": "on_off"}], "label": "Ignore Y", "widget": "line_edit", "default": "0", "tooltip": "Whether the node only turns sideways.", "values": ["1: Turn sideways only, never up or down.", "0: Aim straight at the marker.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Tilt", "value": "0" },
+								{ "label": "Only turn sideways", "value": "1" }
+							]}
+						},
+						{
+							"id": "Progression", "checks": [{"check": "one_of", "values": ["Time", "Speed"], "text": "Not 'Time' or 'Speed'."}], "label": "Progression", "widget": "line_edit", "default": "Time", "tooltip": "Whether the node gets there within a set time, or at a set speed. A new change replaces the one still running, and it goes on while the dialogue is suspended, and after it ends.", "values": ["Time: Within Time.", "Speed: At Speed.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Within a time", "value": "Time" },
+								{ "label": "At a speed", "value": "Speed" }
+							]}
+						},
+						{ "id": "Time", "checks": [{"check": "fade_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "How long the turn takes. The node turns the short way round.", "values": ["Seconds", "0: Instant.", "!Seconds: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "field": "Progression", "not_equals": "Speed" } },
+						{ "id": "Speed", "checks": [{"check": "fade_speed"}], "label": "Speed", "widget": "line_edit", "default": "0", "tooltip": "How fast the node turns, the short way round.", "values": ["Degrees per second", "0: Instant.", "!Speed: Hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "field": "Progression", "equals": "Speed" } }
+					]
+				}
+			]
+		}
+	]
+}

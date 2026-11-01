@@ -1,0 +1,23 @@
+{
+	"type": "Input",
+	"title": "Input",
+	"category": "Input",
+	"colors": { "Text": Color(0.33, 0.7, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{File}",
+	"short": ["{Variable}"],
+	"fields": [
+		{
+			"id": "File", "checks": [{"check": "scene_file"}], "label": "Scene", "widget": "line_edit", "default": "Default.tscn", "tooltip": "The Input scene, from the input menus folder.", "values": ["Scene name", "res:// or user:// path", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "Player_Input_Scenes" }
+		},
+		{
+			"id": "Parent", "checks": [{"check": "cs_target"}], "label": "Parent", "widget": "line_edit", "default": "null", "tooltip": "The node the scene is added under.", "values": ["Location/Name", "Location/{role}Role", "Node path", "null: The engine's Input node.", "{expression}Expression"],
+			"dropdown": { "provider": "cs_targets" }
+		},
+		{ "id": "Variable", "checks": [{"check": "write_target"}], "label": "Variable", "widget": "line_edit", "default": "", "tooltip": "Where the scene stores the result.", "values": ["Variable path", "{vardict}Variable", "{expression}Expression: Gives the variable's path."] },
+		{ "id": "Mode", "label": "Mode", "widget": "line_edit", "default": "", "tooltip": "A mode the scene reads. The default scene knows Default.", "values": ["Text", "{expression}Expression"] },
+		{ "id": "Instructions", "label": "Instructions", "widget": "line_edit", "default": "", "tooltip": "Text the default scene shows above its field.", "values": ["Text", "{expression}Expression"] },
+		{ "id": "Placeholder", "label": "Placeholder", "widget": "line_edit", "default": "", "tooltip": "The default scene's placeholder text.", "values": ["Text", "{expression}Expression"] },
+		{ "id": "Text", "label": "Text", "widget": "line_edit", "default": "", "tooltip": "The default scene's starting text.", "values": ["Text", "{expression}Expression"] }
+	]
+}

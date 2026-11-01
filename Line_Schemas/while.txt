@@ -1,0 +1,28 @@
+{
+	"type": "While",
+	"title": "While",
+	"category": "Conditions",
+	"colors": { "Text": Color(0.87, 0.62, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Condition} {Type}",
+	"short": ["{Description}", "{Condition}: {Commands}", "{Condition}"],
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 1, "size_mode": 1, "fixed_size": 0,
+			"first": { "panel": "fields", "config": { "fields": [], "scroll": false } },
+			"second": { "panel": "command_editor", "config": { "map": "Commands" } }
+		}}
+	]},
+	"fields": [
+		{ "id": "Condition", "checks": [{"check": "condition"}, {"check": "when", "severity": "notice", "rule": {"in": ["{expression}true", "{expression}1"]}, "text": "Loops until while_safety_break stops it.", "expressions": true}], "label": "Condition", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "The test checked before each pass: Commands run while it's true.", "values": ["{expression}Expression"] },
+		{
+			"id": "Type", "label": "Type", "widget": "line_edit", "default": "", "command_map": "Commands",
+			"tooltip": "The command to run.", "values": ["Command name"],
+			"dropdown": { "provider": "command_types", "exclude_categories": ["Conditions"], "exclude": ["Comment", "LM"] }
+		},
+		{ "id": "Description", "label": "Description", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "What this loop checks and what it does each time, in plain words. Shown in the Navigator's Short mode. Candy DE doesn't read it.", "values": ["Text"] },
+		{
+			"id": "Commands", "checks": [{"check": "count", "min": 1, "text": "Nothing runs."}], "label": "Commands", "widget": "map", "entries": "commands", "entry_label": "command", "entry_prefix": "Command", "in_forms": false,
+			"tooltip": "The command run again and again while Condition is true, edited below. To run several, put them in a block and Bridge to it."
+		}
+	]
+}

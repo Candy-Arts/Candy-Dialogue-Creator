@@ -1,0 +1,104 @@
+{
+	"type": "Media_Pause",
+	"title": "Media Pause",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}], "label": "Players", "widget": "map", "entry_label": "player", "entry_prefix": "Player", "entry_type": "media_player", "entry_dropdown": { "provider": "media_players" }, "entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).", "tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Lines", "checks": [{"check": "pause_lines"}], "label": "Lines", "widget": "line_edit", "default": "-1", "tooltip": "How many lines until the pause ends by itself.", "values": ["1+: Resume after this many lines.", "-1, 0: Stay paused until a Resume command.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Until Media_Resume", "value": "-1" },
+						{ "label": "After the next line", "value": "1" }
+					]}
+				},
+				{
+					"id": "All", "checks": [{"check": "pause_all"}], "label": "All", "widget": "line_edit", "default": "0", "tooltip": "Which lines count towards Lines.", "values": ["0: Only displayed Spoken_Lines.", "1: Every line.", "{expression}Expression"], "visible_when": { "field": "Lines", "greater_than": 0 },
+					"dropdown": { "items": [
+						{ "label": "Displayed spoken lines", "value": "0" },
+						{ "label": "Every line", "value": "1" }
+					]}
+				},
+				{
+					"id": "Pause_Loop_Start", "checks": [{"check": "pause_loop_time", "other": "Pause_Loop_End"}, {"check": "when", "severity": "error", "rule": {"all": [{"begins_with": ["f=", "f+", "f-"]}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}], "label": "Pause Loop Start", "widget": "line_edit", "default": "", "tooltip": "While paused, where the loop it keeps playing starts. Empty with the other bound empty too: no loop, the media just pauses.", "values": ["Seconds / MM:SS.xx: That position.", "+N / -N: Seconds after or before the pause point.", "f=N / f+N / f-N: A frame, or N frames after or before the pause point (video and image players).", "Empty: The pause point.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "The pause point", "value": "" },
+						{ "label": "2 seconds before the pause point", "value": "-2" },
+						{ "label": "The start", "value": "0" }
+					]}
+				},
+				{
+					"id": "Pause_Loop_End", "checks": [{"check": "pause_loop_time", "other": "Pause_Loop_Start", "end": true}, {"check": "when", "severity": "error", "rule": {"all": [{"begins_with": ["f=", "f+", "f-"]}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}], "label": "Pause Loop End", "widget": "line_edit", "default": "", "tooltip": "While paused, where the loop it keeps playing ends. Empty with the other bound empty too: no loop, the media just pauses.", "values": ["Seconds / MM:SS.xx: That position.", "+N / -N: Seconds after or before the pause point.", "f=N / f+N / f-N: A frame, or N frames after or before the pause point (video and image players).", "Empty: The pause point.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "The pause point", "value": "" },
+						{ "label": "2 seconds after the pause point", "value": "+2" }
+					]}
+				},
+				{
+					"id": "Pause_Loop_Resume", "checks": [{"check": "pause_loop_resume"}], "label": "Pause Loop Resume", "widget": "line_edit", "default": "Return", "tooltip": "How playback resumes after a pause loop.", "values": ["Return: Now, from the pause point.", "Continue: Now, from where the loop is.", "Finish_Return: At the loop's end, from the pause point.", "Finish_Continue: At the loop's end, carrying on from there.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Pause_Loop_Start", "not_empty": true }, { "field": "Pause_Loop_End", "not_empty": true } ] },
+					"dropdown": { "items": [
+						{ "label": "Now, from the pause point", "value": "Return" },
+						{ "label": "Now, from where the loop is", "value": "Continue" },
+						{ "label": "At the loop's end, from the pause point", "value": "Finish_Return" },
+						{ "label": "At the loop's end, carrying on", "value": "Finish_Continue" }
+					]}
+				},
+				{
+					"id": "Pause_Volume", "checks": [{"check": "volume"}], "label": "Pause Volume", "widget": "line_edit", "default": "null", "types": ["audio", "video"], "tooltip": "The volume the pause loop plays at, in dB.", "values": ["N: N dB.", "+=N / -=N: The volume now, changed by N dB.", "null: The volume stays as it is.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Pause_Loop_Start", "not_empty": true }, { "field": "Pause_Loop_End", "not_empty": true } ] },
+					"dropdown": { "items": [
+						{ "label": "Silent", "value": "-80" },
+						{ "label": "Quieter by 12 dB", "value": "-=12" },
+						{ "label": "Quieter by 6 dB", "value": "-=6" }
+					]}
+				},
+				{
+					"id": "Pause_Volume_Time", "checks": [{"check": "fade_time"}], "label": "Pause Volume Time", "widget": "line_edit", "default": "0", "types": ["audio", "video"], "tooltip": "How long the fade to Pause Volume takes.", "values": ["Seconds", "0: Instant.", "!Seconds: Fade, and hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Pause_Loop_Start", "not_empty": true }, { "field": "Pause_Loop_End", "not_empty": true } ] },
+					"dropdown": { "items": [
+						{ "label": "Instant", "value": "0" },
+						{ "label": "Fade over 1 second", "value": "1" },
+						{ "label": "Fade over 1 second and wait", "value": "!1" }
+					]}
+				},
+				{
+					"id": "Resume_Volume_Time", "checks": [{"check": "fade_time"}], "label": "Resume Volume Time", "widget": "line_edit", "default": "0", "types": ["audio", "video"], "tooltip": "How long the volume takes to come back once playback resumes.", "values": ["Seconds", "0: Instant.", "!Seconds: Fade, and hold the dialogue until it's done (when Media_Resume resumes it at once).", "{expression}Expression"], "visible_when": { "any": [ { "field": "Pause_Loop_Start", "not_empty": true }, { "field": "Pause_Loop_End", "not_empty": true } ] },
+					"dropdown": { "items": [
+						{ "label": "Instant", "value": "0" },
+						{ "label": "Fade over 1 second", "value": "1" },
+						{ "label": "Fade over 1 second and wait", "value": "!1" }
+					]}
+				},
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Pause_Loop_Start", "begins_with": ["f=", "f+", "f-"] }, { "field": "Pause_Loop_End", "begins_with": ["f=", "f+", "f-"] } ] }, "types": ["video"]
+				},
+				{
+					"id": "Box", "checks": [{"check": "z_index", "reference": "the player"}], "label": "Box", "widget": "line_edit", "default": "", "types": ["video", "image"], "tooltip": "Moves the dialogue UI in z-order, next to this player.", "values": ["Empty: Leave the z-order alone.", "Reset: Back to the default z-order.", "N: Exactly z index N.", "+N / -N: The player's z index plus or minus N.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Leave alone", "value": "" },
+						{ "label": "Reset", "value": "Reset" },
+						{ "label": "In front of the player", "value": "+1" },
+						{ "label": "Behind the player", "value": "-1" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

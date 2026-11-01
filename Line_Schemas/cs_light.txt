@@ -1,0 +1,35 @@
+{
+	"type": "CS_Light",
+	"title": "CS Light",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}, {"check": "entry_fields_empty", "fields": ["Color", "Energy"], "text": "Changes nothing."}], "label": "Targets", "widget": "map", "entry_label": "light", "entry_prefix": "Light", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The Light2D or Light3D nodes to change, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{ "id": "Color", "checks": [{"check": "color"}], "label": "Color", "widget": "line_edit", "default": "", "tooltip": "The light's new color.", "values": ["#rrggbb", "(r, g, b, a)", "Color name", "Empty: Unchanged.", "{expression}Expression"] },
+				{ "id": "Energy", "checks": [{"check": "number"}], "label": "Energy", "widget": "line_edit", "default": "", "tooltip": "The light's new energy, changed by Operator.", "values": ["Number", "Empty: Unchanged.", "{expression}Expression"] },
+				{
+					"id": "Operator", "checks": [{"check": "one_of", "values": ["=", "+", "-", "*", "/"], "text": "Not an operator."}, {"check": "when", "severity": "warning", "rule": {"all": [{"equals": "/"}, {"field": "Energy", "equals": "0"}]}, "text": "Can't divide by 0: the energy is left alone."}], "label": "Operator", "widget": "line_edit", "default": "=", "tooltip": "How Energy changes the light's energy.", "values": ["=: Set it.", "+: Add to it.", "-: Subtract from it.", "*: Multiply it.", "/: Divide it.", "{expression}Expression"], "visible_when": { "field": "Energy", "not_empty": true },
+					"dropdown": { "items": [
+						"=",
+						"+",
+						"-",
+						"*",
+						"/"
+					]}
+				},
+				{ "id": "Time", "checks": [{"check": "fade_time"}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "How long Color and Energy take to change. A new change replaces the one still running, and an Operator other than = counts from the energy it's heading for. It goes on while the dialogue is suspended, and after it ends.", "values": ["Seconds", "0: Instant.", "!Seconds: Change, and hold the dialogue until it's done.", "{expression}Expression"], "visible_when": { "any": [{ "field": "Color", "not_empty": true }, { "field": "Energy", "not_empty": true }] } }
+			]
+		}
+	]
+}

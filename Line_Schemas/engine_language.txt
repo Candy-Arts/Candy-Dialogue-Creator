@@ -1,0 +1,29 @@
+{
+	"type": "Engine_Language",
+	"title": "Engine Language",
+	"category": "Engine",
+	"colors": { "Text": Color(1, 0.75, 0.4, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Language}",
+	"short": ["{Language}"],
+	"fields": [
+		{
+			"id": "Language", "checks": [{"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "The engine follows candy_de.language again."}, {"check": "language"}], "label": "Language", "widget": "line_edit", "default": "null", "tooltip": "The language the engine uses, from the next line.", "values": ["Language name", "Empty: Follow candy_de.language.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "languages", "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Voice_Language", "checks": [{"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "The engine follows candy_de.voice_language again, else the text's language."}, {"check": "language"}], "label": "Voice Language", "widget": "line_edit", "default": "null", "tooltip": "The language of the engine's voice files, from the next line, when it differs from the text's.", "values": ["Language name", "Empty: Follow candy_de.voice_language, else the text's language.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "languages", "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Revert", "checks": [{"check": "setting_on_off"}], "label": "Revert", "widget": "line_edit", "default": "null", "tooltip": "Whether this change is undone when the dialogue ends.", "values": ["1: Undo it.", "0: Keep it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Undo when the dialogue ends", "value": "1" },
+				{ "label": "Keep after the dialogue", "value": "0" }
+			]}
+		}
+	]
+}

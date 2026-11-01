@@ -1,0 +1,19 @@
+{
+	"line": [
+		{ "id": "Meta_Reference", "label": "Meta Reference", "widget": "line_edit", "stored_in": "Meta", "default": "", "tooltip": "A name for this line, for your own code. Candy DE doesn't read it.", "values": ["Text"] },
+		{
+			"id": "Meta_Notes", "label": "Meta Notes", "widget": "map", "entries": "values", "stored_in": "Meta", "entry_label": "note", "entry_prefix": "Note", "start_entries": 1, "tooltip": "Notes about this line, for its writers. Candy DE doesn't read them.", "values": ["Text"],
+			"value": { "widget": "text_edit", "height": "fit", "default": "" }
+		},
+		{
+			"id": "Custom_Data", "label": "Custom Data", "widget": "map", "entries": "values", "stored_in": "Meta", "entry_label": "custom field", "entry_prefix": "Custom", "start_entries": 1, "tooltip": "Free data for your own code. Candy DE doesn't read it.", "values": ["Any value"],
+			"value": { "widget": "line_edit", "default": "" }
+		}
+	],
+	"entry": [
+		{
+			"id": "Custom_Data", "label": "Custom Data", "widget": "map", "entries": "values", "stored_in": "Meta", "entry_label": "custom field", "entry_prefix": "Custom", "start_entries": 1, "tooltip": "Free data for your own code. Candy DE doesn't read it.", "values": ["Any value"],
+			"value": { "widget": "line_edit", "default": "" }
+		}
+	]
+}

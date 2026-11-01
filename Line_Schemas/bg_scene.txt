@@ -1,0 +1,22 @@
+{
+	"type": "BG_Scene",
+	"title": "BG Scene",
+	"category": "Backgrounds",
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.59, 0.59, 0, 1) },
+	"summary": "{Scene}",
+	"short": ["{Scene}"],
+	"fields": [
+		{
+			"id": "Scene", "checks": [{"check": "scene_file"}], "label": "Scene", "widget": "line_edit", "default": "", "tooltip": "The background scene to switch to, from the BG scenes folder. Empty removes the current one.", "values": ["Scene name", "res:// or user:// path", "Empty: Remove the current scene.", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "BG_Scenes" }
+		},
+		{
+			"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the background scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Let the scene decide", "value": "" },
+				{ "label": "Take hold", "value": "1" },
+				{ "label": "Never take hold", "value": "-1" }
+			]}
+		}
+	]
+}

@@ -1,0 +1,7 @@
+{
+	"type": "End",
+	"title": "End",
+	"category": "Transitions",
+	"colors": { "Text": Color(0.8, 0, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"fields": []
+}

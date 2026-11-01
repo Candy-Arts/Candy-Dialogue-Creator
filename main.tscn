@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cm0dd3rcbpr5"]
+
+[ext_resource type="Script" uid="uid://c7b7ygcj2gu1y" path="res://main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://dhcewmkg0q56" path="res://UI/area_host.gd" id="2_host"]
+[ext_resource type="PackedScene" uid="uid://deoevh2qwy0vj" path="res://UI/landing_screen.tscn" id="3_landing"]
+
+[node name="Main" type="Control" unique_id=174175100]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="AreaHost" type="Control" parent="." unique_id=654714023]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_host")
+
+[node name="LandingScreen" parent="." unique_id=143747708 instance=ExtResource("3_landing")]
+layout_mode = 1

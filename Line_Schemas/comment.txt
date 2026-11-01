@@ -1,0 +1,12 @@
+{
+	"type": "Comment",
+	"title": "Comment",
+	"category": "Misc",
+	"colors": { "Text": Color(1, 1, 1, 1), "BG": Color(0.5, 0.5, 0.5, 1) },
+	"summary": "{Comment}",
+	"navigator_text_field": "Color",
+	"fields": [
+		{ "id": "Comment", "label": "Comment", "widget": "text_edit", "default": "", "tooltip": "A note for the dialogue's writers. Candy DE ignores it.", "values": ["Text"] },
+		{ "id": "Color", "label": "Color", "widget": "color", "default": "Color(1, 1, 1, 1)", "default_from": "navigator_text_color", "tooltip": "The color of this Comment's text in the Navigator.", "values": ["Color"] }
+	]
+}

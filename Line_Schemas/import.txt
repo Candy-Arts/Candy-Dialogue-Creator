@@ -1,0 +1,23 @@
+{
+	"type": "Import",
+	"title": "Import",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{File}",
+	"short": ["{File}"],
+	"fields": [
+		{
+			"id": "File", "checks": [{"check": "file", "folder_field": "Path", "folder_label": "the export folder", "missing": "No file ‹name› in ‹folder›."}], "label": "File", "widget": "line_edit", "default": "Export", "tooltip": "The file to read. Its extension sets the format.", "values": ["File name", "{expression}Expression"],
+			"dropdown": { "provider": "exports", "key": "File" }
+		},
+		{
+			"id": "Format", "checks": [{"check": "one_of", "values": ["json", "txt", "csv", "cfg", "ini", "bin", "b64", "base64", "tres", "res", "dialogue"], "trim_prefix": ".", "text": "Not a format."}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "File", "not_contains": "."}]}, "text": "No format: add one here, or an extension to File."}], "label": "Format", "widget": "line_edit", "default": "", "tooltip": "The file's format.", "values": ["json", "txt", "csv", "cfg / ini", "bin", "b64 / base64", "tres / res", "dialogue: A dialogue file.", "Empty: From File's extension.", "{expression}Expression"],
+			"dropdown": { "provider": "file_formats", "from_extension": true }
+		},
+		{
+			"id": "Path", "label": "Path", "widget": "line_edit", "default": "", "tooltip": "The folder to read from.", "values": ["Folder path", "Empty: candy_de.export_folder.", "{expression}Expression"],
+			"dropdown": { "provider": "exports", "key": "Path" }
+		},
+		{ "id": "Dictionary", "checks": [{"check": "write_target"}, {"check": "when", "severity": "error", "rule": {"all": [{"not_empty": false}, {"any": [{"field": "Format", "in": ["dialogue", ".dialogue"]}, {"all": [{"field": "Format", "not_empty": false}, {"field": "File", "ends_with": ".dialogue"}]}]}]}, "text": "Required for dialogue."}, {"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "Each entry goes back to the variable it was exported from."}], "label": "Dictionary", "widget": "line_edit", "default": "", "tooltip": "A dictionary to copy every entry into, instead of each entry's own variable. Required for dialogue files.", "values": ["Variable path", "{vardict}Variable", "Empty: Each entry goes back to its variable.", "{expression}Expression: Gives the variable's path."] }
+	]
+}

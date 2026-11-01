@@ -1,0 +1,76 @@
+{
+	"type": "CS_Sprite_Play",
+	"title": "CS Sprite Play",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets/Animation}", "{Targets/File}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes this command acts on, each with its own settings.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Node", "label": "Node", "widget": "line_edit", "default": "", "tooltip": "The node inside the target to drive.", "values": ["Internal node key", "Node path", "Empty: The target itself, or its sprite child.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Find it automatically", "value": "" },
+						{ "label": "Sprite2D", "value": "Sprite2D" },
+						{ "label": "Sprite3D", "value": "Sprite3D" },
+						{ "label": "AnimatedSprite2D", "value": "AnimatedSprite2D" },
+						{ "label": "AnimatedSprite3D", "value": "AnimatedSprite3D" }
+					]}
+				},
+				{
+					"id": "File", "checks": [{"check": "file", "missing": "No file ‹name› in ‹folder›.", "empty": "Removes the sprite and hides the node. (On other commands, an empty File plays Default.)"}], "label": "File", "widget": "line_edit", "default": "", "tooltip": "The file to show, from the target's sprite folder.", "values": ["File name", "Name_CxR.png: A sprite sheet of C x R frames.", "res:// or user:// path", "Empty: Remove the sprite and hide the node.", "{expression}Expression"],
+					"dropdown": { "provider": "display_files", "folder": "*Sprites", "entry_part": "last" }
+				},
+				{
+					"id": "Animation", "checks": [{"check": "in_list", "text": "No animation ‹name› in ‹File›."}], "label": "Animation", "widget": "line_edit", "default": "", "tooltip": "For AnimatedSprite nodes: the animation of the SpriteFrames to play.", "values": ["Animation name", "Empty: The one named like File, else the first with frames.", "{expression}Expression"], "visible_when": { "field": "File", "not_empty": true },
+					"dropdown": { "provider": "sprite_frame_animations", "file_field": "File", "folder": "*Sprites", "entry_part": "last" }
+				},
+				{
+					"id": "Loops", "checks": [{"check": "loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) the sprite plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame, until a Resume command. With a Duration, play for it instead.", "-1: Loop forever, whatever the Duration.", "{expression}Expression"], "visible_when": { "field": "File", "not_empty": true },
+					"dropdown": { "items": [
+						{ "label": "Once", "value": "1" },
+						{ "label": "Forever", "value": "-1" },
+						{ "label": "Hold the first frame", "value": "0" }
+					]}
+				},
+				{ "id": "Duration", "checks": [{"check": "duration"}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "How long the sprite keeps playing after its loops, so it can stop partway through one. With Loops 0, it plays for the Duration alone.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "Empty or 0: No Duration: Loops alone decides.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } },
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame"}], "label": "Stop Frame", "widget": "line_edit", "default": "0", "tooltip": "Where the sprite stops, once it has played its Loops and Duration.", "values": ["0: Stop on the frame it ends on.", "Clear: Remove the sprite and hide the node.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"], "visible_when": { "all": [ { "field": "File", "not_empty": true }, { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } ] },
+					"dropdown": { "items": [
+						{ "label": "Frame it ends on", "value": "0" },
+						{ "label": "Clear", "value": "Clear" },
+						{ "label": "Last frame", "value": "-1" },
+						{ "label": "First frame", "value": "1" }
+					]}
+				},
+				{
+					"id": "Wait_Loops", "checks": [{"check": "wait_loops", "loop_field": "Loops", "duration_field": "Duration"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] },
+					"dropdown": { "items": [
+						{ "label": "Don't wait", "value": "0" },
+						{ "label": "Until one loop ends", "value": "1" }
+					]}
+				},
+				{ "id": "Wait_Time", "checks": [{"check": "wait_time"}], "label": "Wait Time", "widget": "line_edit", "default": "", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "0: No extra wait.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] } },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The playback frame rate of sprite sheets and SpriteFrames without a speed. f= values count with it too.", "values": ["Frames per second", "Empty: The default frame rate.", "{expression}Expression"], "visible_when": { "field": "File", "not_empty": true },
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,95 @@
+{
+	"type": "Media_Play",
+	"title": "Media Play",
+	"category": "Media",
+	"summary": "{Players}",
+	"short": ["{Players/File}"],
+	"colors": { "Text": Color(0.9, 0.9, 0.9, 1), "BG": Color(0.14, 0.35, 1, 1) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Players", "entry_checks": [{"check": "entry_name", "kind": "player"}],
+			"label": "Players",
+			"widget": "map",
+			"entry_label": "player",
+			"entry_prefix": "Player",
+			"entry_type": "media_player",
+			"entry_dropdown": { "provider": "media_players" },
+			"entry_type_hint": "A player's type comes from the folder named after it in the project's Audio, Videos or Images folder (Settings > Project > Paths).",
+			"tooltip": "The media players this command acts on, each with its own settings.", "values": ["Media player name", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "File", "checks": [{"check": "media_file"}, {"check": "animated_file"}], "label": "File", "widget": "line_edit", "default": "", "tooltip": "The file to play, from the player's media folder.", "values": ["File name", "Folder: A frame animation, on image players.", "res:// or user:// path", "Empty: Default.", "{expression}Expression"],
+					"dropdown": { "provider": "media_files", "preview": { "audio": "audio", "image": "media_images", "video": "media_videos" } }
+				},
+				{
+					"id": "Loops", "checks": [{"check": "loop", "duration_field": "Duration"}, {"check": "when", "severity": "notice", "rule": {"all": [{"equals": "0"}, {"field": "Duration", "in": ["", "0"]}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio doesn't play until a Media_Resume."}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) the media plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame, until a Resume command. With a Duration, play for it instead.", "-1: Loop forever, whatever the Duration.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Once", "value": "1" },
+						{ "label": "Loop forever", "value": "-1" },
+						{ "label": "Hold the first frame, don't play", "value": "0" }
+					]}
+				},
+				{ "id": "Duration", "checks": [{"check": "duration"}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": "f="}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": "f="}, {"field": "Animated", "equals": "0"}, {"types": ["image"]}]}, "text": "A single image has no frames."}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "How long the media keeps playing after its loops, so it can stop partway through one. With Loops 0, it plays for the Duration alone. A single image stays up for its Duration, or until stopped without one.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames (video and image players).", "Empty or 0: No Duration: Loops alone decides.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } },
+				{
+					"id": "Stop_Frame", "checks": [{"check": "stop_frame"}, {"check": "when", "severity": "notice", "rule": {"all": [{"is_number": true}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frame to show: it stops, keeping the file loaded."}], "label": "Stop Frame", "widget": "line_edit", "default": "Clear", "tooltip": "Where each player stops, once it has played its Loops and Duration. Audio has no frame: any number just stops it.", "values": ["Clear: Unload the file, and hide video and images.", "0: Stop on the frame it ends on.", "-1: Stop on the last frame.", "1+: Stop on that frame.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] },
+					"dropdown": { "items": [
+						{ "label": "Clear", "value": "Clear" },
+						{ "label": "Frame it ends on", "value": "0" },
+						{ "label": "Last frame", "value": "-1" },
+						{ "label": "First frame", "value": "1" }
+					]}
+				},
+				{
+					"id": "Wait_Loops", "checks": [{"check": "wait_loops", "loop_field": "Loops", "duration_field": "Duration"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] },
+					"dropdown": { "items": [
+						{ "label": "Don't wait", "value": "0" },
+						{ "label": "Until one loop ends", "value": "1" }
+					]}
+				},
+				{ "id": "Wait_Time", "checks": [{"check": "wait_time"}, {"check": "when", "severity": "error", "rule": {"all": [{"contains": "f="}, {"types": ["audio"]}, {"not": {"types": ["video", "image"]}}]}, "text": "Audio has no frames."}], "label": "Wait Time", "widget": "line_edit", "default": "0", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames (video and image players).", "0: No extra wait.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] } },
+				{
+					"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values and a video's Stop Frame number count with. On an animated image, also the playback frame rate.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "any": [ { "types": ["image"] }, { "field": "Wait_Time", "contains": "f=" }, { "field": "Duration", "contains": "f=" }, { "field": "Stop_Frame", "greater_than": 0 } ] }, "types": ["video", "image"],
+					"dropdown": { "items": [
+						{ "label": "From the FPS chain", "value": "" },
+						{ "label": "12", "value": "12" },
+						{ "label": "24", "value": "24" },
+						{ "label": "30", "value": "30" },
+						{ "label": "60", "value": "60" }
+					]}
+				},
+				{
+					"id": "Animated", "checks": [{"check": "one_of", "values": ["-1", "0", "1"], "text": "Not -1, 0 or 1."}], "label": "Animated", "widget": "line_edit", "default": "-1", "types": ["image"], "tooltip": "Whether an image player's File is animated.", "values": ["-1: Decide from File (a folder is animated).", "1: File must be a folder.", "0: File must be a single image.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Decide from File", "value": "-1" },
+						{ "label": "Folder animation", "value": "1" },
+						{ "label": "Single image", "value": "0" }
+					]}
+				},
+				{
+					"id": "Box", "checks": [{"check": "z_index", "reference": "the player"}], "label": "Box", "widget": "line_edit", "default": "", "types": ["video", "image"], "tooltip": "Moves the dialogue UI in z-order, next to this player.", "values": ["Empty: Leave the z-order alone.", "Reset: Back to the default z-order.", "N: Exactly z index N.", "+N / -N: The player's z index plus or minus N.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Leave alone", "value": "" },
+						{ "label": "Reset", "value": "Reset" },
+						{ "label": "In front of the player", "value": "+1" },
+						{ "label": "Behind the player", "value": "-1" }
+					]}
+				},
+				{
+					"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "player"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the player, when it's Public.", "values": ["Empty: The player decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Let the player decide", "value": "" },
+						{ "label": "Take hold", "value": "1" },
+						{ "label": "Never take hold", "value": "-1" }
+					]}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,671 @@
+{
+	"options": [
+		{
+			"id": "background", "label": "Background", "page": "Colors", "section": "Surfaces", "type": "color", "default": Color(0.29, 0.831, 0.627, 1),
+			"tooltip": "Behind everything, around the panels.",
+			"targets": [
+				["style", "CandyBackground", "panel", "bg_color"]
+			]
+		},
+		{
+			"id": "surface", "label": "Panels", "page": "Colors", "section": "Surfaces", "type": "color", "default": Color(0.725, 0.961, 0.863, 1),
+			"tooltip": "The inside of panels and widgets, dialogs and menus.",
+			"targets": [
+				["style", ["CandyPanelFrame", "CandyWidgetFrame", "TabContainer", "PopupMenu", "PopupPanel", "AcceptDialog"], "panel", "bg_color"]
+			]
+		},
+		{
+			"id": "tooltip", "label": "Tooltips", "page": "Colors", "section": "Surfaces", "type": "color", "default": Color(1, 0.827, 0.388, 1),
+			"targets": [
+				["style", "TooltipPanel", "panel", "bg_color"]
+			]
+		},
+		{
+			"id": "raised", "label": "Boxes", "page": "Colors", "section": "Surfaces", "type": "color", "default": Color(0.639, 0.922, 0.808, 1),
+			"tooltip": "Boxes inside a panel: list entries, players, fold-out sections.",
+			"targets": [
+				["style", ["PanelContainer", "Panel", "FoldableContainer", "CandyTagBox"], "panel", "bg_color"]
+			]
+		},
+		{
+			"id": "field", "label": "Text fields and lists", "page": "Colors", "section": "Surfaces", "type": "color", "default": Color(0.961, 1, 0.98, 1),
+			"tooltip": "Where you type, and lists you pick from.",
+			"targets": [
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only"], "bg_color"],
+				["style", ["Tree", "ItemList", "CandyListBox", "CandyWidgetList"], "panel", "bg_color"],
+				["style", ["HScrollBar", "VScrollBar"], "scroll", "bg_color"],
+				["style", "ProgressBar", "background", "bg_color"]
+			]
+		},
+		{
+			"id": "control", "label": "Buttons", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.557, 0.82, 0.988, 1),
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], ["normal", "disabled"], "bg_color"],
+				["style", "OptionButton", ["normal_mirrored", "disabled_mirrored"], "bg_color"],
+				["style", "FoldableContainer", ["title_panel", "title_collapsed_panel"], "bg_color"]
+			]
+		},
+		{
+			"id": "control_hover", "label": "Hovered", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.702, 0.882, 0.992, 1),
+			"tooltip": "A button or menu item under the mouse.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], "hover", "bg_color"],
+				["style", "OptionButton", "hover_mirrored", "bg_color"],
+				["style", "PopupMenu", "hover", "bg_color"],
+				["style", ["Tree", "ItemList"], "hovered", "bg_color"],
+				["style", "Tree", ["button_hover", "custom_button_hover", "title_button_hover"], "bg_color"],
+				["style", "SpinBox", ["up_background_hovered", "down_background_hovered"], "bg_color"],
+				["style", "FoldableContainer", ["title_hover_panel", "title_collapsed_hover_panel"], "bg_color"]
+			]
+		},
+		{
+			"id": "control_pressed", "label": "Pressed", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.957, 0.718, 1, 1),
+			"tooltip": "A button while it's pressed, or toggled on.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], "pressed", "bg_color"],
+				["style", "OptionButton", "pressed_mirrored", "bg_color"],
+				["style", "Tree", ["button_pressed", "custom_button_pressed", "title_button_pressed"], "bg_color"],
+				["style", "SpinBox", ["up_background_pressed", "down_background_pressed"], "bg_color"]
+			]
+		},
+		{
+			"id": "border", "label": "Borders", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.122, 0.302, 0.251, 1),
+			"tooltip": "The outline of buttons, fields, boxes and menus, and separator lines.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton"], ["normal", "hover", "pressed", "disabled"], "border_color"],
+				["style", "OptionButton", ["normal_mirrored", "hover_mirrored", "pressed_mirrored", "disabled_mirrored"], "border_color"],
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only"], "border_color"],
+				["style", ["Tree", "ItemList", "CandyListBox", "CandyTagBox", "CandyWidgetList", "PopupMenu", "PopupPanel", "TooltipPanel", "PanelContainer", "Panel"], "panel", "border_color"],
+				["style", ["HSeparator", "VSeparator"], "separator", "color"],
+				["style", "PopupMenu", ["separator", "labeled_separator_left", "labeled_separator_right"], "color"]
+			]
+		},
+		{
+			"id": "list_lines", "label": "List lines", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.122, 0.302, 0.251, 0.35),
+			"tooltip": "The lines between the rows of lists: on the Languages & Tags and Variations pages, and in the Variation Selector widget.",
+			"targets": [
+				["color", ["CandyListBox", "CandySettingsList", "CandyWidgetList"], "line_color"]
+			]
+		},
+		{
+			"id": "locked_field", "label": "Locked fields", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.8, 0.8, 0.8, 1),
+			"tooltip": "The background of a data field locked from its right-click menu (Lock Text Editing).",
+			"targets": [
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "bg_color"]
+			]
+		},
+		{
+			"id": "locked_field_border", "label": "Locked field borders", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.5, 0.5, 0.5, 1),
+			"tooltip": "The outline of a locked data field.",
+			"targets": [
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "border_color"]
+			]
+		},
+		{
+			"id": "checkbox", "label": "Unticked boxes", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.122, 0.302, 0.251, 1),
+			"tooltip": "The outline of a checkbox or radio button that isn't ticked.",
+			"targets": [
+				["icon_box", ["CheckBox", "Tree", "PopupMenu"], ["unchecked", "unchecked_disabled"]],
+				["icon_circle", ["CheckBox", "PopupMenu"], ["radio_unchecked", "radio_unchecked_disabled"]]
+			]
+		},
+		{
+			"id": "icons", "label": "Icons", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.082, 0.227, 0.188, 1),
+			"tooltip": "Arrows and small symbols: dropdown and fold arrows, submenu and tab arrows, number field buttons, the clear, remove and move buttons of fields, the Documentation window's icons.",
+			"targets": [
+				["icon_tint", "CandyIcons", ["clear", "remove", "move_up", "move_down", "volume", "position", "back", "forward", "page", "folder", "unread", "globe"]],
+				["icon_tint", "Tree", ["arrow", "arrow_collapsed", "arrow_collapsed_mirrored", "select_arrow", "updown"]],
+				["icon_tint", "OptionButton", "arrow"],
+				["icon_tint", "PopupMenu", ["submenu", "submenu_mirrored"]],
+				["icon_tint", ["TabBar", "TabContainer"], ["increment", "decrement", "increment_highlight", "decrement_highlight", "menu", "menu_highlight", "close"]],
+				["icon_tint", "FoldableContainer", ["expanded_arrow", "folded_arrow", "folded_arrow_mirrored"]],
+				["color", "SpinBox", ["up_icon_modulate", "up_hover_icon_modulate", "up_pressed_icon_modulate", "down_icon_modulate", "down_hover_icon_modulate", "down_pressed_icon_modulate"]],
+				["color", "LineEdit", "clear_button_color"]
+			]
+		},
+		{
+			"id": "scrollbar", "label": "Scrollbars", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.247, 0.725, 0.549, 1),
+			"targets": [
+				["style", ["HScrollBar", "VScrollBar"], "grabber", "bg_color"]
+			]
+		},
+		{
+			"id": "scrollbar_hover", "label": "Scrollbars, hovered", "page": "Colors", "section": "Controls", "type": "color", "default": Color(0.18, 0.604, 0.447, 1),
+			"targets": [
+				["style", ["HScrollBar", "VScrollBar"], ["grabber_highlight", "grabber_pressed"], "bg_color"]
+			]
+		},
+		{
+			"id": "panel_frame_border", "label": "Panel frames", "page": "Colors", "section": "Frames", "type": "color", "default": Color(0.122, 0.302, 0.251, 1),
+			"tooltip": "The line around each panel of the window layout.",
+			"targets": [
+				["style", "CandyPanelFrame", "panel", "border_color"]
+			]
+		},
+		{
+			"id": "widget_frame_border", "label": "Widget frames", "page": "Colors", "section": "Frames", "type": "color", "default": Color(0.227, 0.663, 0.51, 1),
+			"tooltip": "The line around each widget of the Dialogue Editor.",
+			"targets": [
+				["style", "CandyWidgetFrame", "panel", "border_color"]
+			]
+		},
+		{
+			"id": "accent", "label": "Accent", "page": "Colors", "section": "Accent", "type": "color", "default": Color(0.541, 0.333, 0.949, 1),
+			"tooltip": "What has focus, ticked boxes, the text cursor.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "CheckBox", "CheckButton", "LineEdit", "TextEdit", "Tree", "ItemList", "RichTextLabel", "Label", "ScrollContainer", "FoldableContainer"], "focus", "border_color"],
+				["style", ["TabContainer", "TabBar"], "tab_focus", "border_color"],
+				["style", "ProgressBar", "fill", "bg_color"],
+				["color", "CheckBox", "checkbox_checked_color"],
+				["color", "CheckButton", "button_checked_color"],
+				["color", ["LineEdit", "TextEdit"], "caret_color"],
+				["color", ["TabContainer", "TabBar"], "drop_mark_color"],
+				["color", "Tree", "drop_position_color"],
+				["color", "CandyHighlight", "font_color"]
+			]
+		},
+		{
+			"id": "selection", "label": "Selection", "page": "Colors", "section": "Accent", "type": "color", "default": Color(0.969, 0.549, 1, 0.5),
+			"tooltip": "Selected text, and the selected row of a list.",
+			"targets": [
+				["color", ["LineEdit", "TextEdit", "RichTextLabel"], "selection_color"],
+				["style", ["Tree", "ItemList"], ["selected", "selected_focus", "hovered_selected", "hovered_selected_focus"], "bg_color"]
+			]
+		},
+		{
+			"id": "tab_selected", "label": "Selected tab", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.725, 0.961, 0.863, 1),
+			"tooltip": "The open tab of a Tabs panel or a tab bar.",
+			"targets": [
+				["style", ["TabContainer", "TabBar"], "tab_selected", "bg_color"]
+			]
+		},
+		{
+			"id": "tab_selected_text", "label": "Selected tab text", "page": "Colors", "section": "Tabs", "column": "Text", "row": "tab_selected", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"targets": [
+				["color", ["TabContainer", "TabBar"], "font_selected_color"]
+			]
+		},
+		{
+			"id": "tab_unselected", "label": "Unselected tabs", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.29, 0.831, 0.627, 1),
+			"tooltip": "The other tabs, and disabled ones.",
+			"targets": [
+				["style", ["TabContainer", "TabBar"], ["tab_unselected", "tab_disabled"], "bg_color"]
+			]
+		},
+		{
+			"id": "tab_unselected_text", "label": "Unselected tabs text", "page": "Colors", "section": "Tabs", "column": "Text", "row": "tab_unselected", "type": "color", "default": Color(0.184, 0.369, 0.314, 1),
+			"targets": [
+				["color", ["TabContainer", "TabBar"], "font_unselected_color"]
+			]
+		},
+		{
+			"id": "tab_hovered", "label": "Hovered tab", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.702, 0.882, 0.992, 1),
+			"tooltip": "A tab under the mouse.",
+			"targets": [
+				["style", ["TabContainer", "TabBar"], "tab_hovered", "bg_color"]
+			]
+		},
+		{
+			"id": "tab_hovered_text", "label": "Hovered tab text", "page": "Colors", "section": "Tabs", "column": "Text", "row": "tab_hovered", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"targets": [
+				["color", ["TabContainer", "TabBar"], "font_hovered_color"]
+			]
+		},
+		{
+			"id": "tab_line", "label": "Selected tab line", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.541, 0.333, 0.949, 1),
+			"tooltip": "The line on top of the open tab. Its width is on the Shapes & Spacing page.",
+			"targets": [
+				["style", ["TabContainer", "TabBar"], "tab_selected", "border_color"]
+			]
+		},
+		{
+			"id": "tab_separator", "label": "Tab separator", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.122, 0.302, 0.251, 1),
+			"tooltip": "The line between a Tabs panel's tabs and their content, cut under the open tab. Its width is the Border width, on the Shapes & Spacing page.",
+			"targets": [
+				["color", "CandyTabStrip", "separator"]
+			]
+		},
+		{
+			"id": "editor_tab_open", "label": "Open Editor tab", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.56, 0.78, 1, 1),
+			"tooltip": "The open tab of the Dialogue Editor. Its other tabs have the Pressed button color.",
+			"targets": [
+				["color", "CandyEditorTab", "open_tab"]
+			]
+		},
+		{
+			"id": "editor_tab_add", "label": "Add Editor tab", "page": "Colors", "section": "Tabs", "column": "Background", "type": "color", "default": Color(0.56, 0.78, 1, 1), "default_from": "control",
+			"tooltip": "The + after the Dialogue Editor's tabs, which adds a tab. Starts as the Buttons color.",
+			"targets": [
+				["color", "CandyEditorTab", "add_tab"]
+			]
+		},
+		{
+			"id": "text", "label": "Text", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"tooltip": "All text, except on buttons, which have colors of their own below. Flat buttons, drawn on the panel (the top bar's menus), use this one.",
+			"targets": [
+				["color", ["Label", "CheckBox", "CheckButton", "LineEdit", "TextEdit", "Tree", "ItemList", "PopupMenu", "TooltipLabel", "ProgressBar"], "font_color"],
+				["color", ["CheckBox", "CheckButton"], ["font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]],
+				["color", ["CandyFlatButton", "CandyFlatOptionButton", "CandyFlatMenuBar"], ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]],
+				["color", ["Tree", "ItemList"], ["font_selected_color", "font_hovered_selected_color"]],
+				["color", ["LineEdit", "TextEdit"], "font_selected_color"],
+				["color", "RichTextLabel", "default_color"],
+				["color", "Window", "title_color"]
+			]
+		},
+		{
+			"id": "text_outline", "label": "Text outline", "page": "Text", "section": "Colors", "column": "Outline", "row": "text", "type": "color", "default": Color(0, 0, 0, 0),
+			"tooltip": "The outline of all text. Transparent for none.",
+			"targets": [
+				["color", ["Label", "Button", "OptionButton", "MenuButton", "CheckBox", "CheckButton", "ColorPickerButton", "MenuBar", "LineEdit", "TextEdit", "Tree", "ItemList", "PopupMenu", "TooltipLabel", "ProgressBar", "FoldableContainer", "TabContainer", "TabBar", "RichTextLabel"], "font_outline_color"],
+				["color", "Window", "title_outline_modulate"]
+			]
+		},
+		{
+			"id": "button_text", "label": "Text on buttons", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"tooltip": "Buttons, dropdowns, the menu bar, foldable titles, and the Dialogue Editor's other tabs.",
+			"targets": [
+				["color", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], ["font_color", "font_focus_color"]],
+				["color", "FoldableContainer", ["font_color", "collapsed_font_color"]]
+			]
+		},
+		{
+			"id": "button_text_hover", "label": "Text on hovered buttons", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"tooltip": "Buttons under the mouse, and the rows of menus and lists under the mouse, which have the Hovered color behind them.",
+			"targets": [
+				["color", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], "font_hover_color"],
+				["color", "FoldableContainer", "hover_font_color"],
+				["color", "PopupMenu", "font_hover_color"],
+				["color", ["Tree", "ItemList"], "font_hovered_color"]
+			]
+		},
+		{
+			"id": "button_text_pressed", "label": "Text on pressed buttons", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.059, 0.165, 0.137, 1),
+			"tooltip": "A button while it's pressed, or toggled on, and the Dialogue Editor's open tab.",
+			"targets": [
+				["color", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], ["font_pressed_color", "font_hover_pressed_color"]]
+			]
+		},
+		{
+			"id": "muted_text", "label": "Secondary text", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.184, 0.369, 0.314, 1),
+			"tooltip": "Notes and hints, placeholder text.",
+			"targets": [
+				["color", ["CandyNote", "CandyBreadcrumb"], "font_color"],
+				["color", ["LineEdit", "TextEdit"], "font_placeholder_color"],
+				["color", "PopupMenu", ["font_accelerator_color", "font_separator_color"]],
+				["color", "Tree", ["font_hovered_dimmed_color", "relationship_line_color"]]
+			]
+		},
+		{
+			"id": "muted_text_outline", "label": "Secondary text outline", "page": "Text", "section": "Colors", "column": "Outline", "row": "muted_text", "type": "color", "default": Color(0, 0, 0, 0),
+			"tooltip": "The outline of notes and hints. Tabs and placeholder text take the Text outline. Transparent for none.",
+			"targets": [
+				["color", ["CandyNote", "CandyBreadcrumb"], "font_outline_color"]
+			]
+		},
+		{
+			"id": "heading_text", "label": "Titles", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.42, 0.247, 0.839, 1),
+			"tooltip": "The titles of groups of fields and of settings, and the Dialogue Editor's title.",
+			"targets": [
+				["color", ["CandySectionTitle", "CandyEditorTitle"], "font_color"]
+			]
+		},
+		{
+			"id": "heading_text_outline", "label": "Titles outline", "page": "Text", "section": "Colors", "column": "Outline", "row": "heading_text", "type": "color", "default": Color(0, 0, 0, 0),
+			"tooltip": "The outline of titles. Transparent for none.",
+			"targets": [
+				["color", ["CandySectionTitle", "CandyEditorTitle"], "font_outline_color"]
+			]
+		},
+		{
+			"id": "disabled_text", "label": "Disabled text", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.373, 0.58, 0.51, 1),
+			"targets": [
+				["color", ["Button", "OptionButton", "MenuButton", "CheckBox", "CheckButton", "ColorPickerButton", "MenuBar", "PopupMenu", "Tree", "TabContainer", "TabBar"], "font_disabled_color"],
+				["color", "LineEdit", "font_uneditable_color"],
+				["color", "TextEdit", "font_readonly_color"]
+			]
+		},
+		{
+			"id": "error_text", "label": "Errors", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.784, 0.141, 0.247, 1),
+			"targets": [
+				["color", "CandyError", "font_color"]
+			]
+		},
+		{
+			"id": "error_text_outline", "label": "Errors outline", "page": "Text", "section": "Colors", "column": "Outline", "row": "error_text", "type": "color", "default": Color(0, 0, 0, 0),
+			"tooltip": "The outline of error messages. Transparent for none.",
+			"targets": [
+				["color", "CandyError", "font_outline_color"]
+			]
+		},
+		{
+			"id": "warning_text", "label": "Warnings", "page": "Text", "section": "Colors", "column": "Text", "type": "color", "default": Color(0.561, 0.329, 0, 1),
+			"targets": [
+				["color", "CandyWarning", "font_color"]
+			]
+		},
+		{
+			"id": "warning_text_outline", "label": "Warnings outline", "page": "Text", "section": "Colors", "column": "Outline", "row": "warning_text", "type": "color", "default": Color(0, 0, 0, 0),
+			"tooltip": "The outline of warnings. Transparent for none.",
+			"targets": [
+				["color", "CandyWarning", "font_outline_color"]
+			]
+		},
+		{
+			"id": "font", "label": "Font", "page": "Text", "section": "Font", "type": "font", "default": "",
+			"tooltip": "The font of almost all text: a font file from the fonts folder. Default keeps the theme's own font.",
+			"targets": [
+				["font", "", "default"]
+			]
+		},
+		{
+			"id": "font_size", "label": "Text size", "page": "Text", "section": "Sizes", "type": "number", "default": 15, "min": 8, "max": 40, "step": 1,
+			"tooltip": "The size of almost all text.",
+			"targets": [
+				["font_size", "", "default"]
+			]
+		},
+		{
+			"id": "title_font_size", "label": "Editor title size", "page": "Text", "section": "Sizes", "type": "number", "default": 17, "min": 8, "max": 48, "step": 1,
+			"tooltip": "The Dialogue Editor's title line.",
+			"targets": [
+				["font_size", "CandyEditorTitle", "font_size"]
+			]
+		},
+		{
+			"id": "small_font_size", "label": "Small text size", "page": "Text", "section": "Sizes", "type": "number", "default": 12, "min": 6, "max": 32, "step": 1,
+			"tooltip": "The path under the Dialogue Editor's title, and the ? beside each field's name.",
+			"targets": [
+				["font_size", ["CandyBreadcrumb", "CandyHelpButton"], "font_size"]
+			]
+		},
+		{
+			"id": "corner_radius", "label": "Rounded corners", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 8, "min": 0, "max": 24, "step": 1,
+			"tooltip": "How round the corners of buttons, fields, boxes and menus are. 0 is square.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], ["normal", "hover", "pressed", "disabled", "focus"], "corner_radius"],
+				["style", "OptionButton", ["normal_mirrored", "hover_mirrored", "pressed_mirrored", "disabled_mirrored"], "corner_radius"],
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only", "focus"], "corner_radius"],
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "corner_radius"],
+				["style", ["CandySpeechViewer", "CandyNews"], "normal", "corner_radius"],
+				["style", ["Tree", "ItemList"], ["panel", "focus", "hovered", "selected", "selected_focus", "hovered_selected", "hovered_selected_focus"], "corner_radius"],
+				["style", ["PopupMenu"], ["panel", "hover"], "corner_radius"],
+				["style", ["PopupPanel", "TooltipPanel", "PanelContainer", "Panel", "CandyListBox", "CandyTagBox", "CandyWidgetList"], "panel", "corner_radius"],
+				["style", ["CheckBox", "CheckButton"], "focus", "corner_radius"],
+				["style", ["TabContainer", "TabBar"], ["tab_selected", "tab_unselected", "tab_hovered", "tab_disabled"], "corner_radius_top"],
+				["style", "FoldableContainer", ["title_panel", "title_hover_panel", "title_collapsed_panel", "title_collapsed_hover_panel"], "corner_radius"]
+			]
+		},
+		{
+			"id": "border_width", "label": "Border width", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 2, "min": 0, "max": 8, "step": 1,
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton"], ["normal", "hover", "pressed", "disabled"], "border_width"],
+				["style", "OptionButton", ["normal_mirrored", "hover_mirrored", "pressed_mirrored", "disabled_mirrored"], "border_width"],
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only"], "border_width"],
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "border_width"],
+				["style", ["Tree", "ItemList", "CandyListBox", "CandyTagBox", "CandyWidgetList", "PopupMenu", "PopupPanel", "TooltipPanel", "PanelContainer", "Panel"], "panel", "border_width"],
+				["constant", "CandyTabStrip", "separator_width"]
+			]
+		},
+		{
+			"id": "focus_width", "label": "Focus outline width", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 2, "min": 0, "max": 8, "step": 1,
+			"tooltip": "The accent outline around what has focus.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "CheckBox", "CheckButton", "LineEdit", "TextEdit", "Tree", "ItemList"], "focus", "border_width"],
+				["style", ["TabContainer", "TabBar"], "tab_focus", "border_width"]
+			]
+		},
+		{
+			"id": "tab_accent_width", "label": "Selected tab line", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 2, "min": 0, "max": 8, "step": 1,
+			"tooltip": "The accent line on top of the selected tab.",
+			"targets": [
+				["style", ["TabContainer", "TabBar"], "tab_selected", "border_width_top"]
+			]
+		},
+		{
+			"id": "frame_width", "label": "Frame width", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 2, "min": 0, "max": 8, "step": 1,
+			"tooltip": "The line around each panel and widget.",
+			"targets": [
+				["style", ["CandyPanelFrame", "CandyWidgetFrame"], "panel", "border_width"]
+			]
+		},
+		{
+			"id": "frame_radius", "label": "Frame corners", "page": "Shapes & Spacing", "section": "Shapes", "type": "number", "default": 12, "min": 0, "max": 32, "step": 1,
+			"tooltip": "How round the corners of each panel and widget are. 0 is square.",
+			"targets": [
+				["style", ["CandyPanelFrame", "CandyWidgetFrame"], "panel", "corner_radius"]
+			]
+		},
+		{
+			"id": "frame_padding", "label": "Frame padding", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the line around a panel, a widget or a popup and what's inside. Keep it at least as wide as the frame, or wider for round corners.",
+			"targets": [
+				["style", ["CandyPanelFrame", "CandyWidgetFrame", "PopupPanel"], "panel", "content_margin"]
+			]
+		},
+		{
+			"id": "box_padding", "label": "Box padding", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space inside boxes, such as the entries of lists and the commands of an If.",
+			"targets": [
+				["style", "PanelContainer", "panel", "content_margin"]
+			]
+		},
+		{
+			"id": "list_padding", "label": "Padding in lists", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between an item's text and the sides of its row, in lists such as the Settings pages.",
+			"targets": [
+				["constant", "Tree", ["inner_item_margin_left", "inner_item_margin_right"]],
+				["style", "CandyListBox", "panel", "content_margin"]
+			]
+		},
+		{
+			"id": "window_margin", "label": "Window margin", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 8, "min": 0, "max": 64, "step": 1,
+			"tooltip": "The space between the edges of the window and the panels.",
+			"targets": [
+				["constant", "CandyAreaHost", "margin"]
+			]
+		},
+		{
+			"id": "area_gap", "label": "Space between panels", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 8, "min": 2, "max": 32, "step": 1,
+			"tooltip": "The space between two panels of the layout, where you drag to resize them.",
+			"targets": [
+				["constant", "CandyAreaSplit", "gap"]
+			]
+		},
+		{
+			"id": "top_bar_gap", "label": "Space under the top bar", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 8, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the top bar and the panels below it.",
+			"targets": [
+				["constant", "CandyAreaSplit", "locked_gap"]
+			]
+		},
+		{
+			"id": "padding_h", "label": "Padding, sides", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 8, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the text and the sides of buttons and fields.",
+			"targets": [
+				["style", ["Button", "MenuButton", "ColorPickerButton", "MenuBar"], ["normal", "hover", "pressed", "disabled"], "content_margin_h"],
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only", "focus"], "content_margin_h"],
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "content_margin_h"],
+				["style", "TooltipPanel", "panel", "content_margin_h"],
+				["style", "CandyTagBox", "panel", "content_margin_left"]
+			]
+		},
+		{
+			"id": "padding_v", "label": "Padding, top and bottom", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space above and below the text of buttons and fields.",
+			"targets": [
+				["style", ["Button", "OptionButton", "MenuButton", "ColorPickerButton", "MenuBar"], ["normal", "hover", "pressed", "disabled"], "content_margin_v"],
+				["style", "OptionButton", ["normal_mirrored", "hover_mirrored", "pressed_mirrored", "disabled_mirrored"], "content_margin_v"],
+				["style", ["LineEdit", "TextEdit"], ["normal", "read_only", "focus"], "content_margin_v"],
+				["style", ["CandyLockedLineEdit", "CandyLockedTextEdit"], "read_only", "content_margin_v"],
+				["style", "TooltipPanel", "panel", "content_margin_v"]
+			]
+		},
+		{
+			"id": "spacing", "label": "Spacing", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between controls placed next to each other.",
+			"targets": [
+				["constant", ["BoxContainer", "HBoxContainer", "VBoxContainer"], "separation"],
+				["constant", ["GridContainer", "FlowContainer", "HFlowContainer", "VFlowContainer"], ["h_separation", "v_separation"]]
+			]
+		},
+		{
+			"id": "compact_spacing", "label": "Tight spacing", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 2, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between closely related rows, like the fields of one group.",
+			"targets": [
+				["constant", ["CandyCompactVBox", "CandyCompactHBox"], "separation"]
+			]
+		},
+		{
+			"id": "roomy_spacing", "label": "Wide spacing", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the rows of settings pages and dialogs.",
+			"targets": [
+				["constant", ["CandyRoomyVBox", "CandyRoomyHBox"], "separation"],
+				["constant", "CandyRoomyGrid", "v_separation"]
+			]
+		},
+		{
+			"id": "indent", "label": "Indent", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 12, "min": 0, "max": 64, "step": 1,
+			"tooltip": "How far nested fields are moved in.",
+			"targets": [
+				["constant", "CandyIndent", "margin_left"]
+			]
+		},
+		{
+			"id": "panel_margin", "label": "Panel margin", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space inside panels such as the buttons and inserts panels.",
+			"targets": [
+				["constant", "CandyPanelMargin", ["margin_left", "margin_top", "margin_right", "margin_bottom"]]
+			]
+		},
+		{
+			"id": "page_margin", "label": "Page margin", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 12, "min": 0, "max": 64, "step": 1,
+			"tooltip": "The space around settings pages.",
+			"targets": [
+				["constant", "CandyPageMargin", ["margin_left", "margin_top", "margin_right", "margin_bottom"]]
+			]
+		},
+		{
+			"id": "scrollbar_gap", "label": "Space before scrollbars", "page": "Shapes & Spacing", "section": "Spacing", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between a scrolling area's content and its scrollbar: the Dialogue Editor's, the Command Editor's, and the Fields widget's.",
+			"targets": [
+				["constant", "CandyScrollGap", "margin_right"]
+			]
+		},
+		{
+			"id": "settings_list_row_gap", "label": "Space around row buttons", "page": "Shapes & Spacing", "section": "Settings Lists", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space above and below the buttons of each row, together, in the long lists of the Settings pages (Variations).",
+			"targets": [
+				["constant", "CandySettingsList", "row_gap"]
+			]
+		},
+		{
+			"id": "settings_list_scrollbar_gap", "label": "Space before the scrollbar", "page": "Shapes & Spacing", "section": "Settings Lists", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the rows and the scrollbar, in the long lists of the Settings pages (Variations).",
+			"targets": [
+				["constant", "CandySettingsList", "scrollbar_gap"]
+			]
+		},
+		{
+			"id": "navigator_conversation", "label": "Conversation rows", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.769, 0.627, 0.992, 1),
+			"targets": [
+				["color", "CandyNavigator", "conversation_bg"]
+			]
+		},
+		{
+			"id": "navigator_block", "label": "Block rows", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.557, 0.82, 0.988, 1),
+			"targets": [
+				["color", "CandyNavigator", "block_bg"]
+			]
+		},
+		{
+			"id": "navigator_header_text", "label": "Conversation & Block text", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.063, 0.141, 0.122, 1),
+			"targets": [
+				["color", "CandyNavigator", "header_text"]
+			]
+		},
+		{
+			"id": "navigator_line_base", "label": "Under default line colors", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.09, 0.227, 0.192, 1),
+			"tooltip": "The commands' default colors are made for a dark background: their background is laid over this color. Colors set in Navigator Colors are used as they are.",
+			"targets": [
+				["color", "CandyNavigator", "line_base"]
+			]
+		},
+		{
+			"id": "navigator_scrollbar_gap", "label": "Space before the scrollbar", "page": "Editor & Navigator", "section": "Navigator", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the rows and the Navigator's scrollbar.",
+			"targets": [
+				["constant", "CandyNavigator", "scrollbar_gap"]
+			]
+		},
+		{
+			"id": "navigator_selected", "label": "Selected row outline", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.969, 0.549, 1, 1),
+			"tooltip": "The frame around selected rows, outside their border. Navigator Colors can set each command's own.",
+			"targets": [
+				["color", "CandyNavigator", "selected_outline"]
+			]
+		},
+		{
+			"id": "navigator_drop", "label": "Drop marker", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.878, 0.353, 0.929, 1),
+			"tooltip": "Where a dragged row will land.",
+			"targets": [
+				["color", "CandyNavigator", "drop_indicator"]
+			]
+		},
+		{
+			"id": "navigator_current", "label": "Last used dot", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.969, 0.549, 1, 1),
+			"tooltip": "The full dot left of a Navigator's mode, in the Navigators clicked last: those the Dialogue Buttons panel and pasting act on.",
+			"targets": [
+				["color", "CandyNavigator", "current_dot"]
+			]
+		},
+		{
+			"id": "navigator_not_current", "label": "Other Navigators' dot", "page": "Editor & Navigator", "section": "Navigator", "type": "color", "default": Color(0.969, 0.549, 1, 1),
+			"tooltip": "The empty dot (its outline) left of a Navigator's mode, in the Navigators not clicked last.",
+			"targets": [
+				["color", "CandyNavigator", "other_dot"]
+			]
+		},
+		{
+			"id": "widget_list_padding", "label": "Padding", "page": "Editor & Navigator", "section": "Widget Lists", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the rows and the box around them, in the lists of the Variation Selector and Field Tree widgets.",
+			"targets": [
+				["style", "CandyWidgetList", "panel", "content_margin"]
+			]
+		},
+		{
+			"id": "widget_list_row_gap", "label": "Space around row buttons", "page": "Editor & Navigator", "section": "Widget Lists", "type": "number", "default": 4, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space above and below the buttons of each row, together, in the lists of the Variation Selector and Field Tree widgets.",
+			"targets": [
+				["constant", "CandyWidgetList", "row_gap"]
+			]
+		},
+		{
+			"id": "widget_list_scrollbar_gap", "label": "Space before the scrollbar", "page": "Editor & Navigator", "section": "Widget Lists", "type": "number", "default": 6, "min": 0, "max": 32, "step": 1,
+			"tooltip": "The space between the rows and the scrollbar, in the lists of the Variation Selector and Field Tree widgets.",
+			"targets": [
+				["constant", "CandyWidgetList", "scrollbar_gap"]
+			]
+		},
+		{
+			"id": "split_highlight", "label": "Layout highlight", "page": "Editor & Navigator", "section": "Layout", "type": "color", "default": Color(0.541, 0.333, 0.949, 1),
+			"tooltip": "A split handle under the mouse, and where a dragged panel will go.",
+			"targets": [
+				["color", "CandyAreaSplit", "highlight"]
+			]
+		},
+		{
+			"id": "area_border_window", "label": "Window area borders", "page": "Editor & Navigator", "section": "Layout", "type": "color", "default": Color(1, 0.84, 0, 1),
+			"tooltip": "The border of each area of the window layout, in Edit Layout mode, and the fill of the area buttons over it.",
+			"targets": [
+				["color", "CandyAreaOutline", "window"]
+			]
+		},
+		{
+			"id": "area_border_editor", "label": "Dialogue Editor borders", "page": "Editor & Navigator", "section": "Layout", "type": "color", "default": Color(1, 0.55, 0.1, 1),
+			"tooltip": "The border of each area of the Dialogue Editor, in its Edit Layout mode, and the fill of the area buttons over it.",
+			"targets": [
+				["color", "CandyAreaOutline", "editor"]
+			]
+		}
+	]
+}

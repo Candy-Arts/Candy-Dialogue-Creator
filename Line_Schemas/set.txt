@@ -1,0 +1,16 @@
+{
+	"type": "Set",
+	"title": "Set",
+	"category": "Control",
+	"colors": { "Text": Color(0.45, 1, 0.45, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Variable} {Operator} {Expression}",
+	"short": ["{Variable} {Operator} {Expression}", "{Variable} {Operator}"],
+	"fields": [
+		{ "id": "Variable", "checks": [{"check": "required"}, {"check": "write_target"}], "label": "Variable", "widget": "line_edit", "default": "", "tooltip": "The variable to write to, written without {expression}.", "values": ["Variable path", "{vardict}Variable", "{expression}Expression: Gives the variable's path."] },
+		{
+			"id": "Operator", "checks": [{"check": "operator"}], "label": "Operator", "widget": "line_edit", "default": "=", "tooltip": "How Expression changes the variable. Most operators work on the current value when Expression is empty.", "values": ["=: Replace the value with Expression.", "Other operators: Listed in the dropdown.", "{expression}Expression"],
+			"dropdown": { "provider": "operators" }
+		},
+		{ "id": "Expression", "checks": [{"check": "when", "severity": "notice", "rule": {"all": [{"is_number": true}, {"field": "Operator", "equals": "="}]}, "text": "Stored as the text \"‹value›\". Write {expression}‹value› to store the number."}, {"check": "when", "severity": "notice", "rule": {"all": [{"in": ["true", "false"]}, {"field": "Operator", "equals": "="}]}, "text": "Stored as the text \"‹value›\". Write {expression}‹value› to store the boolean."}, {"check": "when", "severity": "error", "rule": {"all": [{"not_empty": false}, {"field": "Operator", "equals": "="}]}, "text": "Required with =."}], "label": "Expression", "widget": "text_edit", "height": "fit", "default": "", "tooltip": "The value the operator uses.", "values": ["Value", "Empty: No value (not with =).", "{expression}Expression"] }
+	]
+}

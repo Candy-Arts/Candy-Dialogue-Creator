@@ -1,0 +1,60 @@
+{
+	"type": "Timer_Status",
+	"title": "Timer Status",
+	"category": "Choices",
+	"short": ["{Timer_Tags}", "{Menu_Tags}"],
+	"colors": { "Text": Color(0.33, 0.7, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"fields": [
+		{
+			"id": "Menu_Mode", "checks": [{"check": "one_of", "values": ["Last", "Tags", "All"], "text": "Not a mode."}], "label": "Menu Mode", "widget": "line_edit", "default": "Last", "tooltip": "Which open menus to change.", "values": ["Last: The deepest open menu.", "Tags: Menus with a tag in Menu Tags.", "All: Every open menu.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Last", "value": "Last" },
+				{ "label": "Tags", "value": "Tags" },
+				{ "label": "All", "value": "All" }
+			]}
+		},
+		{
+			"id": "Menu_Tags", "checks": [{"check": "tags", "used": "menu"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "Menu_Mode", "equals": "Tags"}]}, "text": "No tags: no menu matches."}], "label": "Menu Tags", "widget": "line_edit", "default": "", "tooltip": "The tags of the menus to change.", "values": ["Comma-separated tags", "{expression}Expression"], "visible_when": { "field": "Menu_Mode", "equals": "Tags" },
+			"dropdown": { "provider": "choice_tags", "level": "menu", "pick": "append" }
+		},
+		{
+			"id": "Timer_Mode", "checks": [{"check": "one_of", "values": ["Last", "Tags", "All"], "text": "Not a mode."}], "label": "Timer Mode", "widget": "line_edit", "default": "Last", "tooltip": "Which timers to change.", "values": ["Last: The menu's last timer to time out.", "Tags: Timers with a tag in Timer Tags.", "All: Every timer without a tag in Timer Tags.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Last", "value": "Last" },
+				{ "label": "Tags", "value": "Tags" },
+				{ "label": "All", "value": "All" }
+			]}
+		},
+		{
+			"id": "Timer_Tags", "checks": [{"check": "tags", "used": "timer"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_empty": false}, {"field": "Timer_Mode", "equals": "Tags"}]}, "text": "No tags: no timer matches."}, {"check": "when", "severity": "notice", "rule": {"all": [{"not_empty": true}, {"field": "Timer_Mode", "equals": "All"}]}, "text": "Timers with these tags are left out."}], "label": "Timer Tags", "widget": "line_edit", "default": "", "tooltip": "Tags of the timers Tags includes, or All leaves out.", "values": ["Comma-separated tags", "{expression}Expression"], "visible_when": { "field": "Timer_Mode", "in": ["Tags", "All"] },
+			"dropdown": { "provider": "choice_tags", "level": "timer", "pick": "append" }
+		},
+		{ "id": "Time", "checks": [{"check": "timer_change"}], "label": "Time", "widget": "line_edit", "default": "", "tooltip": "The timers' new countdown length.", "values": ["N: Seconds.", "+N / -N / *N / /N: Change it.", "Empty: Unchanged.", "{expression}Expression"] },
+		{
+			"id": "Timer_Node", "checks": [{"check": "one_of", "values": ["Ignore", "Restart", "Update"], "text": "Not Ignore, Restart or Update."}], "label": "Timer Node", "widget": "line_edit", "default": "Ignore", "tooltip": "What a Time change does to a countdown already running.", "values": ["Ignore: Apply it from the next start.", "Restart: Restart with the new time.", "Update: Restart only if the new time is shorter than what's left.", "{expression}Expression"], "visible_when": { "field": "Time", "not_empty": true },
+			"dropdown": { "items": [
+				{ "label": "Ignore: from the next start", "value": "Ignore" },
+				{ "label": "Restart with the new time", "value": "Restart" },
+				{ "label": "Update if shorter than what's left", "value": "Update" }
+			]}
+		},
+		{
+			"id": "Loops", "checks": [{"check": "timer_change", "loop": true}], "label": "Loops", "widget": "line_edit", "default": "", "tooltip": "How many more times the timers count down and fire.", "values": ["N: Countdowns left.", "+N / -N / *N / /N: Change it.", "0: Forever.", "Empty: Unchanged.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Unchanged", "value": "" },
+				{ "label": "Forever", "value": "0" },
+				{ "label": "One more", "value": "+1" },
+				{ "label": "One fewer", "value": "-1" }
+			]}
+		},
+		{
+			"id": "Status", "checks": [{"check": "one_of", "values": ["-", "Start/Resume", "Pause", "Stop"], "case_sensitive": true, "text": "Not a status. Case-sensitive."}, {"check": "when", "severity": "warning", "rule": {"all": [{"in": ["", "-"]}, {"field": "Time", "not_empty": false}, {"field": "Loops", "not_empty": false}]}, "text": "This line changes nothing."}], "label": "Status", "widget": "line_edit", "default": "", "tooltip": "Starts, pauses or stops the timers.", "values": ["Start/Resume: Start or resume.", "Pause: Pause.", "Stop: Stop.", "-: Unchanged.", "Empty: Unchanged.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Unchanged", "value": "-" },
+				{ "label": "Start / Resume", "value": "Start/Resume" },
+				{ "label": "Pause", "value": "Pause" },
+				{ "label": "Stop", "value": "Stop" }
+			]}
+		}
+	]
+}

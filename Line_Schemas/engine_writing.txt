@@ -1,0 +1,62 @@
+{
+	"type": "Engine_Writing",
+	"title": "Engine Writing",
+	"category": "Engine",
+	"colors": { "Text": Color(1, 0.75, 0.4, 1), "BG": Color(0, 0, 0, 0.5) },
+	"fields": [
+		{
+			"id": "Writing_Speed", "checks": [{"check": "setting_number", "reset": true}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Writes every line at once."}], "label": "Writing Speed", "widget": "line_edit", "default": "null", "tooltip": "How fast the engine writes text.", "values": ["Characters per second", "0: Instant.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Continue_Fast_Speed", "checks": [{"check": "setting_number", "reset": true}], "label": "Continue Fast Speed", "widget": "line_edit", "default": "null", "tooltip": "The writing speed while the player holds the speed-up input.", "values": ["Characters per second", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Continue_Slow_Speed", "checks": [{"check": "setting_number", "reset": true}], "label": "Continue Slow Speed", "widget": "line_edit", "default": "null", "tooltip": "The writing speed while the player holds the slow-down input.", "values": ["Characters per second", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Auto_Advance", "checks": [{"check": "setting_number", "reset": true}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Advances as soon as a line is written."}, {"check": "when", "severity": "notice", "rule": {"all": [{"less_than": 0}, {"not_equals": "-1"}]}, "text": "Only when the player advances, like -1."}], "label": "Auto Advance", "widget": "line_edit", "default": "null", "tooltip": "How long before a line advances by itself.", "values": ["Seconds", "-1: Only when the player advances.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Manual only", "value": "-1" },
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Auto_Advance_Per_Character", "checks": [{"check": "setting_number", "reset": true}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_equals": "0"}, {"field": "Auto_Advance", "equals": "-1"}]}, "text": "Auto Advance is -1: lines only advance when the player does."}, {"check": "when", "severity": "notice", "rule": {"less_than": 0}, "text": "Shortens the wait on longer lines."}], "label": "Auto Advance Per Character", "widget": "line_edit", "default": "null", "tooltip": "Seconds added to Auto Advance for each character a line shows.", "values": ["Seconds per character", "0: None.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Sync_Write_Speed_Voice", "checks": [{"check": "setting_on_off", "reset": true}], "label": "Sync Write Speed Voice", "widget": "line_edit", "default": "null", "tooltip": "Whether the writing speed follows the voice's length.", "values": ["1: Follow it.", "0: Don't.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" },
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Await_Voice_Playback", "checks": [{"check": "setting_on_off", "reset": true}], "label": "Await Voice Playback", "widget": "line_edit", "default": "null", "tooltip": "Whether advancing waits for the voice to finish.", "values": ["1: Wait.", "0: Don't wait.", "Reset: The engine's own value.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" },
+				{ "label": "Reset to the engine's value", "value": "Reset" }
+			]}
+		},
+		{
+			"id": "Revert", "checks": [{"check": "setting_on_off"}], "label": "Revert", "widget": "line_edit", "default": "null", "tooltip": "Whether this change is undone when the dialogue ends.", "values": ["1: Undo it.", "0: Keep it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Undo when the dialogue ends", "value": "1" },
+				{ "label": "Keep after the dialogue", "value": "0" }
+			]}
+		}
+	]
+}

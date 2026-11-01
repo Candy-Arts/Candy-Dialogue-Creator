@@ -1,0 +1,11 @@
+{
+	"type": "Write_Pause",
+	"title": "Write Pause",
+	"category": "Text Events",
+	"colors": { "Text": Color(1, 0.85, 0.45, 1), "BG": Color(0.22, 0.16, 0.02, 1) },
+	"summary": "{Wait_Time}",
+	"short": ["{Wait_Time}"],
+	"fields": [
+		{ "id": "Wait_Time", "checks": [{"check": "wait_time", "frames": false}, {"check": "when", "severity": "error", "rule": {"begins_with": "f="}, "text": "Write_Pause can't count frames."}, {"check": "when", "severity": "warning", "rule": {"any": [{"not_empty": false}, {"equals": "0"}]}, "text": "Pauses for nothing."}], "label": "Wait Time", "widget": "line_edit", "default": "0", "tooltip": "How long the writing of the line pauses. The skip key ends it, and skips the rest of the writing.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "{expression}Expression"] }
+	]
+}

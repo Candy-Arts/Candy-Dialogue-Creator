@@ -1,0 +1,267 @@
+{
+	"type": "Spoken_Line",
+	"title": "Spoken Line",
+	"category": "Misc",
+	"colors": { "Text": Color(1, 1, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Reference}",
+	"fields": [
+		{
+			"id": "Reference", "checks": [{"check": "actor"}, {"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "No speaker: the line shows no name, and has no portrait, voice or bust folder."}], "label": "Speaker", "widget": "line_edit", "default": "", "tooltip": "The actor who speaks this line.",
+			"values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"dropdown": { "provider": "actors" }
+		},
+		{
+			"id": "Disposition", "checks": [{"check": "disposition", "condition": true}], "label": "Disposition", "widget": "line_edit", "default": "", "tooltip": "The line only plays when the speaker's dispositions pass this test.", "values": ["a, b: At least one of them.", "+a, b: All of them.", "-a, b: No dispositions outside these.", "=a, b: Exactly these.", "!a, b: None of them.", "(n)a, b: Exactly n of them.", "Empty: Always plays.", "{expression}Expression"],
+			"dropdown": { "provider": "project_data", "kind": "Dispositions", "pick": "append" }
+		},
+		{
+			"id": "Portrait", "checks": [{"check": "setting_modes", "modes": ["Box", "Chat"], "modes_text": "Box and Chat"}, {"check": "file", "missing": "Not found in ‹folder›: Candy DE shows Default instead."}], "label": "Portrait", "widget": "line_edit", "default": "", "tooltip": "The portrait shown with the line, from the speaker's portraits folder (Box and Chat).", "values": ["File name", "Animation name: For an AnimatedSprite portrait.", "res:// or user:// path", "Empty: Default.", "{expression}Expression"],
+			"dropdown": { "provider": "portrait_files", "folder": "*Portraits", "entry_field": "Reference", "sprite_frames_field": "Sprite_Frames_File", "preview": "portraits" }
+		},
+		{
+			"id": "Sprite_Frames_File", "checks": [{"check": "setting_modes", "modes": ["Box", "Chat"], "modes_text": "Box and Chat"}, {"check": "file", "missing": "No SpriteFrames ‹name› in ‹folder›."}], "label": "Sprite Frames File", "widget": "line_edit", "default": "", "tooltip": "For an AnimatedSprite portrait: the SpriteFrames the Portrait animation is in.", "values": ["File name", "res:// or user:// path", "Empty: The speaker's own.", "{expression}Expression"], "visible_when": { "provider": "portrait_kind", "in": ["animation"] },
+			"dropdown": { "provider": "sprite_frames_files", "folder": "*Portraits", "entry_field": "Reference", "preview": "portraits" }
+		},
+		{
+			"id": "Portrait_Play", "checks": [{"check": "setting_modes", "modes": ["Box", "Chat"], "modes_text": "Box and Chat"}, {"check": "portrait_play"}], "label": "Play Portrait", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) an animated portrait plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame.", "-1: Play until the next line.", "-2: Play until the next Spoken_Line.", "-3: Play until the voice ends (without a voice: the stop frame at once).", "-3/n: Play until the voice ends (without a voice: as n).", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Once", "value": "1" },
+				{ "label": "First frame only", "value": "0" },
+				{ "label": "Until the next line", "value": "-1" },
+				{ "label": "Until replaced", "value": "-2" }
+			]}
+		},
+		{
+			"id": "Portrait_Stop", "checks": [{"check": "setting_modes", "modes": ["Box", "Chat"], "modes_text": "Box and Chat"}, {"check": "number", "whole": true, "min": -1, "text": "Not a frame."}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Removes the portrait when it stops. (On the Stop commands, 0 is the current frame.)"}], "label": "Portrait Stop", "widget": "line_edit", "default": "1", "tooltip": "The frame an animated portrait stops on.", "values": ["1+: Stop on that frame.", "-1: Stop on the last frame.", "0: Remove the portrait.", "{expression}Expression"], "visible_when": { "field": "Portrait_Play", "not_in": ["0", "-2"] },
+			"dropdown": { "items": [
+				{ "label": "First frame", "value": "1" },
+				{ "label": "Last frame", "value": "-1" },
+				{ "label": "Remove the portrait", "value": "0" }
+			]}
+		},
+		{
+			"id": "Voice", "checks": [{"check": "file", "folder_label": "the speaker's voice folder", "missing": "No voice file ‹name› in ‹folder›.", "empty": "Plays the folder's Default file. To play no voice, set Enable Voice to 0."}], "label": "Voice", "widget": "line_edit", "default": "", "tooltip": "The voice file played with the line.", "values": ["File name", "res:// or user:// path", "Empty: Default.", "{expression}Expression"],
+			"dropdown": { "provider": "voice_files", "actor_field": "Reference", "preview": "audio" }
+		},
+		{
+			"id": "Variations", "checks": [{"check": "variations"}], "label": "Variations", "widget": "list", "tooltip": "The versions of the line's text: by language, tags, random pick and TTS.", "in_forms": false, "entry": "named", "entry_label": "variation", "entry_prefix": "Variation",
+			"fields": [
+				{ "id": "Text", "checks": [{"check": "speech_text"}], "label": "Text", "widget": "text_edit", "default": "", "tooltip": "What the speaker says.", "values": ["Text (BBCode allowed)", "{text_var_start}Variable{text_var_end}: A text variable.", "{substitution_start}Word{separator}Actor{substitution_end}: A word substitution.", "{text_event_start}Event{text_event_end}: A text event, run when the writing reaches it.", "{lexicon_escape_start}Text{lexicon_escape_end}: Never formatted by the lexicon; the symbols aren't shown.","{expression}Expression: The whole text, evaluated; its result is read like a written text.", "Empty: The variation is ignored."], "in_forms": false },
+				{
+					"id": "Direction", "checks": [{"check": "one_of", "values": ["LtR", "RtL"], "text": "Not LtR or RtL."}], "label": "Direction", "widget": "line_edit", "default": "LtR", "tooltip": "The direction the text is written in.", "values": ["LtR: Left to right.", "RtL: Right to left.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Left to right", "value": "LtR" },
+						{ "label": "Right to left", "value": "RtL" }
+					]}
+				},
+				{ "id": "Weight", "checks": [{"check": "weight"}], "label": "Weight", "widget": "line_edit", "default": "1", "tooltip": "The variation's chance when variations are picked randomly, relative to the others.", "values": ["1+: Relative chance."] }
+			]
+		},
+		{
+			"id": "Text_Events", "label": "Text Events", "widget": "map", "in_forms": false, "entry_label": "variation", "entry_prefix": "Variation",
+			"tooltip": "The line's own text events, by variation: run when the writing reaches their markers, before the project's text events table. Edited in the Text Event Editor.",
+			"fields": [
+				{ "id": "Events", "label": "Events", "widget": "map", "in_forms": false, "entry_label": "event", "entry_prefix": "Event", "fields": [
+					{
+						"id": "Run_On_Skip", "checks": [{"check": "on_off"}], "label": "Run On Skip", "widget": "line_edit", "default": "1", "tooltip": "Whether the event runs when the writing is skipped, or the line written at once. It then runs without its waits.", "values": ["1: Run it, without its waits.", "0: Don't run it.", "{expression}Expression"],
+						"dropdown": { "items": [
+							{ "label": "On", "value": "1" },
+							{ "label": "Off", "value": "0" }
+						]}
+					},
+					{
+						"id": "Pause_Voice", "checks": [{"check": "setting_on_off"}], "label": "Pause Voice", "widget": "line_edit", "default": "null", "tooltip": "Whether the line's voice pauses until the event is over.", "values": ["1: Pause it.", "0: Let it go on.", "null: No override.", "{expression}Expression"],
+						"dropdown": { "items": [
+							{ "label": "On", "value": "1" },
+							{ "label": "Off", "value": "0" }
+						]}
+					},
+					{
+						"id": "Resync_Voice", "checks": [{"check": "setting_on_off"}], "label": "Resync Voice", "widget": "line_edit", "default": "null", "tooltip": "In a line whose writing is synced to its voice, whether the speed is worked out again after the event, so the text still ends with the voice. Not while a Write_Speed is in effect.", "values": ["1: Sync it again.", "0: Don't.", "null: No override.", "{expression}Expression"],
+						"dropdown": { "items": [
+							{ "label": "On", "value": "1" },
+							{ "label": "Off", "value": "0" }
+						]}
+					},
+					{ "id": "Lines", "label": "Commands", "widget": "list", "entries": "commands", "in_forms": false, "tooltip": "The commands the event runs, in order, as nested lines. Only those text_event_commands allows (Candy_Properties.gd)." }
+				]}
+			]
+		},
+		{
+			"id": "Passed_Tags", "checks": [{"check": "shared_values", "other": "Disabled_Tags", "text": "Also disabled on this line, so it fails: ‹shared›."}], "label": "Passed Tags", "widget": "map", "entries": "values", "entry_label": "passed tag", "entry_prefix": "Tag", "start_entries": 0, "tooltip": "Variation tags that pass on this line, whatever their value, even if the speaker or the engine disables them. A bare tag (Shout) only passes when a level passes it.", "values": ["Tag: a bare tag (Shout), or a tag's name (S for S=F).", "{expression}Expression"],
+			"value": { "widget": "line_edit", "default": "", "dropdown": { "provider": "variation_tags" } }
+		},
+		{
+			"id": "Disabled_Tags", "checks": [{"check": "shared_values", "other": "Passed_Tags", "text": "Also passed on this line, but still fails: ‹shared›."}], "label": "Disabled Tags", "widget": "map", "entries": "values", "entry_label": "disabled tag", "entry_prefix": "Tag", "start_entries": 0, "tooltip": "Variation tags that fail on this line, even if the speaker or the engine passes them. A variation with one of them is never picked.", "values": ["Tag: a bare tag (Shout), or a tag's name (S for S=F).", "{expression}Expression"],
+			"value": { "widget": "line_edit", "default": "", "dropdown": { "provider": "variation_tags" } }
+		},
+		{
+			"id": "Dialogue_Mode", "checks": [{"check": "dialogue_mode"}], "label": "Dialogue Mode", "widget": "line_edit", "default": "null", "tooltip": "How the line is displayed.", "values": ["Box", "Subtitles", "Chat", "Bubbles", "Barks", "Voice", "A mode of your own: a script in Candy_DE/Scripts/Dialogue_Modes.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "dialogue_modes", "exclude": ["VN_Bubbles"] }
+		},
+		{
+			"id": "Bubbles_Exempt_Mode", "checks": [{"check": "dialogue_mode"}, {"check": "setting_modes", "modes": ["Bubbles", "VN_Bubbles"], "modes_text": "Bubbles"}, {"check": "when", "severity": "warning", "rule": {"equals": "Bubbles"}, "text": "A speaker with no bubble can't use Bubbles either."}], "label": "Bubbles Exempt Mode", "widget": "line_edit", "default": "null", "tooltip": "How the line is displayed when the speaker has no speech bubble.", "values": ["Box", "Subtitles", "Chat", "Bubbles", "Barks", "Voice", "A mode of your own: a script in Candy_DE/Scripts/Dialogue_Modes.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "dialogue_modes", "exclude": ["VN_Bubbles"] }
+		},
+		{
+			"id": "Portrait_Mode", "checks": [{"check": "setting_mode", "values": ["Off", "All", "Player", "NPC", "VN"]}, {"check": "setting_modes", "modes": ["Box", "Chat"], "modes_text": "Box and Chat"}], "label": "Portrait Mode", "widget": "line_edit", "default": "null", "tooltip": "Which speakers show a portrait (Box and Chat).", "values": ["Off: No portraits.", "All: Every speaker.", "Player: Only the player.", "NPC: Everyone but the player.", "VN: Speakers without a VN bust.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Off", "value": "Off" },
+				{ "label": "All", "value": "All" },
+				{ "label": "Player", "value": "Player" },
+				{ "label": "NPC", "value": "NPC" },
+				{ "label": "VN", "value": "VN" }
+			]}
+		},
+		{
+			"id": "Enable_Voice", "checks": [{"check": "setting_on_off"}], "label": "Enable Voice", "widget": "line_edit", "default": "null", "tooltip": "Whether the line's voice plays.", "values": ["1: Play it.", "0: Don't play it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Await_Voice_Playback", "checks": [{"check": "setting_on_off"}, {"check": "when", "severity": "warning", "rule": {"all": [{"in": ["1", "true"]}, {"field": "Enable_Voice", "in": ["0", "false"]}]}, "text": "No voice plays on this line: there's nothing to wait for."}], "label": "Await Voice Playback", "widget": "line_edit", "default": "null", "tooltip": "Whether advancing waits for the voice to finish.", "values": ["1: Wait.", "0: Don't wait.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "TTS", "checks": [{"check": "setting_mode", "values": ["Off", "Simple", "Advanced"], "others": "Not a built-in TTS mode: your tts() function must handle it."}, {"check": "tts_variations"}], "label": "TTS", "widget": "line_edit", "default": "null", "tooltip": "How text-to-speech reads the line.", "values": ["Off: No TTS.", "Simple: Read the line's text.", "Advanced: Read the line's TTS variation.", "A TTS mode of your own: handled by your tts() function.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Off", "value": "Off" },
+				{ "label": "Simple", "value": "Simple" },
+				{ "label": "Advanced", "value": "Advanced" }
+			]}
+		},
+		{
+			"id": "TTS_Advanced_Fallback", "checks": [{"check": "setting_mode", "values": ["Off", "Simple", "Advanced"], "others": "Not a built-in TTS mode: your tts() function must handle it."}, {"check": "when", "severity": "warning", "rule": {"equals": "Advanced"}, "text": "Advanced can't be its own fallback."}], "label": "TTS Advanced Fallback", "widget": "line_edit", "default": "null", "tooltip": "The TTS mode used when Advanced finds no TTS variation.", "values": ["Off: No TTS.", "Simple: Read the line's text.", "Advanced: Read the line's TTS variation.", "A TTS mode of your own: handled by your tts() function.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Off", "value": "Off" },
+				{ "label": "Simple", "value": "Simple" },
+				{ "label": "Advanced", "value": "Advanced" }
+			]}
+		},
+		{
+			"id": "LLM", "checks": [{"check": "setting_on_off"}], "label": "LLM", "widget": "line_edit", "default": "null", "tooltip": "Whether the llm_query hook rewrites the line.", "values": ["1: Rewrite it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{ "id": "Writing_Speed", "checks": [{"check": "setting_number"}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Writes the whole line at once."}], "label": "Writing Speed", "widget": "line_edit", "default": "null", "tooltip": "How fast the text is written.", "values": ["Characters per second", "0: Instant.", "null: No override.", "{expression}Expression"] },
+		{ "id": "Continue_Fast_Speed", "checks": [{"check": "setting_number"}], "label": "Continue Fast Speed", "widget": "line_edit", "default": "null", "tooltip": "The writing speed while the player holds the speed-up input.", "values": ["Characters per second", "null: No override.", "{expression}Expression"] },
+		{ "id": "Continue_Slow_Speed", "checks": [{"check": "setting_number"}], "label": "Continue Slow Speed", "widget": "line_edit", "default": "null", "tooltip": "The writing speed while the player holds the slow-down input.", "values": ["Characters per second", "null: No override.", "{expression}Expression"] },
+		{
+			"id": "Sync_Write_Speed_Voice", "checks": [{"check": "setting_on_off"}, {"check": "when", "severity": "warning", "rule": {"all": [{"in": ["1", "true"]}, {"field": "Enable_Voice", "in": ["0", "false"]}]}, "text": "No voice plays on this line: there's nothing to follow."}], "label": "Sync Write Speed Voice", "widget": "line_edit", "default": "null", "tooltip": "Whether the writing speed follows the voice's length.", "values": ["1: Follow it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Auto_Advance", "checks": [{"check": "setting_number"}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Advances as soon as the line is written."}, {"check": "when", "severity": "notice", "rule": {"all": [{"less_than": 0}, {"not_equals": "-1"}]}, "text": "Only when the player advances, like -1."}], "label": "Auto Advance", "widget": "line_edit", "default": "null", "tooltip": "How long before the line advances by itself.", "values": ["Seconds", "-1: Only when the player advances.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Manual only", "value": "-1" }
+			]}
+		},
+		{ "id": "Auto_Advance_Per_Character", "checks": [{"check": "setting_number"}, {"check": "when", "severity": "warning", "rule": {"all": [{"not_equals": "0"}, {"field": "Auto_Advance", "equals": "-1"}]}, "text": "Auto Advance is -1: the line only advances when the player does."}, {"check": "when", "severity": "notice", "rule": {"less_than": 0}, "text": "Shortens the wait on longer lines."}], "label": "Auto Advance Per Character", "widget": "line_edit", "default": "null", "tooltip": "Seconds added to Auto Advance for each character the line shows.", "values": ["Seconds per character", "0: None.", "null: No override.", "{expression}Expression"] },
+		{
+			"id": "Write_Dialogue_History", "checks": [{"check": "setting_on_off"}], "label": "Write Dialogue History", "widget": "line_edit", "default": "null", "tooltip": "Whether the line is written to the dialogue history.", "values": ["1: Write it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{ "id": "Text_BBCode", "checks": [{"check": "setting_empty_text", "none": "No wrap"}, {"check": "bbcode_setting"}], "label": "Text BBCode", "widget": "line_edit", "default": "null", "tooltip": "BBCode tags wrapped around the text. Candy DE adds the closing tags.", "values": ["Opening BBCode tags", "Empty: No wrap.", "null: No override.", "{expression}Expression"] },
+		{ "id": "Speaker_BBCode", "checks": [{"check": "setting_empty_text", "none": "No wrap"}, {"check": "bbcode_setting"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat"], "modes_text": "Box, Subtitles and Chat"}], "label": "Speaker BBCode", "widget": "line_edit", "default": "null", "tooltip": "BBCode tags wrapped around the speaker's name (Box, Subtitles, Chat).", "values": ["Opening BBCode tags", "Empty: No wrap.", "null: No override.", "{expression}Expression"] },
+		{
+			"id": "Show_Speaker", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat"], "modes_text": "Box, Subtitles and Chat"}], "label": "Show Speaker", "widget": "line_edit", "default": "null", "tooltip": "Whether the speaker's name is shown (Box, Subtitles, Chat).", "values": ["1: Show it.", "0: Hide it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{ "id": "Speaker_Prefix", "checks": [{"check": "setting_empty_text", "none": "No prefix"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat"], "modes_text": "Box, Subtitles and Chat"}], "label": "Speaker Prefix", "widget": "line_edit", "default": "null", "tooltip": "Text before the speaker's name.", "values": ["Text", "Empty: None.", "null: No override.", "{expression}Expression"] },
+		{ "id": "Speaker_Suffix", "checks": [{"check": "setting_empty_text", "none": "No suffix"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat"], "modes_text": "Box, Subtitles and Chat"}], "label": "Speaker Suffix", "widget": "line_edit", "default": "null", "tooltip": "Text after the speaker's name.", "values": ["Text", "Empty: None.", "null: No override.", "{expression}Expression"] },
+		{ "id": "End_Of_Line_String", "checks": [{"check": "setting_empty_text", "none": "No end-of-line string"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat", "Bubbles", "VN_Bubbles", "Barks"], "modes_text": "every mode but Voice"}], "label": "End Of Line String", "widget": "line_edit", "default": "null", "tooltip": "Text shown once the line is written.", "values": ["Text (BBCode allowed)", "Empty: None.", "null: No override.", "{expression}Expression"] },
+		{ "id": "Advance_String", "checks": [{"check": "setting_empty_text", "none": "No advance string"}, {"check": "setting_modes", "modes": ["Box", "Subtitles", "Chat", "Bubbles", "VN_Bubbles", "Barks"], "modes_text": "every mode but Voice"}], "label": "Advance String", "widget": "line_edit", "default": "null", "tooltip": "Text that replaces the end-of-line string once the player has advanced, while the line stays on screen.", "values": ["Text (BBCode allowed)", "Empty: None.", "null: No override.", "{expression}Expression"] },
+		{
+			"id": "Self_Clear", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Box", "Subtitles"], "modes_text": "Box and Subtitles"}], "label": "Self Clear", "widget": "line_edit", "default": "null", "tooltip": "Whether the text is cleared when the dialogue moves on (Box, Subtitles).", "values": ["1: Clear it.", "0: Keep it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Portrait_Self_Clear", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Box"], "modes_text": "Box"}], "label": "Portrait Self Clear", "widget": "line_edit", "default": "null", "tooltip": "Whether the portrait is cleared when the dialogue moves on (Box).", "values": ["1: Clear it.", "0: Keep it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Lexicon_Mode", "checks": [{"check": "setting_on_off"}], "label": "Lexicon Mode", "widget": "line_edit", "default": "null", "tooltip": "Enable/Disable the Lexicon for this line.", "values": ["1: Enable it.", "0: Disable it.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Line_Scene", "checks": [{"check": "scene_file"}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Chat Line Scene", "widget": "line_edit", "default": "null", "tooltip": "The Chat_Line scene the line is shown in, from the chat lines folder (Chat).", "values": ["Scene name", "res:// or user:// path", "null: No override.", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "Chat_Line_Scenes" }
+		},
+		{
+			"id": "Speaker_Display", "checks": [{"check": "setting_mode", "values": ["Every_Line", "Speaker_Change"]}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Speaker Display", "widget": "line_edit", "default": "null", "tooltip": "When the line shows its speaker's name (Chat).", "values": ["Every_Line: On every line.", "Speaker_Change: When the speaker changes.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Every Line", "value": "Every_Line" },
+				{ "label": "Speaker Change", "value": "Speaker_Change" }
+			]}
+		},
+		{
+			"id": "Portrait_Display", "checks": [{"check": "setting_mode", "values": ["Every_Line", "Speaker_Change", "Speaker_Or_Portrait_Change"]}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Portrait Display", "widget": "line_edit", "default": "null", "tooltip": "When the line shows its portrait (Chat).", "values": ["Every_Line: On every line.", "Speaker_Change: When the speaker changes.", "Speaker_Or_Portrait_Change: When the speaker or the portrait changes.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Every Line", "value": "Every_Line" },
+				{ "label": "Speaker Change", "value": "Speaker_Change" },
+				{ "label": "Speaker Or Portrait Change", "value": "Speaker_Or_Portrait_Change" }
+			]}
+		},
+		{
+			"id": "Alignment", "checks": [{"check": "setting_mode", "values": ["Left", "Right", "Alternate"]}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Alignment", "widget": "line_edit", "default": "null", "tooltip": "The side of the portrait and name, and the text's alignment (Chat).", "values": ["Left", "Right", "Alternate: Switch sides when the speaker changes.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Left", "value": "Left" },
+				{ "label": "Right", "value": "Right" },
+				{ "label": "Alternate", "value": "Alternate" }
+			]}
+		},
+		{
+			"id": "Keep_Portrait_Space", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Keep Portrait Space", "widget": "line_edit", "default": "null", "tooltip": "Whether a portrait not shown keeps its room (Chat).", "values": ["1: Keep it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Keep_Speaker_Space", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Keep Speaker Space", "widget": "line_edit", "default": "null", "tooltip": "Whether a name not shown keeps its room (Chat).", "values": ["1: Keep it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Keep_Alternate_Portrait_Space", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Keep Alternate Portrait Space", "widget": "line_edit", "default": "null", "tooltip": "Whether the portrait's room on the other side is kept (Chat).", "values": ["1: Keep it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		},
+		{
+			"id": "Keep_Alternate_Speaker_Space", "checks": [{"check": "setting_on_off"}, {"check": "setting_modes", "modes": ["Chat"], "modes_text": "Chat"}], "label": "Keep Alternate Speaker Space", "widget": "line_edit", "default": "null", "tooltip": "Whether the name's room on the other side is kept (Chat).", "values": ["1: Keep it.", "0: Don't.", "null: No override.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "On", "value": "1" },
+				{ "label": "Off", "value": "0" }
+			]}
+		}
+	]
+}

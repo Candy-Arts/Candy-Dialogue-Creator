@@ -1,0 +1,47 @@
+{
+	"type": "Line_Portrait",
+	"title": "Line Portrait",
+	"category": "Text Events",
+	"colors": { "Text": Color(1, 0.85, 0.45, 1), "BG": Color(0.22, 0.16, 0.02, 1) },
+	"summary": "{Action} {Portrait} {Frame}",
+	"short": ["{Action}: {Portrait}", "{Action}: {Frame}", "{Action}"],
+	"fields": [
+		{
+			"id": "Action", "checks": [{"check": "one_of", "values": ["Show", "Pause", "Resume", "Stop", "Frame"], "text": "Not Show, Pause, Resume, Stop or Frame."}], "label": "Action", "widget": "line_edit", "default": "", "tooltip": "What to do with the portrait of the line being written.", "values": ["Show: Another portrait.", "Pause: Pause its animation.", "Resume: Resume it.", "Stop: Stop it on a frame.", "Frame: Jump to a frame, playing or paused as it was."],
+			"dropdown": { "items": [
+				{ "label": "Show another portrait", "value": "Show" },
+				{ "label": "Pause", "value": "Pause" },
+				{ "label": "Resume", "value": "Resume" },
+				{ "label": "Stop on a frame", "value": "Stop" },
+				{ "label": "Jump to a frame", "value": "Frame" }
+			]}
+		},
+		{ "id": "Portrait", "label": "Portrait", "widget": "line_edit", "default": "null", "tooltip": "The portrait to show, as on Spoken_Line, from the speaker's portraits folder.", "values": ["File name", "Animation name: For an AnimatedSprite portrait.", "res:// or user:// path", "null: The line's.", "{expression}Expression"], "visible_when": { "field": "Action", "in": ["Show"] } },
+		{ "id": "Sprite_Frames_File", "label": "Sprite Frames File", "widget": "line_edit", "default": "null", "tooltip": "For an AnimatedSprite portrait: the SpriteFrames the Portrait animation is in.", "values": ["File name", "res:// or user:// path", "null: The line's.", "{expression}Expression"], "visible_when": { "field": "Action", "in": ["Show"] } },
+		{
+			"id": "Portrait_Play", "checks": [{"check": "portrait_play"}], "label": "Play Portrait", "widget": "line_edit", "default": "null", "tooltip": "How many times (loops) the new portrait plays. Also decides what happens when the dialogue moves on.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame.", "-1: Play until the next line.", "-2: Play until the next Spoken_Line.", "-3: Play until the voice ends (without a voice: the stop frame at once).", "-3/n: Play until the voice ends (without a voice: as n).", "null: The line's.", "{expression}Expression"], "visible_when": { "field": "Action", "in": ["Show"] },
+			"dropdown": { "items": [
+				{ "label": "Once", "value": "1" },
+				{ "label": "First frame only", "value": "0" },
+				{ "label": "Until the next line", "value": "-1" },
+				{ "label": "Until replaced", "value": "-2" }
+			]}
+		},
+		{
+			"id": "Portrait_Stop", "checks": [{"check": "number", "whole": true, "min": -1, "text": "Not a frame."}], "label": "Portrait Stop", "widget": "line_edit", "default": "null", "tooltip": "The frame the new portrait stops on.", "values": ["1+: Stop on that frame.", "-1: Stop on the last frame.", "0: Remove the portrait.", "null: The line's.", "{expression}Expression"], "visible_when": { "field": "Action", "in": ["Show"] },
+			"dropdown": { "items": [
+				{ "label": "First frame", "value": "1" },
+				{ "label": "Last frame", "value": "-1" },
+				{ "label": "Remove the portrait", "value": "0" }
+			]}
+		},
+		{
+			"id": "Frame", "checks": [{"check": "number", "whole": true, "min": -1, "text": "Not a frame."}, {"check": "when", "severity": "error", "rule": {"all": [{"equals": "0"}, {"field": "Action", "in": ["Frame"]}]}, "text": "Frame can't jump to 0."}], "label": "Frame", "widget": "line_edit", "default": "null", "tooltip": "Stop: the frame it stops on. Frame: the frame it jumps to.", "values": ["1+: That frame.", "-1: The last frame.", "0: Remove the portrait (Stop only).", "null: The line's Portrait Stop (Stop only).", "{expression}Expression"], "visible_when": { "field": "Action", "in": ["Stop", "Frame"] },
+			"dropdown": { "items": [
+				{ "label": "First frame", "value": "1" },
+				{ "label": "Last frame", "value": "-1" },
+				{ "label": "Remove the portrait", "value": "0" }
+			]}
+		}
+	]
+}

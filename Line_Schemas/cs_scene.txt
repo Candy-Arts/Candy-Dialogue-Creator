@@ -1,0 +1,31 @@
+{
+	"type": "CS_Scene",
+	"title": "CS Scene",
+	"category": "Cutscene",
+	"summary": "{Targets}",
+	"short": ["{Targets/Instances}"],
+	"colors": { "Text": Color(0.41, 0.7, 0.7, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Targets", "entry_checks": [{"check": "entry_name", "kind": "target"}], "label": "Targets", "widget": "map", "entry_label": "target", "entry_prefix": "Target", "entry_dropdown": { "provider": "cs_targets" }, "tooltip": "The nodes to add scene instances under.", "values": ["Location/Name", "Location/{role}Role", "Node path", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Instances", "label": "Instances", "widget": "map", "entry_label": "instance", "entry_prefix": "Instance", "tooltip": "The scene instances to add, each named after its key.", "values": ["Instance name", "Empty: Godot names it."],
+					"fields": [
+						{
+							"id": "Scene", "checks": [{"check": "required"}, {"check": "when", "severity": "error", "rule": {"all": [{"not_empty": true}, {"not": {"begins_with": ["res://", "user://"]}}]}, "text": "Needs a res:// or user:// path."}, {"check": "file", "missing_path": "This scene doesn't exist."}], "label": "Scene", "widget": "line_edit", "default": "", "tooltip": "The scene to add. Required.", "values": ["res:// or user:// path", "{expression}Expression"],
+							"dropdown": { "provider": "project_scenes" }
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,75 @@
+{
+	"type": "VN_Effect_Play",
+	"title": "VN Effect Play",
+	"category": "Visual Novel",
+	"summary": "{Actors}",
+	"short": ["{Actors/Effects}"],
+	"colors": { "Text": Color(1, 1, 0, 1), "BG": Color(0, 0, 0, 0.5) },
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Actors", "entry_checks": [{"check": "entry_name"}, {"check": "actor"}], "label": "Actors", "widget": "map", "entry_label": "actor", "entry_prefix": "Actor", "entry_dropdown": { "provider": "actors" }, "tooltip": "The actors this command acts on, each with its own settings.", "values": ["Actor reference", "{role}Role reference", "{expression}Expression"],
+			"fields": [
+				{
+					"id": "Effects", "entry_checks": [{"check": "entry_name"}, {"check": "in_list", "dropdown": "entry_dropdown", "text": "No animation ‹name› in ‹Library›."}], "label": "Effects", "widget": "map", "entry_label": "effect", "entry_prefix": "Effect", "entry_dropdown": { "provider": "effect_animations", "library_field": "Library", "folder": "*Busts" }, "tooltip": "The effects this command acts on, each named after the animation it plays.", "values": ["Animation name"],
+					"fields": [
+						{
+							"id": "Library", "checks": [{"check": "effect_library"}], "label": "Library", "widget": "line_edit", "default": "", "tooltip": "The animation library the effect's animation is in.", "values": ["Library name", "res:// or user:// path", "Empty: An animation the bust's AnimationPlayers already have.", "{expression}Expression"],
+							"dropdown": { "provider": "effect_libraries", "folder": "*Busts" }
+						},
+						{
+							"id": "Loops", "checks": [{"check": "loop", "duration_field": "Duration"}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times (loops) the effect plays.", "values": ["1+: Number of loops to play.", "0: Hold on the first frame, until a Resume command. With a Duration, play for it instead.", "-1: Loop forever, whatever the Duration.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Once", "value": "1" },
+								{ "label": "Forever", "value": "-1" },
+								{ "label": "Hold the first frame", "value": "0" }
+							]}
+						},
+						{ "id": "Duration", "checks": [{"check": "duration"}], "label": "Duration", "widget": "line_edit", "default": "", "tooltip": "How long the effect keeps playing after its loops, so it can stop partway through one. With Loops 0, it plays for the Duration alone.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "Empty or 0: No Duration: Loops alone decides.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] } },
+						{
+							"id": "Stop_Frame", "checks": [{"check": "stop_frame"}], "label": "Stop Frame", "widget": "line_edit", "default": "0", "tooltip": "Where the effect stops, once it has played its Loops and Duration.", "values": ["0: Keep the pose it ends on.", "Clear: Play the RESET animation, if there is one, then stop.", "-1: Keep the pose of the last frame.", "1+: Keep the pose of that frame.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "greater_than": -1 }, { "field": "Loops", "equals": "" } ] },
+							"dropdown": { "items": [
+								{ "label": "Frame it ends on", "value": "0" },
+								{ "label": "Clear", "value": "Clear" },
+								{ "label": "Last frame", "value": "-1" },
+								{ "label": "First frame", "value": "1" }
+							]}
+						},
+						{
+							"id": "Wait_Loops", "checks": [{"check": "wait_loops", "loop_field": "Loops", "duration_field": "Duration"}], "label": "Wait Loops", "widget": "line_edit", "default": "0", "tooltip": "How many completed loops the dialogue waits for.", "values": ["0: No wait, unless Wait Time is set.", "1+: Number of loops to wait for.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] },
+							"dropdown": { "items": [
+								{ "label": "Don't wait", "value": "0" },
+								{ "label": "Until one loop ends", "value": "1" }
+							]}
+						},
+						{ "id": "Wait_Time", "checks": [{"check": "wait_time"}], "label": "Wait Time", "widget": "line_edit", "default": "", "tooltip": "How long the dialogue waits, after its Wait Loops.", "values": ["Seconds", "Timestamp (MM:SS.xx)", "f=N: Number of frames.", "0: No extra wait.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Loops", "not_equals": "0" }, { "field": "Duration", "not_in": ["", "0"] } ] } },
+						{
+							"id": "FPS", "checks": [{"check": "fps"}], "label": "FPS", "widget": "line_edit", "default": "", "tooltip": "The frame rate f= values and a Stop Frame number count with.", "values": ["Frames per second", "Empty: The media's own, or the default frame rate.", "{expression}Expression"], "visible_when": { "any": [ { "field": "Wait_Time", "contains": "f=" }, { "field": "Duration", "contains": "f=" }, { "field": "Stop_Frame", "greater_than": 0 } ] },
+							"dropdown": { "items": [
+								{ "label": "From the FPS chain", "value": "" },
+								{ "label": "12", "value": "12" },
+								{ "label": "24", "value": "24" },
+								{ "label": "30", "value": "30" },
+								{ "label": "60", "value": "60" }
+							]}
+						},
+						{
+							"id": "Take_Hold", "checks": [{"check": "take_hold", "decider": "scene"}], "label": "Take Hold", "widget": "line_edit", "default": "", "tooltip": "Whether this command takes hold of the bust scene, when it's Public.", "values": ["Empty: The scene decides.", "1: Take hold anyway.", "-1: Never take hold.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Let the scene decide", "value": "" },
+								{ "label": "Take hold", "value": "1" },
+								{ "label": "Never take hold", "value": "-1" }
+							]}
+						}
+					]
+				}
+			]
+		}
+	]
+}

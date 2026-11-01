@@ -1,0 +1,323 @@
+{
+	"type": "Choice_List",
+	"title": "Choice List",
+	"category": "Choices",
+	"colors": { "Text": Color(0.33, 0.7, 1, 1), "BG": Color(0, 0, 0, 0.5) },
+	"summary": "{Title}",
+	"short": ["{Title}: {Categories/Choices/Label}", "{Categories/Choices/Label}", "{Title}"],
+	"layout": { "tabs": [
+		{ "name": "Line", "root": {
+			"layout": 0, "ratio": 0.3,
+			"first": { "panel": "field_tree", "config": {} },
+			"second": { "panel": "fields", "config": { "fields": [] } }
+		}}
+	]},
+	"fields": [
+		{
+			"id": "Menu_Scene", "checks": [{"check": "scene_file"}], "label": "Menu Scene", "widget": "line_edit", "default": "Default.tscn", "tooltip": "The choice menu scene, from the choice menus folder.", "values": ["Scene name", "res:// or user:// path", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "Choice_Menu_Scenes" }
+		},
+		{
+			"id": "Category_Scene", "checks": [{"check": "scene_file"}], "label": "Category Scene", "widget": "line_edit", "default": "Default.tscn", "tooltip": "The category scene, from the choice categories folder. Every category uses it by default.", "values": ["Scene name", "res:// or user:// path", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "Choice_Category_Scenes" }
+		},
+		{
+			"id": "Button_Scene", "checks": [{"check": "scene_file"}], "label": "Button Scene", "widget": "line_edit", "default": "Default.tscn", "tooltip": "The button scene, from the choice buttons folder. Every button uses it by default.", "values": ["Scene name", "res:// or user:// path", "{expression}Expression"],
+			"dropdown": { "provider": "scenes", "folder": "Choice_Button_Scenes" }
+		},
+		{ "id": "Title", "label": "Title", "widget": "line_edit", "default": "", "tooltip": "A title for the menu and every category.", "values": ["Text", "{expression}Expression"] },
+		{ "id": "Prompt", "label": "Prompt", "widget": "line_edit", "default": "", "tooltip": "A prompt for the menu and every category.", "values": ["Text", "{expression}Expression"] },
+		{
+			"id": "Tags", "checks": [{"check": "tags"}], "label": "Tags", "widget": "line_edit", "default": "", "tooltip": "Tags that Choice_Status and Timer_Status can find this menu by.", "values": ["Comma-separated tags", "{expression}Expression"],
+			"dropdown": { "provider": "choice_tags", "level": "menu", "pick": "append" }
+		},
+		{
+			"id": "Main", "checks": [{"check": "category_name"}], "label": "Main Category", "widget": "line_edit", "default": "", "tooltip": "The category shown first.", "values": ["Category name", "Empty: The first category.", "{expression}Expression"],
+			"dropdown": { "provider": "choice_names" }
+		},
+		{
+			"id": "Mouse", "checks": [{"check": "one_of", "values": ["Default", "Visible", "Hidden", "Captured", "Locked", "Confined", "Confined_Hidden", "Menu"], "text": "Not a mouse mode."}, {"check": "when", "severity": "error", "rule": {"equals": "Menu"}, "text": "Menu only works on a category."}, {"check": "when", "severity": "notice", "rule": {"equals": "Locked"}, "text": "Same as Captured."}], "label": "Mouse", "widget": "line_edit", "default": "Default", "tooltip": "The mouse mode while the menu is shown.", "values": ["Default: The engine's choice mouse mode.", "Visible: Shown and free.", "Hidden: Hidden, but free.", "Captured: Hidden, and locked to the window.", "Confined: Shown, and kept in the window.", "Confined_Hidden: Hidden, and kept in the window.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Engine's choice mode", "value": "Default" },
+				{ "label": "Visible", "value": "Visible" },
+				{ "label": "Hidden", "value": "Hidden" },
+				{ "label": "Captured", "value": "Captured" },
+				{ "label": "Confined", "value": "Confined" },
+				{ "label": "Confined and hidden", "value": "Confined_Hidden" }
+			]}
+		},
+		{
+			"id": "Hide_Menu", "checks": [{"check": "one_of", "values": ["1", "0"], "text": "Not 1 or 0."}], "label": "Hide Menu", "widget": "line_edit", "default": "0", "tooltip": "Whether the menu is hidden while a Continue choice's or a timer's lines run. Every category uses it by default.", "values": ["1: Hidden.", "0: Shown, behind its shield.", "{expression}Expression"],
+			"dropdown": { "items": [
+				{ "label": "Hide the menu", "value": "1" },
+				{ "label": "Keep it shown", "value": "0" }
+			]}
+		},
+		{
+			"id": "Setup", "label": "Setup", "widget": "group", "tooltip": "A block run as a Bridge before the menu is built. Skipped while Conversation, Block and Line are empty.",
+			"fields": [
+				{
+					"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+					"dropdown": { "provider": "conversations" }
+				},
+				{
+					"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+					"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+				},
+				{
+					"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+					"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+				},
+				{
+					"id": "Type", "checks": [{"check": "one_of", "values": ["Bridge"], "text": "Only Bridge works here."}], "label": "Type", "widget": "line_edit", "default": "Bridge", "tooltip": "How the Setup block runs.", "values": ["Bridge: Run the block, then come back."],
+					"dropdown": { "items": [
+						{ "label": "Bridge", "value": "Bridge" }
+					]}
+				}
+			]
+		},
+		{
+			"id": "Timers", "entry_checks": [{"check": "choice_name", "kind": "timer"}], "label": "Timers", "widget": "list", "entry": "named", "entry_label": "timer", "entry_prefix": "Timer", "tooltip": "Countdowns that run while the menu is open. A timer's name is its node name.",
+			"fields": [
+				{ "id": "Time", "checks": [{"check": "number"}, {"check": "when", "severity": "warning", "rule": {"any": [{"equals": "0"}, {"less_than": 0}]}, "text": "Times out at once."}], "label": "Time", "widget": "line_edit", "default": "0", "tooltip": "How long the countdown lasts.", "values": ["Seconds", "{expression}Expression"] },
+				{
+					"id": "Auto", "checks": [{"check": "one_of", "values": ["Start"], "case_sensitive": true, "only_case": true}, {"check": "when", "severity": "notice", "rule": {"not_equals": "Start", "case_sensitive": true}, "text": "On hold until a Timer_Status starts it."}], "label": "Auto", "widget": "line_edit", "default": "Start", "tooltip": "Whether the timer starts when the menu opens.", "values": ["Start: Start when the menu opens.", "Hold: Wait for a Timer_Status.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Start with the menu", "value": "Start" },
+						{ "label": "Wait for a Timer Status", "value": "Hold" }
+					]}
+				},
+				{
+					"id": "Loops", "checks": [{"check": "number", "whole": true}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Counts down once, like 1. (On Timer_Status, 0 means forever.)"}], "label": "Loops", "widget": "line_edit", "default": "1", "tooltip": "How many times the timer counts down and fires.", "values": ["1+: Number of countdowns.", "-1: Forever.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Once", "value": "1" },
+						{ "label": "Forever", "value": "-1" }
+					]}
+				},
+				{
+					"id": "Tags", "checks": [{"check": "tags"}], "label": "Tags", "widget": "line_edit", "default": "", "tooltip": "Tags that Timer_Status can find this timer by.", "values": ["Comma-separated tags", "{expression}Expression"],
+					"dropdown": { "provider": "choice_tags", "level": "timer", "pick": "append" }
+				},
+				{
+					"id": "Setup", "label": "Setup", "widget": "group", "tooltip": "A block run as a Bridge before the menu is built. Skipped while Conversation, Block and Line are empty.",
+					"fields": [
+						{
+							"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+							"dropdown": { "provider": "conversations" }
+						},
+						{
+							"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+							"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+						},
+						{
+							"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+							"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+						},
+						{
+							"id": "Type", "checks": [{"check": "one_of", "values": ["Bridge"], "text": "Only Bridge works here."}], "label": "Type", "widget": "line_edit", "default": "Bridge", "tooltip": "How the Setup block runs.", "values": ["Bridge: Run the block, then come back."],
+							"dropdown": { "items": [
+								{ "label": "Bridge", "value": "Bridge" }
+							]}
+						}
+					]
+				},
+				{
+					"id": "Timeout", "label": "Timeout", "widget": "group", "tooltip": "A block run as a Bridge on each timeout. Optional.",
+					"fields": [
+						{
+							"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+							"dropdown": { "provider": "conversations" }
+						},
+						{
+							"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+							"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+						},
+						{
+							"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+							"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+						},
+						{
+							"id": "Hide_Menu", "checks": [{"check": "one_of", "values": ["1", "0", "Menu"], "text": "Not 1, 0 or Menu."}], "label": "Hide Menu", "widget": "line_edit", "default": "null", "tooltip": "Whether the menu is hidden while the timeout's lines run.", "values": ["1: Hidden.", "0: Shown, behind its shield.", "null or Menu: The menu's.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Hide the menu", "value": "1" },
+								{ "label": "Keep it shown", "value": "0" },
+								{ "label": "The menu's", "value": "Menu" }
+							]}
+						}
+					]
+				},
+				{
+					"id": "Timer_Choices", "checks": [{"check": "timer_choices"}], "label": "Timer Choices", "widget": "line_edit", "default": "", "tooltip": "The choice picked on each timeout.", "values": ["Category, Choice", "Empty: None.", "{expression}Expression"],
+					"dropdown": { "provider": "choice_names", "list": "choices" }
+				}
+			]
+		},
+		{
+			"id": "Categories", "checks": [{"check": "count", "min": 1, "text": "The menu has no categories: it shows nothing."}], "entry_checks": [{"check": "choice_name", "kind": "category"}], "label": "Categories", "widget": "list", "entry": "named", "entry_label": "category", "entry_prefix": "Category", "tooltip": "The menu's groups of choices. A category's name is its node name.",
+			"fields": [
+				{
+					"id": "Category_Scene", "checks": [{"check": "scene_file"}], "label": "Category Scene", "widget": "line_edit", "default": "", "tooltip": "The category scene, from the choice categories folder.", "values": ["Scene name", "res:// or user:// path", "Empty: The menu's.", "{expression}Expression"],
+					"dropdown": { "provider": "scenes", "folder": "Choice_Category_Scenes", "empty_label": "The menu's" }
+				},
+				{
+					"id": "Button_Scene", "checks": [{"check": "scene_file"}], "label": "Button Scene", "widget": "line_edit", "default": "", "tooltip": "The button scene of this category's choices, from the choice buttons folder.", "values": ["Scene name", "res:// or user:// path", "Empty: The menu's.", "{expression}Expression"],
+					"dropdown": { "provider": "scenes", "folder": "Choice_Button_Scenes", "empty_label": "The menu's" }
+				},
+				{ "id": "Title", "label": "Title", "widget": "line_edit", "default": "", "tooltip": "The category's title.", "values": ["Text", "{expression}Expression"] },
+				{ "id": "Prompt", "label": "Prompt", "widget": "line_edit", "default": "", "tooltip": "The category's prompt.", "values": ["Text", "{expression}Expression"] },
+				{
+					"id": "Tags", "checks": [{"check": "tags"}], "label": "Tags", "widget": "line_edit", "default": "", "tooltip": "Tags that Choice_Status can find this category by.", "values": ["Comma-separated tags", "{expression}Expression"],
+					"dropdown": { "provider": "choice_tags", "level": "category", "pick": "append" }
+				},
+				{
+					"id": "Mouse", "checks": [{"check": "one_of", "values": ["Default", "Visible", "Hidden", "Captured", "Locked", "Confined", "Confined_Hidden", "Menu"], "text": "Not a mouse mode."}, {"check": "when", "severity": "notice", "rule": {"equals": "Locked"}, "text": "Same as Captured."}], "label": "Mouse", "widget": "line_edit", "default": "Default", "tooltip": "The mouse mode while the category is shown.", "values": ["Default: The engine's choice mouse mode.", "Menu: The menu's mouse mode.", "Visible: Shown and free.", "Hidden: Hidden, but free.", "Captured: Hidden, and locked to the window.", "Confined: Shown, and kept in the window.", "Confined_Hidden: Hidden, and kept in the window.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Engine's choice mode", "value": "Default" },
+						{ "label": "Visible", "value": "Visible" },
+						{ "label": "Hidden", "value": "Hidden" },
+						{ "label": "Captured", "value": "Captured" },
+						{ "label": "Confined", "value": "Confined" },
+						{ "label": "Confined and hidden", "value": "Confined_Hidden" },
+						{ "label": "The menu's", "value": "Menu" }
+					]}
+				},
+				{
+					"id": "Hide_Menu", "checks": [{"check": "one_of", "values": ["1", "0"], "text": "Not 1 or 0."}], "label": "Hide Menu", "widget": "line_edit", "default": "null", "tooltip": "Whether the menu is hidden while the lines of this category's Continue choices run. Every choice uses it by default.", "values": ["1: Hidden.", "0: Shown, behind its shield.", "null: The menu's.", "{expression}Expression"],
+					"dropdown": { "items": [
+						{ "label": "Hide the menu", "value": "1" },
+						{ "label": "Keep it shown", "value": "0" }
+					]}
+				},
+				{
+					"id": "Setup", "label": "Setup", "widget": "group", "tooltip": "A block run as a Bridge before the menu is built. Skipped while Conversation, Block and Line are empty.",
+					"fields": [
+						{
+							"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+							"dropdown": { "provider": "conversations" }
+						},
+						{
+							"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+							"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+						},
+						{
+							"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+							"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+						},
+						{
+							"id": "Type", "checks": [{"check": "one_of", "values": ["Bridge"], "text": "Only Bridge works here."}], "label": "Type", "widget": "line_edit", "default": "Bridge", "tooltip": "How the Setup block runs.", "values": ["Bridge: Run the block, then come back."],
+							"dropdown": { "items": [
+								{ "label": "Bridge", "value": "Bridge" }
+							]}
+						}
+					]
+				},
+				{
+					"id": "Choices", "checks": [{"check": "count", "min": 1, "text": "This category has no choices."}], "entry_checks": [{"check": "choice_name", "kind": "choice"}], "label": "Choices", "widget": "list", "entry": "named", "entry_label": "choice", "entry_prefix": "Choice", "tooltip": "The category's choices. A choice's name is its button's node name.",
+					"fields": [
+						{ "id": "Label", "checks": [{"check": "when", "severity": "notice", "rule": {"not_empty": false}, "text": "Shows the choice's name, ‹entry›."}], "label": "Label", "widget": "line_edit", "default": "", "tooltip": "The button's text.", "values": ["Text", "Empty: The choice's name.", "{expression}Expression"] },
+						{ "id": "Tooltip", "label": "Tooltip", "widget": "line_edit", "default": "", "tooltip": "The button's tooltip.", "values": ["Text", "{expression}Expression"] },
+						{
+							"id": "Button_Scene", "checks": [{"check": "scene_file"}], "label": "Button Scene", "widget": "line_edit", "default": "", "tooltip": "The button scene, from the choice buttons folder.", "values": ["Scene name", "res:// or user:// path", "Empty: The category's.", "{expression}Expression"],
+							"dropdown": { "provider": "scenes", "folder": "Choice_Button_Scenes", "empty_label": "The category's" }
+						},
+						{
+							"id": "Tags", "checks": [{"check": "tags"}], "label": "Tags", "widget": "line_edit", "default": "", "tooltip": "Tags that Choice_Status can find this choice by.", "values": ["Comma-separated tags", "{expression}Expression"],
+							"dropdown": { "provider": "choice_tags", "level": "choice", "pick": "append" }
+						},
+						{
+							"id": "Enabled", "checks": [{"check": "one_of", "values": ["1", "0"], "text": "Not 1 or 0."}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "No button until a Choice_Status enables it. Its Setup doesn't run with the menu's."}], "label": "Enabled", "widget": "line_edit", "default": "1", "tooltip": "Whether the choice gets a button.", "values": ["1: Create its button.", "0: No button at all.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Enabled", "value": "1" },
+								{ "label": "Disabled", "value": "0" }
+							]}
+						},
+						{
+							"id": "Active", "checks": [{"check": "one_of", "values": ["1", "0"], "text": "Not 1 or 0."}], "label": "Active", "widget": "line_edit", "default": "1", "tooltip": "Whether the button can be picked.", "values": ["1: Can be picked.", "0: Shown, but can't be picked.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Active", "value": "1" },
+								{ "label": "Inactive", "value": "0" }
+							]}
+						},
+						{
+							"id": "Invisible", "checks": [{"check": "one_of", "values": ["1", "0"], "text": "Not 1 or 0."}], "label": "Invisible", "widget": "line_edit", "default": "0", "tooltip": "Whether the button is hidden.", "values": ["0: Shown.", "1: Hidden.", "{expression}Expression"],
+							"dropdown": { "items": [
+								{ "label": "Visible", "value": "0" },
+								{ "label": "Invisible", "value": "1" }
+							]}
+						},
+						{
+							"id": "Navigate", "checks": [{"check": "category_name", "own": true}], "label": "Navigate", "widget": "line_edit", "default": "", "tooltip": "The category shown instead, when the choice is picked.", "values": ["Category name", "Empty: Stay on this category.", "{expression}Expression"],
+							"dropdown": { "provider": "choice_names" }
+						},
+						{
+							"id": "Setup", "label": "Setup", "widget": "group", "tooltip": "A block run as a Bridge before the button is spawned. Skipped while Conversation, Block and Line are empty.",
+							"fields": [
+								{
+									"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"],
+									"dropdown": { "provider": "conversations" }
+								},
+								{
+									"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"],
+									"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+								},
+								{
+									"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"],
+									"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+								},
+								{
+									"id": "Type", "checks": [{"check": "one_of", "values": ["Bridge"], "text": "Only Bridge works here."}], "label": "Type", "widget": "line_edit", "default": "Bridge", "tooltip": "How the Setup block runs.", "values": ["Bridge: Run the block, then come back."],
+									"dropdown": { "items": [
+										{ "label": "Bridge", "value": "Bridge" }
+									]}
+								}
+							]
+						},
+						{
+							"id": "Finish", "label": "Finish", "widget": "group", "tooltip": "What picking the choice does.",
+							"fields": [
+								{
+									"id": "Type", "checks": [{"check": "one_of", "values": ["Continue", "Bridge", "Jump", "Return", "End", "Close"], "text": "Not a Finish type."}, {"check": "when", "severity": "warning", "rule": {"all": [{"in": ["Continue", "Bridge", "Jump"]}, {"field": "Conversation", "not_empty": false}, {"field": "Block", "not_empty": false}, {"field": "Line", "not_empty": false}, {"field": "../Navigate", "not_empty": false}]}, "text": "Picking it does nothing: the menu stays open."}], "label": "Type", "widget": "line_edit", "default": "Bridge", "tooltip": "What picking the choice does.", "values": ["Continue: Bridge to the target, then come back to the open menu.", "Bridge: Hide the menu and Bridge to the target, then close the menu.", "Jump: Close the menu and Jump to the target.", "Return: Close the menu and Return.", "End: Close the menu and end the dialogue.", "Close: Close the menu and carry on after it.", "{expression}Expression"],
+									"dropdown": { "items": [
+										{ "label": "Continue: bridge, then back to the open menu", "value": "Continue" },
+										{ "label": "Bridge: hide the menu, bridge, then close it", "value": "Bridge" },
+										{ "label": "Jump: close the menu and jump", "value": "Jump" },
+										{ "label": "Return: close the menu and return", "value": "Return" },
+										{ "label": "End the dialogue", "value": "End" },
+										{ "label": "Close the menu and carry on", "value": "Close" }
+									]}
+								},
+								{
+									"id": "Hide_Menu", "checks": [{"check": "one_of", "values": ["1", "0", "Menu"], "text": "Not 1, 0 or Menu."}], "label": "Hide Menu", "widget": "line_edit", "default": "null", "tooltip": "Whether the menu is hidden while this choice's lines run.", "values": ["1: Hidden.", "0: Shown, behind its shield.", "Menu: The menu's, whatever the category's.", "null: The category's.", "{expression}Expression"], "visible_when": { "field": "Type", "equals": "Continue" },
+									"dropdown": { "items": [
+										{ "label": "Hide the menu", "value": "1" },
+										{ "label": "Keep it shown", "value": "0" },
+										{ "label": "The menu's", "value": "Menu" }
+									]}
+								},
+								{
+									"id": "Conversation", "checks": [{"check": "transition", "optional": true, "part": "conversation"}], "label": "Conversation", "widget": "line_edit", "default": "", "tooltip": "The conversation to go to.", "values": ["Conversation name", "Empty: The current conversation.", "{expression}Expression"], "visible_when": { "field": "Type", "in": ["Continue", "Bridge", "Jump"] },
+									"dropdown": { "provider": "conversations" }
+								},
+								{
+									"id": "Block", "checks": [{"check": "transition", "optional": true, "part": "block", "conversation_field": "Conversation"}], "label": "Block", "widget": "line_edit", "default": "", "tooltip": "The block to go to.", "values": ["Block name", "Empty: The current block.", "{expression}Expression"], "visible_when": { "field": "Type", "in": ["Continue", "Bridge", "Jump"] },
+									"dropdown": { "provider": "blocks", "conversation_field": "Conversation" }
+								},
+								{
+									"id": "Line", "checks": [{"check": "transition", "optional": true, "part": "line", "conversation_field": "Conversation", "block_field": "Block"}], "label": "Line", "widget": "line_edit", "default": "", "tooltip": "The line to start from.", "values": ["0+: Line number, counted from 0.", "LM reference", "Empty: The first line.", "{expression}Expression"], "visible_when": { "field": "Type", "in": ["Continue", "Bridge", "Jump"] },
+									"dropdown": { "provider": "line_markers", "conversation_field": "Conversation", "block_field": "Block" }
+								},
+								{
+									"id": "Levels", "checks": [{"check": "number", "whole": true}, {"check": "when", "severity": "notice", "rule": {"equals": "0"}, "text": "Unwinds all the way to the main block."}, {"check": "when", "severity": "notice", "rule": {"less_than": 0}, "text": "Ends the dialogue if unwinding goes past the main block."}], "label": "Levels", "widget": "line_edit", "default": "1", "tooltip": "How many bridged blocks to unwind, as on Return.", "values": ["1+: Unwind this many, stopping at the main block.", "-N: Unwind this many, and end the dialogue past the main block.", "0: Unwind to the main block.", "{expression}Expression"], "visible_when": { "field": "Type", "equals": "Return" },
+									"dropdown": { "items": [
+										{ "label": "One level", "value": "1" },
+										{ "label": "To the main block", "value": "0" }
+									]}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
